@@ -1,50 +1,79 @@
-/* Depth (2026-11-02, dark only): light, glass and motion for the global navigation and the home page.
-   Every colour is a Bgentic token or an alpha of one: ground #0f1217, column #12151b, surface #191c22, navy band
-   #1b3160 to #0f1e3a and #182b4d, sky #c9ddfd and #7fb0f7, accent #2b6fe6 (hover #1f5fcc). The richness comes
-   from how they're layered: glows behind, glass in front, a line of light on every edge. */
+/* Depth (2026-11-02, dark only): light, material and motion for the global navigation and the home page.
+   The rules, after Apple, Linear and Stripe:
+   - one light source, desaturated, falling off into deep neutral shadow: no coloured bloom behind text
+   - glass is a material: a tint, a blur, a fine grain, a 1px inner edge and a lit top, resting on a real shadow
+   - corners are continuous (corner-shape: squircle) where the browser supports it, ordinary radii elsewhere
+   - white headings, muted slate text, generous space between ideas and tight space within them
+   Colours are Bgentic tokens (navy #1b3160 #0f1e3a #182b4d, sky #c9ddfd #7fb0f7, accent #2b6fe6 #1f5fcc, ground
+   #0f1217) or neutral black and white alphas for light and shadow. */
+
+/* Text tones and the grain, outside the layers so they land after tokens.css: brighter ink so headings pop, a muted
+   slate for body copy, a quieter slate for notes. */
+:root[data-theme="dark"] {
+  --b-ink: #f5f7fa;
+  --b-body: #8995a8;
+  --b-slate: #7a8699;
+  /* fractal noise, greyscale, at a few per cent: the texture that makes glass read as a physical material */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.11'/%3E%3C/svg%3E");
+  /* glass edges: a 1px inner border, a lit top, and a shadow with real weight */
+  --edge: inset 0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.07);
+}
+
 @layer components {
-  /* ------------------------------------------------------------- shared light */
-  /* A 1px gradient edge drawn with a mask, so glass gets a lit top and a falling-off bottom. Set --ring to tint. */
-  .ring-light::after,
-  .spot::after,
-  .dash::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: var(
-      --ring,
-      linear-gradient(180deg, rgb(127 176 247 / 0.42), rgb(127 176 247 / 0.1) 38%, rgb(255 255 255 / 0.05))
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    transition: filter 300ms var(--ease-out);
+  /* ------------------------------------------------------------- continuous corners */
+  /* Apple's continuous curve. Browsers without corner-shape ignore it and keep the plain radius. */
+  .sq,
+  .nav-pill,
+  .nav-pill::before,
+  .nav-item,
+  .nav-hl,
+  .mega,
+  .mega-link,
+  .tile,
+  .nav-sheet,
+  .btn-primary,
+  .btn-primary::before,
+  .btn-glass,
+  .btn-glass::before,
+  .svc,
+  .svc::before,
+  .svc::after,
+  .svc-glow,
+  .svc-chip,
+  .seg,
+  .seg-tab,
+  .seg-pill,
+  .mac,
+  .mac-tag,
+  .wf-toggle,
+  .wf-stepper,
+  .dash,
+  .dash-card,
+  .tool,
+  .plan-chip,
+  .cc-card,
+  .cc-card::after,
+  .cc-arrow {
+    corner-shape: squircle;
   }
 
-  /* Headings in metal: white falling to sky. The accent phrase glows in the brand blues. */
-  :root[data-theme="dark"] .t-h2,
-  .t-hero {
-    background: linear-gradient(180deg, #ffffff 35%, rgb(201 221 253 / 0.82) 120%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  /* ------------------------------------------------------------- type */
+  /* The one coloured phrase is lit from the orb's side: it brightens toward the light, with a faint bloom. */
   .t-glow {
-    background: linear-gradient(100deg, #e4eefe 0%, #c9ddfd 18%, #7fb0f7 52%, #2b6fe6 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, #7fb0f7 60%, #c9ddfd) 0%,
+      #c9ddfd 70%,
+      color-mix(in oklab, #c9ddfd 60%, #ffffff) 100%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 22px rgb(43 111 230 / 0.42)) drop-shadow(0 12px 40px rgb(43 111 230 / 0.28));
     padding-bottom: 0.06em; /* room for descenders inside the clip */
+    /* an optical bloom, not a glow: a tight halo at the letterforms and a wide, very faint one beyond */
+    filter: drop-shadow(0 0 1px rgb(201 221 253 / 0.18)) drop-shadow(0 0 22px rgb(127 176 247 / 0.16));
   }
   @media (forced-colors: active) {
-    :root[data-theme="dark"] .t-h2,
-    .t-hero,
     .t-glow {
       background: none;
       color: CanvasText;
@@ -52,8 +81,7 @@
     }
   }
 
-  /* ------------------------------------------------------------- navigation: a floating glass pill */
-  /* A compact pill, centred and floating clear of the page: it reads as an object, not a bar. */
+  /* ------------------------------------------------------------- navigation: a floating glass slab */
   .nav-shell {
     position: fixed;
     inset: 1rem 0 auto 0;
@@ -66,55 +94,34 @@
   .nav-pill {
     pointer-events: auto;
     position: relative;
-    width: min(100%, 58rem);
+    width: min(100%, 56rem);
     height: 3.5rem;
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0 0.5rem 0 1.25rem;
-    border-radius: 999px;
+    padding: 0 0.5rem 0 1.375rem;
+    border-radius: 20px;
     color: var(--b-ink);
   }
-  /* The glass sits on pseudo-elements, not the pill: an element with a backdrop-filter becomes the backdrop root
+  /* The glass sits on a pseudo-element, not the pill: an element with a backdrop-filter becomes the backdrop root
      for everything inside it, and the mega-menu and phone sheet would then blur only the pill, not the page. */
-  .nav-pill::before,
-  .nav-pill::after {
+  .nav-pill::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
     border-radius: inherit;
     pointer-events: none;
-  }
-  .nav-pill::before {
-    background: linear-gradient(180deg, rgb(35 39 45 / 0.5), rgb(25 28 34 / 0.42));
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    backdrop-filter: blur(20px) saturate(180%);
+    background: var(--grain), linear-gradient(180deg, rgb(30 34 41 / 0.64), rgb(20 23 29 / 0.58));
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(150%);
     box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.07),
-      0 1px 2px rgb(0 0 0 / 0.35),
-      0 18px 48px -18px rgb(0 0 0 / 0.75),
-      0 10px 40px -20px rgb(43 111 230 / 0.25);
-    transition: background-color 320ms var(--ease-out);
-  }
-  .nav-pill::after {
-    padding: 1px;
-    background: linear-gradient(100deg, rgb(127 176 247 / 0.32), rgb(255 255 255 / 0.08) 30%, rgb(255 255 255 / 0.06) 70%, rgb(127 176 247 / 0.22));
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+      var(--edge),
+      0 1px 1px rgb(0 0 0 / 0.35),
+      0 12px 32px -12px rgb(0 0 0 / 0.75);
   }
   .nav-pill[data-scrolled]::before {
-    background: linear-gradient(180deg, rgb(35 39 45 / 0.72), rgb(25 28 34 / 0.66));
-  }
-  @media (prefers-reduced-transparency: reduce) {
-    .nav-pill::before {
-      background: var(--b-surface);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
+    background: var(--grain), linear-gradient(180deg, rgb(30 34 41 / 0.82), rgb(20 23 29 / 0.78));
   }
   .nav-list {
     position: relative;
@@ -129,17 +136,17 @@
     gap: 0.25rem;
     height: 2.25rem;
     padding-inline: 0.875rem;
-    border-radius: 999px;
-    font-size: 0.90625rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.006em;
     color: var(--b-body);
     transition: color 200ms var(--ease-out);
   }
   .nav-item:hover,
   .nav-item[aria-current="page"],
   .nav-item[aria-expanded="true"] {
-    color: #fff;
+    color: var(--b-ink);
   }
   .nav-item .chev {
     transition: transform 280ms var(--ease-spring);
@@ -154,9 +161,9 @@
     left: 0;
     height: 2.25rem;
     margin-top: -1.125rem;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.05));
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.04);
     opacity: 0;
     pointer-events: none;
     transition:
@@ -175,15 +182,15 @@
     left: 50%;
     width: min(54rem, calc(100vw - 1.5rem));
     padding: 0.625rem;
-    border-radius: 1.5rem;
+    border-radius: 26px;
     color: var(--b-ink);
-    background: linear-gradient(180deg, rgb(33 37 44 / 0.86), rgb(22 25 31 / 0.88));
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    backdrop-filter: blur(28px) saturate(180%);
+    background: var(--grain), linear-gradient(180deg, rgb(30 34 41 / 0.88), rgb(20 23 29 / 0.92));
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    backdrop-filter: blur(28px) saturate(150%);
     box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.07),
-      0 30px 80px -30px rgb(0 0 0 / 0.85),
-      0 24px 70px -40px rgb(43 111 230 / 0.35);
+      var(--edge),
+      0 2px 4px rgb(0 0 0 / 0.3),
+      0 28px 64px -24px rgb(0 0 0 / 0.9);
     transform-origin: 50% 0;
     transform: translateX(-50%) translateY(-6px) scale(0.98);
     opacity: 0;
@@ -208,41 +215,36 @@
     display: flex;
     gap: 0.875rem;
     padding: 0.875rem;
-    border-radius: 1rem;
+    border-radius: 16px;
     transition: background-color 200ms var(--ease-out);
   }
   .mega-link:hover,
   .mega-link:focus-visible {
-    background: rgb(255 255 255 / 0.06);
+    background: rgb(255 255 255 / 0.05);
   }
   .tile {
-    position: relative;
     display: grid;
     place-items: center;
     flex: none;
     width: 2.375rem;
     height: 2.375rem;
-    border-radius: 0.75rem;
-    color: #a9cbfa;
-    background:
-      radial-gradient(120% 90% at 30% 0%, rgb(127 176 247 / 0.28), transparent 70%),
-      linear-gradient(180deg, rgb(43 111 230 / 0.26), rgb(27 49 96 / 0.3));
-    box-shadow:
-      inset 0 0 0 1px rgb(127 176 247 / 0.22),
-      inset 0 1px 0 rgb(255 255 255 / 0.14),
-      0 6px 18px -8px rgb(43 111 230 / 0.6);
+    border-radius: 12px;
+    color: var(--b-accent-text);
+    background: linear-gradient(180deg, rgb(127 176 247 / 0.1), rgb(127 176 247 / 0.03));
+    box-shadow: var(--edge);
   }
   .nav-sheet {
     position: absolute;
     top: calc(100% + 0.5rem);
     inset-inline: 0;
     padding: 0.5rem;
-    border-radius: 1.5rem;
-    background: linear-gradient(180deg, rgb(33 37 44 / 0.88), rgb(22 25 31 / 0.9));
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgb(255 255 255 / 0.1);
-    box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.8);
+    border-radius: 24px;
+    background: var(--grain), linear-gradient(180deg, rgb(30 34 41 / 0.9), rgb(20 23 29 / 0.94));
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: blur(24px) saturate(150%);
+    box-shadow:
+      var(--edge),
+      0 28px 64px -24px rgb(0 0 0 / 0.9);
     transform-origin: 50% 0;
     transition:
       transform 300ms var(--ease-settle),
@@ -258,9 +260,7 @@
     transition:
       transform 300ms var(--ease-spring),
       background-color 200ms var(--ease-out),
-      border-color 200ms var(--ease-out),
-      box-shadow 300ms var(--ease-out),
-      filter 200ms var(--ease-out);
+      box-shadow 300ms var(--ease-out);
   }
   @media (hover: hover) and (pointer: fine) {
     .btn-spring:hover {
@@ -272,172 +272,89 @@
     transition-duration: 120ms;
     transition-timing-function: var(--ease-out);
   }
-  /* The one filled action, as tinted glass: translucent accent over a blur of what is behind it, a 1px specular top
-     edge, an inner glow, a gloss across the upper half, and a light that sweeps across on hover. */
+  /* Both buttons are glass: grain over a tint, a 1px inner edge, a lit top, a gloss on the upper half and a neutral
+     shadow underneath. The primary's tint is the accent; its partner's is clear. */
   .btn-primary,
   .btn-glass {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    border: 1px solid rgb(255 255 255 / 0.08);
-    border-top-color: rgb(255 255 255 / 0.15);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    backdrop-filter: blur(16px) saturate(160%);
   }
-  .btn-primary::before,
-  .btn-glass::before,
-  .btn-primary::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    pointer-events: none;
-  }
-  /* gloss: the upper half catches the light */
   .btn-primary::before,
   .btn-glass::before {
+    content: "";
+    position: absolute;
     inset: 0;
+    z-index: -1;
     border-radius: inherit;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.04) 48%, transparent 52%);
+    pointer-events: none;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 55%);
   }
   .btn-primary {
     color: #fff;
-    text-shadow: 0 1px 1px rgb(15 30 58 / 0.35);
+    text-shadow: 0 1px 0 rgb(0 0 0 / 0.15);
     background:
-      radial-gradient(120% 140% at 50% 120%, rgb(127 176 247 / 0.45), transparent 60%),
-      linear-gradient(180deg, rgb(43 111 230 / 0.82), rgb(31 95 204 / 0.88));
+      var(--grain),
+      linear-gradient(180deg, color-mix(in oklab, #2b6fe6, #7fb0f7 16%), #2b6fe6 55%, #1f5fcc);
     box-shadow:
-      inset 0 0 0 1px rgb(127 176 247 / 0.16),
-      inset 0 0 18px rgb(127 176 247 / 0.28),
-      inset 0 -10px 18px -12px rgb(15 30 58 / 0.6),
-      0 1px 2px rgb(0 0 0 / 0.4),
-      0 12px 32px -10px rgb(43 111 230 / 0.65);
+      inset 0 0 0 1px rgb(255 255 255 / 0.08),
+      inset 0 1px 0 rgb(255 255 255 / 0.2),
+      inset 0 -1px 0 rgb(0 0 0 / 0.2),
+      0 1px 2px rgb(0 0 0 / 0.5),
+      0 8px 20px -8px rgb(0 0 0 / 0.6);
   }
-  /* the sweep: a band of light crosses once per hover */
-  .btn-primary::after {
-    inset: -1px;
-    background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.22) 50%, transparent 62%);
-    transform: translateX(-110%);
+  .btn-glass {
+    color: var(--b-ink);
+    background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025));
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.08),
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      0 1px 2px rgb(0 0 0 / 0.45),
+      0 8px 20px -8px rgb(0 0 0 / 0.6);
   }
   @media (hover: hover) and (pointer: fine) {
     .btn-primary:hover {
-      border-top-color: rgb(255 255 255 / 0.28);
-      box-shadow:
-        inset 0 0 0 1px rgb(127 176 247 / 0.24),
-        inset 0 0 22px rgb(127 176 247 / 0.4),
-        inset 0 -10px 18px -12px rgb(15 30 58 / 0.6),
-        0 1px 2px rgb(0 0 0 / 0.4),
-        0 18px 44px -10px rgb(43 111 230 / 0.8);
-    }
-    .btn-primary:hover::after {
-      transform: translateX(110%);
-      transition: transform 700ms var(--ease-out);
+      background:
+        var(--grain),
+        linear-gradient(180deg, color-mix(in oklab, #2b6fe6, #7fb0f7 26%), color-mix(in oklab, #2b6fe6, #7fb0f7 8%) 55%, #2b6fe6);
     }
     .btn-glass:hover {
-      border-color: rgb(127 176 247 / 0.24);
-      border-top-color: rgb(255 255 255 / 0.24);
-      background: linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.05));
+      background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.04));
+      box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.12),
+        inset 0 1px 0 rgb(255 255 255 / 0.14),
+        0 1px 2px rgb(0 0 0 / 0.45),
+        0 8px 20px -8px rgb(0 0 0 / 0.6);
     }
   }
-  /* its partner: clear glass, same edge and gloss, no colour */
-  .btn-glass {
-    color: var(--b-ink);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
-    box-shadow:
-      inset 0 0 14px rgb(127 176 247 / 0.08),
-      0 10px 28px -16px rgb(0 0 0 / 0.9);
-  }
 
-  /* ------------------------------------------------------------- section light */
+  /* ------------------------------------------------------------- section light: faint, overhead, desaturated */
+  /* Below the fold every section is lit the same way: brand navy #1b3160 at 12%, wide and soft, from one side. */
   .lit-a {
     background:
-      radial-gradient(64rem 40rem at 8% -6%, rgb(27 49 96 / 0.62), transparent 64%),
-      radial-gradient(44rem 30rem at 96% 40%, rgb(43 111 230 / 0.1), transparent 70%),
+      radial-gradient(64rem 40rem at 8% -6%, rgb(27 49 96 / 0.12), transparent 64%),
+      radial-gradient(48rem 32rem at 100% 70%, rgb(27 49 96 / 0.12), transparent 70%),
       var(--b-ground);
   }
   .lit-b {
     background:
-      radial-gradient(56rem 36rem at 92% -4%, rgb(43 111 230 / 0.16), transparent 66%),
-      radial-gradient(50rem 40rem at -4% 104%, rgb(24 43 77 / 0.7), transparent 70%),
+      radial-gradient(56rem 36rem at 92% -4%, rgb(27 49 96 / 0.12), transparent 66%),
+      radial-gradient(50rem 40rem at -4% 104%, rgb(27 49 96 / 0.12), transparent 70%),
       var(--b-column);
   }
-  /* A line of light along a section's top edge, brightest at the centre, with a faint wash falling from it. */
+  /* A hairline of light along a section's top edge, brightest at the centre. */
   .edge {
     position: relative;
   }
-  .edge::before,
-  .edge::after {
+  .edge::before {
     content: "";
     position: absolute;
-    pointer-events: none;
-  }
-  .edge::before {
     inset: 0 0 auto 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgb(127 176 247 / 0.42) 50%, transparent);
-  }
-  .edge::after {
-    inset: 0 18% auto;
-    height: 7rem;
-    background: radial-gradient(50% 100% at 50% 0%, rgb(127 176 247 / 0.09), transparent);
-  }
-
-  /* Spotlight cards: navy-tinted glass, a lit gradient edge, layered shadow, and a light that follows the pointer. */
-  .spot {
-    position: relative;
-    isolation: isolate;
-    border-radius: 1.5rem;
-    background:
-      radial-gradient(120% 80% at 0% 0%, rgb(27 49 96 / 0.42), transparent 62%),
-      linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.012)),
-      var(--b-surface);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.06),
-      0 1px 2px rgb(0 0 0 / 0.35),
-      0 28px 56px -28px rgb(0 0 0 / 0.75);
-    transition:
-      transform 360ms var(--ease-spring),
-      box-shadow 360ms var(--ease-out);
-  }
-  .spot::after {
-    --ring: linear-gradient(160deg, rgb(127 176 247 / 0.34), rgb(127 176 247 / 0.08) 35%, rgb(255 255 255 / 0.05) 70%, rgb(127 176 247 / 0.12));
-  }
-  .spot::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: radial-gradient(26rem circle at var(--mx, 50%) var(--my, 0%), rgb(127 176 247 / 0.16), transparent 45%);
-    opacity: 0;
-    transition: opacity 300ms var(--ease-out);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.09) 50%, transparent);
     pointer-events: none;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    a.spot:hover,
-    .spot[data-lift]:hover {
-      transform: translateY(-3px);
-      box-shadow:
-        inset 0 1px 0 rgb(255 255 255 / 0.08),
-        0 1px 2px rgb(0 0 0 / 0.35),
-        0 36px 64px -28px rgb(0 0 0 / 0.8),
-        0 24px 60px -30px rgb(43 111 230 / 0.45);
-    }
-    a.spot:hover::after {
-      filter: brightness(1.9);
-    }
-    .spot:hover::before {
-      opacity: 1;
-    }
-    a.spot:hover .go {
-      transform: translateX(4px);
-    }
-  }
-  a.spot:active {
-    transform: translateY(-1px) scale(0.995);
-    transition-duration: 120ms;
-  }
-  .spot .go {
-    transition: transform 320ms var(--ease-spring);
   }
 
   /* The consultancy card's small "where we'd start" plan: an example of the deliverable, not a metric. */
@@ -447,146 +364,1061 @@
   .plan-chip {
     flex: none;
     padding: 0.125rem 0.5rem;
-    border-radius: 999px;
+    border-radius: 7px;
     font-size: 0.6875rem;
     font-weight: 550;
     color: var(--b-slate);
-    background: var(--b-fill);
+    background: rgb(255 255 255 / 0.06);
   }
   .plan-chip[data-first] {
     color: #fff;
-    background: linear-gradient(180deg, color-mix(in oklab, #7fb0f7 25%, #2b6fe6), #2b6fe6);
-    box-shadow: 0 4px 14px -4px rgb(43 111 230 / 0.7);
+    background: #2b6fe6;
   }
 
   /* ------------------------------------------------------------- hero */
+  /* Restraint: the ground, the orb's faint light, a fainter skylight, the edges falling into shadow, and the barest
+     lift of brand navy (#1b3160 behind the copy and the orb, #0f1e3a at the foot), enough that the page isn't a void
+     and little enough that you have to look for it. The grid stays the sharpest thing in the background.
+     Layers listed top first. */
   .hero-x {
     position: relative;
     isolation: isolate;
     overflow: clip;
-    padding-block: calc(4.5rem + clamp(2.5rem, 6vw, 4.5rem)) clamp(3.5rem, 7vw, 6rem);
-    /* light under the grid: a key light behind the headline, the orb's glow, a navy wash and a low horizon */
+    display: grid;
+    align-items: center;
+    min-height: min(100svh, 60rem);
+    padding-block: calc(4.5rem + clamp(3rem, 7vw, 6rem)) clamp(4rem, 8vw, 7rem);
     background:
-      radial-gradient(40rem 30rem at 22% 36%, rgb(43 111 230 / 0.16), transparent 70%),
-      radial-gradient(46rem 40rem at 76% 46%, rgb(43 111 230 / 0.3), transparent 66%),
-      radial-gradient(60rem 36rem at 4% -6%, rgb(27 49 96 / 0.8), transparent 64%),
-      radial-gradient(90rem 26rem at 50% 118%, rgb(43 111 230 / 0.22), transparent 70%),
+      radial-gradient(52rem 44rem at 74% 46%, rgb(127 176 247 / 0.06), transparent 70%),
+      radial-gradient(90rem 50rem at 50% -30%, rgb(201 221 253 / 0.035), transparent 70%),
+      radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(0 0 0 / 0.45) 100%),
+      radial-gradient(44rem 36rem at 74% 46%, rgb(27 49 96 / 0.16), transparent 70%),
+      radial-gradient(40rem 30rem at 24% 42%, rgb(27 49 96 / 0.12), transparent 72%),
+      radial-gradient(90rem 30rem at 50% 110%, rgb(15 30 58 / 0.35), transparent 70%),
       var(--b-ground);
   }
-  /* The kinetic grid: the lowest layer, shown across the whole hero and faded only under the nav and at the foot. */
+  /* The hero's column sits further in from the edges than the rest of the page. */
+  .hero-x .container-b {
+    width: min(100% - 2 * clamp(1.25rem, 6vw, 5.5rem), 68rem);
+  }
+  /* The kinetic grid: the lowest layer, across the whole hero, faded under the nav, at the foot and at the sides.
+     It's lit by the orb (kinetic-grid.tsx), so it's brightest there and dark at the edges. */
   .hero-backdrop {
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.85;
     pointer-events: none;
     -webkit-mask-image:
-      linear-gradient(180deg, transparent 0%, #000 16%, #000 78%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+      linear-gradient(180deg, transparent 0%, #000 18%, #000 80%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-image:
-      linear-gradient(180deg, transparent 0%, #000 16%, #000 78%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+      linear-gradient(180deg, transparent 0%, #000 18%, #000 80%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
     mask-composite: intersect;
   }
-  /* Above the grid, a soft veil behind the reading line only: the grid recedes under small text instead of hiding. */
+  /* Above the grid, a soft shade behind the reading line only: the grid recedes under small text instead of hiding. */
   .hero-veil {
     position: absolute;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: radial-gradient(34rem 22rem at 20% 60%, rgb(15 18 23 / 0.5), transparent 72%);
+    background: radial-gradient(36rem 26rem at 22% 58%, rgb(15 18 23 / 0.55), transparent 72%);
   }
   .hero-grid {
     display: grid;
     align-items: center;
-    gap: clamp(2.5rem, 6vw, 4rem);
+    gap: 3.5rem;
   }
   @media (min-width: 1024px) {
     .hero-grid {
-      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
-      min-height: min(40rem, calc(100svh - 11rem));
+      grid-template-columns: minmax(0, 33rem) minmax(0, 1fr);
+      column-gap: clamp(4rem, 8vw, 8.5rem);
     }
   }
   .t-hero {
     font-family: var(--font-heading);
-    font-size: clamp(3rem, 1.3rem + 4.4vw, 5.5rem);
+    font-size: clamp(3rem, 1.4rem + 4.3vw, 5.5rem);
     font-weight: 540;
     line-height: 0.96;
     letter-spacing: -0.04em;
+    color: var(--b-ink);
     text-wrap: balance;
   }
+  /* The eyebrow is type, not a component: small Geist capitals, widely tracked, in the quiet slate, led in by a
+     hairline of light. */
   .hero-eyebrow {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 0.625rem;
-    height: 2rem;
-    padding-inline: 0.75rem 0.875rem;
-    border-radius: 999px;
-    font-size: 0.8125rem;
+    gap: 0.875rem;
+    font-family: var(--font-heading);
+    font-size: 0.71875rem;
     font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--b-body);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
-    border: 1px solid rgb(255 255 255 / 0.08);
-    border-top-color: rgb(255 255 255 / 0.14);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--b-slate);
   }
-  .hero-eyebrow-dot {
-    width: 0.375rem;
-    height: 0.375rem;
-    border-radius: 50%;
-    background: #7fb0f7;
-    box-shadow:
-      0 0 0 3px rgb(127 176 247 / 0.16),
-      0 0 10px 2px rgb(43 111 230 / 0.7);
+  .hero-eyebrow-rule {
+    width: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgb(127 176 247 / 0), rgb(127 176 247 / 0.7));
   }
   .hero-lede {
-    max-width: 33rem;
-    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
-    line-height: 1.6;
-    color: rgb(202 206 212 / 0.92);
+    max-width: 31rem;
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+    line-height: 1.62;
+    letter-spacing: -0.006em;
+    color: var(--b-body);
   }
   .hero-aside {
-    max-width: 33rem;
+    max-width: 31rem;
     padding-top: 1.25rem;
-    border-top: 1px solid rgb(255 255 255 / 0.07);
+    border-top: 1px solid rgb(255 255 255 / 0.06);
     font-size: 0.875rem;
     color: var(--b-slate);
   }
   .hero-stage {
     position: relative;
-    width: min(100%, 24rem);
+    width: min(100%, 25rem);
     aspect-ratio: 1;
     justify-self: center;
   }
   @media (min-width: 1024px) {
     .hero-stage {
-      width: min(100%, 38rem);
-      justify-self: end;
-      margin-right: -1.5rem;
+      width: clamp(29rem, 45vw, 42rem);
     }
   }
+  /* the orb's own light, barely there: it lights the grid more than it glows */
   .hero-halo {
     position: absolute;
-    inset: 14%;
+    inset: 18%;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgb(43 111 230 / 0.55), rgb(27 49 96 / 0.4) 55%, transparent);
-    filter: blur(34px);
+    background: radial-gradient(closest-side, rgb(127 176 247 / 0.1), transparent);
+    filter: blur(40px);
   }
   .hero-orb {
     position: absolute;
     inset: 2%;
     mix-blend-mode: screen;
   }
+
+  /* ------------------------------------------------------------- 01 · colour-change cards */
+  /* Two by two from tablets up, stacked on phones. At rest: the problem, a photograph of it under glass. Turned
+     (color-change-card.tsx): the solution's photograph cross-fades in, the card lifts on a spring
+     and gathers a sky edge and a soft glow, and the arrow turns. The text roll and cross-fades are framer-motion; the
+     light is CSS, so it can be interrupted mid-way. Layers: photo, scrim, text, edge, link. */
+  .cc-grid {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .cc-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .cc-grid > li {
+    display: flex;
+  }
+  .cc-card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    width: 100%;
+    min-height: 16.5rem;
+    overflow: hidden;
+    border-radius: 28px;
+    background:
+      var(--grain),
+      linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.012)),
+      var(--b-surface);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.4),
+      0 24px 48px -24px rgb(0 0 0 / 0.7);
+    transition:
+      transform 420ms var(--ease-spring),
+      box-shadow 600ms var(--ease-out);
+  }
+  @media (min-width: 1024px) {
+    .cc-card {
+      min-height: 18rem;
+    }
+  }
+  .cc-card[data-turned] {
+    transform: translateY(-3px);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.4),
+      0 32px 56px -24px rgb(0 0 0 / 0.8),
+      0 24px 64px -32px rgb(43 111 230 / 0.42);
+  }
+  /* the edge sits above the photograph, so it's always crisp: a 1px rim and a lit top, sky when turned */
+  .cc-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.09),
+      inset 0 1px 0 rgb(255 255 255 / 0.1);
+    transition: box-shadow 500ms var(--ease-out);
+  }
+  .cc-card[data-turned]::after {
+    box-shadow:
+      inset 0 0 0 1px rgb(127 176 247 / 0.32),
+      inset 0 1px 0 rgb(255 255 255 / 0.16);
+  }
+  /* Two photographs, stacked: the problem, a person in it, clearly visible at rest and only gently darkened; and the
+     solution, which cross-fades in over it as the card turns while the problem drifts back out of focus. */
+  .cc-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .cc-photo {
+    position: absolute;
+    inset: 0;
+    transition:
+      opacity 750ms var(--ease-out),
+      transform 1200ms var(--ease-out),
+      filter 750ms var(--ease-out);
+  }
+  .cc-photo img {
+    object-fit: cover;
+  }
+  .cc-photo-problem {
+    filter: brightness(0.78) saturate(0.88);
+  }
+  .cc-photo-solution {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  .cc-card[data-turned] .cc-photo-problem {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: brightness(0.5) saturate(0.6) blur(6px);
+  }
+  .cc-card[data-turned] .cc-photo-solution {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  /* narrower cards stack more text over the photograph, so they run a little taller */
+  @media (max-width: 1023px) {
+    .cc-card {
+      min-height: 19rem;
+    }
+  }
+  /* keeps the text legible over any photograph: shade at the top for the labels, deep shade at the foot for the
+     headline, and a breath of brand navy through the middle */
+  .cc-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgb(15 18 23 / 0.5) 0%, rgb(15 18 23 / 0.08) 30%, rgb(15 18 23 / 0.55) 62%, rgb(15 18 23 / 0.9) 100%),
+      linear-gradient(120deg, rgb(15 30 58 / 0.3), transparent 60%);
+  }
+  .cc-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 1.5rem 1.625rem 1.75rem;
+  }
+  @media (min-width: 1024px) {
+    .cc-body {
+      padding: 1.75rem 2rem 2rem;
+    }
+  }
+  .cc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  /* two states stacked in one cell: the cell is as big as the larger, so nothing shifts as they swap */
+  .cc-swap {
+    display: grid;
+  }
+  .cc-swap > * {
+    grid-area: 1 / 1;
+  }
+  .cc-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--b-slate);
+  }
+  .cc-label-on {
+    gap: 0.4375rem;
+    color: #7fb0f7;
+  }
+  .cc-num {
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--b-ink);
+    opacity: 0.6;
+  }
+  .cc-arrow {
+    display: grid;
+    place-items: center;
+    width: 2.375rem;
+    height: 2.375rem;
+    border-radius: 13px;
+    color: var(--b-body);
+    background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
+    box-shadow: var(--edge);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transition:
+      color 300ms var(--ease-out),
+      background-color 300ms var(--ease-out);
+  }
+  .cc-arrow svg {
+    transition: transform 520ms var(--ease-spring);
+  }
+  .cc-card[data-turned] .cc-arrow {
+    color: #fff;
+    background: var(--grain), linear-gradient(180deg, rgb(127 176 247 / 0.3), rgb(43 111 230 / 0.22));
+  }
+  .cc-card[data-turned] .cc-arrow svg {
+    transform: rotate(-45deg);
+  }
+  .cc-heading {
+    display: grid;
+    max-width: 30rem;
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 1.15rem + 1vw, 1.875rem);
+    font-weight: 560;
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    color: var(--b-ink);
+  }
+  .cc-line {
+    grid-area: 1 / 1;
+    align-self: end;
+  }
+  .cc-word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  /* each letter rolls inside its own window: clipped above and below only, so tight tracking never trims a glyph */
+  .cc-letter {
+    display: inline-block;
+    vertical-align: top;
+    clip-path: inset(0 -0.2em);
+  }
+  .cc-glyph {
+    display: inline-block;
+    white-space: pre;
+  }
+  .cc-text {
+    max-width: 30rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--b-body);
+    text-wrap: pretty;
+  }
+  .cc-text-on {
+    color: rgb(214 228 252 / 0.84);
+  }
+  /* the card takes keyboard focus itself (focus turns it); its ring traces the card's edge */
+  .cc-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cc-card:focus-visible {
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cc-card,
+    .cc-card[data-turned],
+    .cc-photo,
+    .cc-card[data-turned] .cc-photo,
+    .cc-card[data-turned] .cc-arrow svg {
+      transform: none;
+    }
+  }
+
+  /* ------------------------------------------------------------- 02 · services: the bento */
+  /* Four columns on desktop with the two wide cards at opposite corners, two on tablets, one on phones. Each card is
+     frosted glass (surface #191c22 with a navy #182b4d wash from its top corner) behind a 1px specular edge. Over a
+     card, a soft light follows the pointer inside it and along that edge, and the card swells 1% on a spring. */
+  .bento {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .bento-wide {
+      grid-column: span 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .bento {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .bento > li {
+    display: flex;
+  }
+  .svc {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.75rem;
+    border-radius: 26px;
+    background:
+      var(--grain),
+      radial-gradient(120% 90% at 0% 0%, rgb(24 43 77 / 0.55), transparent 62%),
+      linear-gradient(180deg, rgb(25 28 34 / 0.8), rgb(25 28 34 / 0.66));
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.4),
+      0 24px 48px -24px rgb(0 0 0 / 0.7);
+    transition:
+      transform 480ms var(--ease-spring),
+      box-shadow 500ms var(--ease-out);
+  }
+  @media (min-width: 1024px) {
+    .svc {
+      padding: 2rem;
+    }
+  }
+  /* the resting edge: a 1px rim and a lit top */
+  .svc::before,
+  .svc::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .svc::before {
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.08),
+      inset 0 1px 0 rgb(255 255 255 / 0.1);
+  }
+  /* the edge where the pointer is: the same 1px band, masked to the border, lit in sky around the pointer */
+  .svc::after {
+    padding: 1px;
+    background: radial-gradient(16rem circle at var(--mx, 50%) var(--my, 0%), rgb(127 176 247 / 0.75), transparent 62%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out);
+  }
+  /* the light inside the card, under the content */
+  .svc-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(24rem circle at var(--mx, 50%) var(--my, 0%), rgb(127 176 247 / 0.12), transparent 55%);
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out);
+    pointer-events: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .svc:hover {
+      transform: scale(1.01);
+      box-shadow:
+        0 1px 2px rgb(0 0 0 / 0.4),
+        0 32px 60px -28px rgb(0 0 0 / 0.8),
+        0 24px 60px -34px rgb(43 111 230 / 0.38);
+    }
+    .svc:hover::after,
+    .svc:hover .svc-glow {
+      opacity: 1;
+    }
+    .svc:hover .go {
+      transform: translateX(4px);
+    }
+  }
+  .svc:active {
+    transform: scale(0.995);
+    transition-duration: 120ms;
+  }
+  .svc .go {
+    transition: transform 320ms var(--ease-spring);
+  }
+  .svc-name {
+    font-family: var(--font-heading);
+    font-size: 1.375rem;
+    font-weight: 560;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--b-ink);
+  }
+  .svc-text {
+    max-width: 44ch;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--b-body);
+  }
+  .svc-chip {
+    padding: 0.25rem 0.625rem;
+    border-radius: 9px;
+    font-size: 0.75rem;
+    color: var(--b-slate);
+    background: rgb(255 255 255 / 0.03);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  }
+
+  /* ------------------------------------------------------------- 03 · see it working: tabs and the viewer */
+  /* The section is lit once, faintly, from behind the viewer: brand navy at 12%. */
+  .demos {
+    background:
+      radial-gradient(60rem 34rem at 50% 62%, rgb(27 49 96 / 0.12), transparent 70%),
+      radial-gradient(40rem 24rem at 12% 0%, rgb(27 49 96 / 0.12), transparent 70%),
+      var(--b-ground);
+  }
+  /* the segmented control: a recessed track, the chosen tab lifted on a glass pill that glides between tabs */
+  /* centred by the control's own auto margins, not justify-content, so when it overflows it scrolls from its start */
+  .seg-scroll {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 0.25rem var(--gutter);
+  }
+  .seg-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .seg {
+    display: inline-flex;
+    flex: none;
+    gap: 0.125rem;
+    margin-inline: auto;
+    padding: 0.25rem;
+    border-radius: 14px;
+    background: rgb(0 0 0 / 0.28);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.07),
+      inset 0 1px 2px rgb(0 0 0 / 0.45),
+      0 1px 0 rgb(255 255 255 / 0.04);
+  }
+  .seg-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.375rem;
+    padding-inline: 0.9375rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.006em;
+    white-space: nowrap;
+    color: var(--b-body);
+    transition: color 200ms var(--ease-out);
+  }
+  .seg-tab:hover,
+  .seg-tab[aria-selected="true"] {
+    color: var(--b-ink);
+  }
+  .seg-tab:focus-visible {
+    outline-offset: 1px;
+  }
+  .seg-pill {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.08));
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.1),
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      0 1px 2px rgb(0 0 0 / 0.5),
+      0 6px 16px -6px rgb(0 0 0 / 0.6);
+  }
+  .seg-icon,
+  .seg-text {
+    position: relative;
+    z-index: 1;
+  }
+  .seg-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--b-slate);
+    transition: color 200ms var(--ease-out);
+  }
+  .seg-tab[aria-selected="true"] .seg-icon {
+    color: #7fb0f7;
+  }
+  /* the viewer: every panel stacked in one cell, so it's always as tall as the tallest; the chosen one fades in */
+  .demo-stack {
+    display: grid;
+  }
+  .demo-panel {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 180ms var(--ease-out),
+      visibility 0s linear 180ms;
+  }
+  .demo-panel[data-active] {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 180ms var(--ease-out),
+      visibility 0s;
+  }
+  .demo-panel:focus-visible {
+    outline-offset: 6px;
+    border-radius: 24px;
+  }
+  /* a macOS-style window in dark glass */
+  .mac {
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--grain), linear-gradient(180deg, rgb(30 34 41 / 0.86), rgb(18 21 27 / 0.92));
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+    box-shadow:
+      var(--edge),
+      0 2px 4px rgb(0 0 0 / 0.4),
+      0 50px 100px -40px rgb(0 0 0 / 0.9);
+  }
+  .mac-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 2.75rem;
+    padding-inline: 1rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.06);
+    background: rgb(255 255 255 / 0.02);
+  }
+  .mac-lights {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .mac-lights i {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.3);
+  }
+  .mac-lights i:nth-child(1) {
+    background: #ff5f57;
+  }
+  .mac-lights i:nth-child(2) {
+    background: #febc2e;
+  }
+  .mac-lights i:nth-child(3) {
+    background: #28c840;
+  }
+  .mac-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--b-slate);
+  }
+  .mac-tag {
+    margin-left: auto;
+    padding: 0.125rem 0.5rem;
+    border-radius: 7px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--b-slate);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  }
+  @media (max-width: 639px) {
+    .mac-title {
+      display: none;
+    }
+  }
+  .mac-body {
+    position: relative;
+    height: clamp(20rem, 38vw, 30rem);
+    overflow: hidden;
+  }
+  @media (max-width: 767px) {
+    .mac-body {
+      height: auto;
+      min-height: 20rem;
+    }
+  }
+  .demo-caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+    margin-top: 1.75rem;
+    padding-inline: 0.25rem;
+  }
+  .demo-title {
+    font-family: var(--font-heading);
+    font-size: 1.375rem;
+    font-weight: 560;
+    letter-spacing: -0.025em;
+    color: var(--b-ink);
+  }
+  .demo-text {
+    max-width: 52ch;
+    margin-top: 0.375rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--b-body);
+  }
+
+  /* ------------------------------------------------------------- 03 · grey-box wireframes (demo-wireframes.tsx) */
+  .wf-split {
+    display: grid;
+    gap: 1rem;
+    height: 100%;
+    padding: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .wf-split {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      padding: 1.5rem;
+    }
+    .wf-split-even {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    .wf-side {
+      display: none !important;
+    }
+  }
+  .wf-pad {
+    padding: 1.25rem;
+  }
+  .wf-pad-sm {
+    padding: 0.75rem;
+  }
+  .wf-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    min-height: 0;
+  }
+  .wf-stack-sm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .wf-block {
+    border-radius: 14px;
+    corner-shape: squircle;
+    background: rgb(255 255 255 / 0.025);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  }
+  .wf-accent {
+    background: linear-gradient(180deg, rgb(127 176 247 / 0.14), rgb(43 111 230 / 0.08));
+    box-shadow: inset 0 0 0 1px rgb(127 176 247 / 0.32);
+  }
+  .wf-line {
+    display: block;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.07);
+  }
+  .wf-line-strong {
+    background: rgb(255 255 255 / 0.15);
+  }
+  .wf-dot {
+    display: block;
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.1);
+  }
+  .wf-label {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--b-slate);
+  }
+  .wf-q {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    color: var(--b-ink);
+  }
+  .wf-progress {
+    display: flex;
+    gap: 0.375rem;
+  }
+  .wf-progress i {
+    height: 0.25rem;
+    flex: 1;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.08);
+  }
+  .wf-progress i[data-on] {
+    background: #7fb0f7;
+  }
+  .wf-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+  .wf-option {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem;
+  }
+  .wf-option-text {
+    font-size: 0.8125rem;
+    color: var(--b-body);
+  }
+  .wf-accent .wf-dot {
+    background: #7fb0f7;
+    box-shadow: 0 0 0 3px rgb(127 176 247 / 0.2);
+  }
+  .wf-button {
+    width: 7rem;
+    height: 2.25rem;
+    border-radius: 11px;
+  }
+  .wf-button-wide {
+    width: 100%;
+  }
+  /* automations */
+  .wf-toggle {
+    padding: 0.3125rem 0.75rem;
+    border-radius: 9px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--b-slate);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  }
+  .wf-toggle[data-on] {
+    color: var(--b-ink);
+    background: rgb(255 255 255 / 0.08);
+  }
+  .wf-flow {
+    flex: 1;
+    width: 100%;
+    max-width: 52rem;
+    min-height: 0;
+    margin-inline: auto;
+  }
+  .wf-node {
+    fill: rgb(255 255 255 / 0.03);
+    stroke: rgb(255 255 255 / 0.12);
+    stroke-width: 1;
+  }
+  .wf-node-on {
+    fill: rgb(43 111 230 / 0.12);
+    stroke: rgb(127 176 247 / 0.45);
+  }
+  .wf-node-text {
+    font: 500 15px var(--font-sans);
+    fill: var(--b-ink);
+  }
+  .wf-edge {
+    fill: none;
+    stroke: rgb(255 255 255 / 0.14);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 5;
+  }
+  .wf-edge-on {
+    stroke: rgb(127 176 247 / 0.6);
+    stroke-dasharray: none;
+  }
+  /* crm */
+  .wf-app {
+    display: flex;
+    height: 100%;
+  }
+  .wf-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 12rem;
+    flex: none;
+    padding: 1.25rem 0.75rem;
+    border-right: 1px solid rgb(255 255 255 / 0.06);
+  }
+  .wf-rail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: 10px;
+  }
+  .wf-rail-on {
+    background: rgb(127 176 247 / 0.12);
+  }
+  .wf-rail-on .wf-dot {
+    background: #7fb0f7;
+  }
+  .wf-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+  .wf-kanban {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+  @media (max-width: 639px) {
+    .wf-stats,
+    .wf-kanban {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  /* websites */
+  .wf-browser {
+    height: 100%;
+    overflow: hidden;
+  }
+  .wf-browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  }
+  .wf-hero {
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+    padding-block: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .wf-hero {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+  }
+  .wf-image {
+    height: 9rem;
+    background:
+      radial-gradient(80% 90% at 70% 20%, rgb(127 176 247 / 0.12), transparent 70%),
+      rgb(255 255 255 / 0.03);
+  }
+  .wf-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+  .wf-toast {
+    position: absolute;
+    right: 2.5rem;
+    bottom: 2.5rem;
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow:
+      inset 0 0 0 1px rgb(127 176 247 / 0.32),
+      0 20px 40px -16px rgb(0 0 0 / 0.8);
+  }
+  .wf-toast .wf-label {
+    color: #7fb0f7;
+  }
+  .wf-toast-text {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--b-ink);
+  }
+  /* ecommerce */
+  .wf-product {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding-block: 0.375rem;
+  }
+  .wf-thumb {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    border-radius: 10px;
+  }
+  .wf-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.3125rem 0.625rem;
+    border-radius: 9px;
+    font-size: 0.8125rem;
+    color: var(--b-slate);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  }
+  .wf-stepper b {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--b-ink);
+  }
+  .wf-rule {
+    height: 1px;
+    background: rgb(255 255 255 / 0.06);
+  }
+  /* seo */
+  .wf-bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 82%;
+    padding: 0.75rem 0.875rem;
+    border-radius: 14px;
+    border-top-left-radius: 4px;
+    background: rgb(43 111 230 / 0.16);
+    box-shadow: inset 0 0 0 1px rgb(127 176 247 / 0.22);
+  }
+  .wf-bubble-them {
+    align-self: flex-end;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 4px;
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+  }
+  .wf-chart {
+    width: 100%;
+    height: 7.5rem;
+  }
+  .wf-chart-line {
+    fill: none;
+    stroke: #7fb0f7;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+  .wf-chart-fill {
+    fill: rgb(127 176 247 / 0.1);
+  }
+
   /* ------------------------------------------------------------- one system: the tools, the beam, the app */
   .system {
     position: relative;
     overflow: clip;
     background:
-      radial-gradient(56rem 30rem at 50% 18%, rgb(27 49 96 / 0.7), transparent 70%),
-      radial-gradient(48rem 34rem at 50% 78%, rgb(43 111 230 / 0.2), transparent 70%),
+      radial-gradient(56rem 30rem at 50% 18%, rgb(24 43 77 / 0.4), transparent 70%),
       var(--b-ground);
   }
   .system::before {
@@ -594,36 +1426,35 @@
     position: absolute;
     inset: 0 0 auto 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgb(127 176 247 / 0.42) 50%, transparent);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.09) 50%, transparent);
   }
   .tool-row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.625rem;
+    gap: 0.5rem;
     max-width: 50rem;
     margin-inline: auto;
   }
   .tool {
     position: relative;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
+    padding: 0.5rem 0.875rem;
+    border-radius: 12px;
     font-size: 0.84375rem;
     font-weight: 500;
     white-space: nowrap;
     color: var(--b-ink);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
-    border: 1px solid rgb(255 255 255 / 0.1);
+    background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.02));
     box-shadow:
-      inset 0 1px 0 rgb(127 176 247 / 0.22),
-      0 10px 24px -14px rgb(0 0 0 / 0.8);
+      var(--edge),
+      0 8px 20px -10px rgb(0 0 0 / 0.8);
   }
   .beam {
     position: relative;
     width: 1px;
     height: 5rem;
     margin: 1.5rem auto 1.75rem;
-    background: linear-gradient(180deg, transparent, rgb(127 176 247 / 0.55) 40%, rgb(43 111 230 / 0.95));
+    background: linear-gradient(180deg, transparent, rgb(201 221 253 / 0.3) 40%, rgb(127 176 247 / 0.6));
     view-timeline: --beam;
   }
   .beam::after {
@@ -635,7 +1466,7 @@
     height: 5px;
     border-radius: 50%;
     background: #c9ddfd;
-    box-shadow: 0 0 12px 3px rgb(127 176 247 / 0.8);
+    box-shadow: 0 0 8px 1px rgb(127 176 247 / 0.5);
     opacity: 0;
   }
   @supports (animation-timeline: view()) {
@@ -684,40 +1515,40 @@
     inset: 4% 6% auto;
     height: 80%;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgb(43 111 230 / 0.55), rgb(27 49 96 / 0.35) 60%, transparent);
-    filter: blur(52px);
+    background: radial-gradient(closest-side, rgb(127 176 247 / 0.08), transparent);
+    filter: blur(60px);
     pointer-events: none;
   }
   .dash {
     position: relative;
-    border-radius: 1.25rem;
+    border-radius: 24px;
     overflow: hidden;
-    background: linear-gradient(180deg, rgb(33 37 44 / 0.82), rgb(20 23 29 / 0.88));
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-    backdrop-filter: blur(24px) saturate(160%);
+    background: var(--grain), linear-gradient(180deg, rgb(30 34 41 / 0.86), rgb(18 21 27 / 0.92));
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
     box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.1),
-      0 2px 4px rgb(0 0 0 / 0.35),
-      0 60px 120px -40px rgb(0 0 0 / 0.85),
-      0 40px 110px -50px rgb(43 111 230 / 0.55);
-  }
-  .dash::after {
-    --ring: linear-gradient(180deg, rgb(127 176 247 / 0.5), rgb(127 176 247 / 0.1) 30%, rgb(255 255 255 / 0.06));
+      var(--edge),
+      0 2px 4px rgb(0 0 0 / 0.4),
+      0 50px 100px -40px rgb(0 0 0 / 0.9);
   }
   .dash-line {
-    border-color: rgb(255 255 255 / 0.07);
+    border-color: rgb(255 255 255 / 0.06);
   }
   .dash-card {
-    border-radius: 0.75rem;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.025));
-    border: 1px solid rgb(255 255 255 / 0.08);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 0.03);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.06),
+      inset 0 1px 0 rgb(255 255 255 / 0.04);
   }
 
   /* ------------------------------------------------------------- reduced motion and transparency */
   @media (prefers-reduced-transparency: reduce) {
+    .nav-pill::before,
     .mega,
-    .nav-sheet {
+    .nav-sheet,
+    .btn-glass,
+    .dash {
       background: var(--b-surface);
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
@@ -728,8 +1559,8 @@
     .mega,
     .mega[data-open],
     .btn-spring,
-    .spot,
-    .spot .go {
+    .svc,
+    .svc .go {
       transition-duration: 0ms;
     }
   }

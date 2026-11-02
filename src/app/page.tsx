@@ -1,12 +1,12 @@
 // Home: the original promise beside the beating orb; the four leaks; every tool pulled into one system, shown as
-// the app itself; six services; one order start to finish; how we work; real clients; honest prices; one place to start.
+// the app itself; six services; each one working; how we work; real clients; honest prices; one place to start.
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Hero } from "@/components/home/hero"
 import { Leaks } from "@/components/home/leaks"
 import { SystemSection } from "@/components/home/system-section"
 import { ServicesBento } from "@/components/home/services-bento"
-import { OrderJourney } from "@/components/home/order-journey"
+import { SeeItWorking } from "@/components/home/see-it-working"
 import { ProcessBand } from "@/components/home/process-band"
 import { ClientsGrid } from "@/components/home/clients-grid"
 import { PlanCards } from "@/components/home/plan-cards"
@@ -31,7 +31,7 @@ export default function Home() {
         </div>
       </section>
 
-      <OrderJourney />
+      <SeeItWorking />
       <ProcessBand />
 
       <section className="section lit-a edge" aria-labelledby="clients-title">

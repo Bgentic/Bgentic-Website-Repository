@@ -5,10 +5,17 @@
 //  - it never takes pointer events: it listens on the window and reacts only while the pointer is over it
 //  - it draws only while something moves (the pointer settling, a ripple travelling) and stops off screen
 //  - ripples can also be sent from code, so other parts of the page can move through it
+//  - it can be lit: a point light (the hero's orb) brightens the lines near it, falling off into shadow
 //  - reduced motion draws one still grid
 import * as React from "react"
+import { clamp, hexToRgb } from "@/lib/canvas"
+import { REDUCED_MOTION } from "@/lib/media"
 
-export type KineticGridHandle = { ripple: (clientX: number, clientY: number, strength?: number) => void }
+export type KineticGridHandle = {
+  ripple: (clientX: number, clientY: number, strength?: number) => void
+  /** a point light in viewport coordinates; the grid is brightest under it and dark beyond its reach */
+  light: (clientX: number, clientY: number, reach: number) => void
+}
 
 type Props = {
   /** grid spacing, CSS px */
@@ -31,11 +38,6 @@ const BAND = 44 // ripple thickness, px
 const AMP = 14 // ripple push at full strength, px
 const LEVELS = 5 // heat buckets, so hot lines and dots draw in a handful of paths
 
-function rgb(hex: string) {
-  const n = parseInt(hex.replace("#", ""), 16)
-  return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`
-}
-
 export function KineticGrid({
   cell = 56,
   radius = 220,
@@ -55,9 +57,10 @@ export function KineticGrid({
     const canvas = ref.current
     const ctx = canvas?.getContext("2d")
     if (!canvas || !ctx) return
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches
-    const L = rgb(line)
-    const G = rgb(glow)
+    const reduced = matchMedia(REDUCED_MOTION).matches
+    // colours as "r,g,b", ready for rgba() at any alpha
+    const L = hexToRgb(line).join(",")
+    const G = hexToRgb(glow).join(",")
 
     let W = 0
     let H = 0
@@ -72,6 +75,7 @@ export function KineticGrid({
     const ripples: { x: number; y: number; age: number; k: number }[] = []
     const ptr = { cx: 0, cy: 0, tx: 0, ty: 0, x: 0, y: 0, on: 0, target: 0, seen: false }
     let visible = true
+    let lamp: { x: number; y: number; r: number } | null = null
     let raf = 0
     let last = 0
 
@@ -160,27 +164,42 @@ export function KineticGrid({
     const draw = () => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, W, H)
-      // resting lines, one path
-      ctx.lineWidth = 1
-      ctx.strokeStyle = `rgba(${L},0.075)`
-      ctx.beginPath()
+      // resting lines and dots, built once and drawn twice: faint everywhere, then lit by the lamp
+      const lines = new Path2D()
       for (let j = 0; j < rows; j++) {
         const o = j * cols
-        ctx.moveTo(x[o], y[o])
-        for (let i = 1; i < cols; i++) ctx.lineTo(x[o + i], y[o + i])
+        lines.moveTo(x[o], y[o])
+        for (let i = 1; i < cols; i++) lines.lineTo(x[o + i], y[o + i])
       }
       for (let i = 0; i < cols; i++) {
-        ctx.moveTo(x[i], y[i])
-        for (let j = 1; j < rows; j++) ctx.lineTo(x[j * cols + i], y[j * cols + i])
+        lines.moveTo(x[i], y[i])
+        for (let j = 1; j < rows; j++) lines.lineTo(x[j * cols + i], y[j * cols + i])
       }
-      ctx.stroke()
-      // resting dots at every crossing
-      ctx.fillStyle = `rgba(${L},0.22)`
-      for (let k = 0; k < x.length; k++) ctx.fillRect(x[k] - 0.75, y[k] - 0.75, 1.5, 1.5)
+      const dots = new Path2D()
+      for (let k = 0; k < x.length; k++) dots.rect(x[k] - 0.75, y[k] - 0.75, 1.5, 1.5)
+      ctx.lineWidth = 1
+      ctx.strokeStyle = `rgba(${L},0.045)`
+      ctx.stroke(lines)
+      ctx.fillStyle = `rgba(${L},0.14)`
+      ctx.fill(dots)
+      if (lamp) {
+        const { x: lx, y: ly, r: lr } = lamp
+        const lit = (a: number) => {
+          const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, lr)
+          g.addColorStop(0, `rgba(${L},${a})`)
+          g.addColorStop(0.45, `rgba(${L},${a * 0.4})`)
+          g.addColorStop(1, `rgba(${L},0)`)
+          return g
+        }
+        ctx.strokeStyle = lit(0.13)
+        ctx.stroke(lines)
+        ctx.fillStyle = lit(0.32)
+        ctx.fill(dots)
+      }
       // lit lines and dots, hottest last
       for (let b = 0; b < LEVELS; b++) {
         const a = (b + 1) / LEVELS
-        ctx.strokeStyle = `rgba(${G},${0.1 + 0.6 * a})`
+        ctx.strokeStyle = `rgba(${G},${0.06 + 0.38 * a})`
         ctx.beginPath()
         for (let j = 0; j < rows; j++)
           for (let i = 0; i < cols; i++) {
@@ -195,13 +214,13 @@ export function KineticGrid({
             }
           }
         ctx.stroke()
-        ctx.fillStyle = `rgba(${G},${0.35 + 0.65 * a})`
-        ctx.shadowColor = `rgba(${G},0.9)`
-        ctx.shadowBlur = 10 * a
+        ctx.fillStyle = `rgba(${G},${0.2 + 0.5 * a})`
+        ctx.shadowColor = `rgba(${G},0.6)`
+        ctx.shadowBlur = 4 * a
         ctx.beginPath()
         for (let k = 0; k < x.length; k++) {
           if (bucket(heat[k]) !== b) continue
-          const s = 1.2 + 1.6 * a
+          const s = 1 + 1.1 * a
           ctx.moveTo(x[k] + s, y[k])
           ctx.arc(x[k], y[k], s, 0, Math.PI * 2)
         }
@@ -256,9 +275,15 @@ export function KineticGrid({
       ripple(clientX, clientY, strength = 1) {
         if (reduced) return
         const r = canvas.getBoundingClientRect()
-        ripples.push({ x: clientX - r.left, y: clientY - r.top, age: 0, k: Math.min(1, Math.max(0, strength)) })
+        ripples.push({ x: clientX - r.left, y: clientY - r.top, age: 0, k: clamp(strength, 0, 1) })
         if (ripples.length > 6) ripples.shift()
         kick()
+      },
+      light(clientX, clientY, reach) {
+        const r = canvas.getBoundingClientRect()
+        lamp = { x: clientX - r.left, y: clientY - r.top, r: reach }
+        step(0)
+        draw()
       },
     }
     const onDown = (e: PointerEvent) => {

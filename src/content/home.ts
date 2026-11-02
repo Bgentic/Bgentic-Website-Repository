@@ -24,30 +24,48 @@ export const leaks = {
   title: "Where the week goes",
   intro:
     "Most businesses we meet aren't short of work. They're short of the hours that disappear between the work. Four leaks come up again and again.",
+  // Each leak's two images: the problem, a person living it (Unsplash, free under the Unsplash License, photographers
+  // credited alongside), and the fix (a Bgentic UI in /public/images/leaks, or a photograph).
   rows: [
     {
       problem: "Calls ring out after five.",
       detail: "Enquiries wait until someone is free, and by then they've called the next business on Google.",
-      fix: "Every call and message answered, day or night.",
+      fix: "Every call answered, day or night.",
       how: "An AI receptionist replies by voice or SMS, asks the right questions and books the job into your calendar.",
+      images: {
+        problem: "https://images.unsplash.com/photo-1507099985932-87a4520ed1d5", // a man on a call, Andreas Klassen
+        solution: "/images/leaks/call-booked.png", // the AI receptionist's call, booked
+      },
     },
     {
-      problem: "Orders get typed in twice.",
+      problem: "Orders typed in twice.",
       detail: "The job lives in the inbox, the spreadsheet and Xero, and someone rekeys it into each one.",
       fix: "One pipeline, synced for you.",
       how: "Enquiries, quotes and orders sit in one CRM and flow into SAP, Xero or MYOB without anyone retyping them.",
+      images: {
+        problem: "https://images.unsplash.com/photo-1759752393975-7ca7b302fcc6", // typing into a spreadsheet, Bluestonex
+        solution: "https://images.unsplash.com/photo-1551288049-bebda4e38f71", // a dark analytics dashboard, Luke Chesser
+      },
     },
     {
       problem: "Follow-up lives in someone's head.",
       detail: "Reminders, backorder updates and no-show calls happen when someone remembers.",
       fix: "Follow-up that runs on time.",
       how: "Confirmations, ETA alerts, no-show recovery and review requests go out on their own, on schedule.",
+      images: {
+        problem: "https://images.unsplash.com/photo-1758874572670-63042c5448c6", // swamped, head in hands at a laptop, Vitaly Gariev
+        solution: "/images/leaks/follow-up-autopilot.png", // follow-ups sending on their own
+      },
     },
     {
       problem: "Five apps, none of them talking.",
       detail: "Calls, emails, DMs, bookings and invoices each live somewhere different.",
       fix: "One place for all of it.",
       how: "A shared inbox, calendar, pipeline and payments, set up around how your team already works.",
+      images: {
+        problem: "https://images.unsplash.com/photo-1758520144705-b39e11ff32e3", // head in hands at a desk at night, Vitaly Gariev
+        solution: "/images/leaks/image_2f09a9.png", // the Bgentic CRM, every channel in one pipeline (supplied)
+      },
     },
   ],
 }
@@ -63,6 +81,12 @@ export const engine = {
 export const servicesIntro = {
   title: "Six services, one system.",
   intro: "Start with the one that hurts most. Each is built to plug into the others, and we keep all of it running.",
+}
+
+// 03 · See it working: one tab per service, each with its demo (the demo copy lives in services.ts).
+export const demos = {
+  title: "See it working",
+  intro: "Every service comes with a demo. Pick one to see what it does on an ordinary day.",
 }
 
 // The best operational story from the old site, kept nearly word for word. Fictional customer, labelled Example.

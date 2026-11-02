@@ -1,10 +1,9 @@
 import * as React from "react"
+import { REDUCED_MOTION } from "@/lib/media"
 
 // prefers-reduced-motion as a live value; false on the server, so the first paint is the full design.
-const QUERY = "(prefers-reduced-motion: reduce)"
-
 function subscribe(onChange: () => void) {
-  const q = window.matchMedia(QUERY)
+  const q = window.matchMedia(REDUCED_MOTION)
   q.addEventListener("change", onChange)
   return () => q.removeEventListener("change", onChange)
 }
@@ -12,7 +11,7 @@ function subscribe(onChange: () => void) {
 export function useReducedMotion() {
   return React.useSyncExternalStore(
     subscribe,
-    () => window.matchMedia(QUERY).matches,
+    () => window.matchMedia(REDUCED_MOTION).matches,
     () => false,
   )
 }

@@ -194,11 +194,11 @@ export function SiteHeader() {
             <Link
               href={BOOK_CALL_HREF}
               tabIndex={menu ? 0 : -1}
-              className="group relative flex flex-col justify-end overflow-hidden rounded-2xl p-6 text-white"
+              className="sq group relative flex flex-col justify-end overflow-hidden rounded-[18px] p-6 text-white"
               style={{
                 background:
-                  "radial-gradient(18rem 14rem at 80% 10%, rgb(43 111 230 / 0.55), transparent 70%), linear-gradient(180deg, #1b3160, #0f1e3a)",
-                boxShadow: "inset 0 1px 0 rgb(255 255 255 / 0.12), inset 0 0 0 1px rgb(127 176 247 / 0.14)",
+                  "radial-gradient(18rem 14rem at 80% 0%, rgb(201 221 253 / 0.1), transparent 70%), linear-gradient(180deg, #1b3160, #0f1e3a)",
+                boxShadow: "inset 0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.1)",
               }}
             >
               {/* the card is navy in both themes, so its text uses the fixed light tints, not theme tokens */}
