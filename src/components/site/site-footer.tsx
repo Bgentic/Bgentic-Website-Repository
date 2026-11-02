@@ -27,8 +27,7 @@ export function SiteFooter() {
     <footer className="border-t hairline bg-ground">
       <div className="container-b grid gap-12 py-16 md:grid-cols-12">
         <div className="md:col-span-4">
-          <Image src="/brand/bgentic-logo-on-light.svg" alt="Bgentic" width={74} height={28} unoptimized className="logo-on-light h-7 w-auto" />
-          <Image src="/brand/bgentic-logo-on-dark.svg" alt="Bgentic" width={74} height={28} unoptimized className="logo-on-dark h-7 w-auto" />
+          <Image src="/brand/bgentic-logo-on-dark.svg" alt="Bgentic" width={74} height={28} unoptimized className="h-7 w-auto" />
           <p className="mt-4 max-w-[26ch] text-[15px] text-body">AI built systems, managed. From Sydney, for Australian businesses.</p>
           <a href={`mailto:${CONTACT_EMAIL}`} className="link-quiet mt-4 inline-block text-[15px]">
             {CONTACT_EMAIL}

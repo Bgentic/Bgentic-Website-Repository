@@ -10,10 +10,11 @@ import {
 } from "lucide-react"
 import { LiveDesk } from "@/components/ui/live-desk"
 import { desk, deskEvents } from "@/content/home"
+import { cn } from "@/lib/utils"
 
-// The hero's product shot: one connected app, shown as a glowing frosted-glass window with the pipeline open, and
-// the live desk floating in front of it as a second depth layer. Example data throughout (the businesses are the
-// fictional ones from the old site's CRM preview), labelled as such.
+// The product shot: one connected app, shown as a glowing frosted-glass window with the pipeline open, and the live
+// desk floating in front of it as a second depth layer. Example data throughout (the businesses are the fictional
+// ones from the old site's CRM preview), labelled as such.
 const NAV = [
   { icon: Inbox, label: "Inbox", count: 4 },
   { icon: CalendarDays, label: "Calendar" },
@@ -61,9 +62,9 @@ const STATS = [
   { label: "Follow-ups due", value: "3" },
 ]
 
-export function DashboardShowcase() {
+export function DashboardShowcase({ className }: { className?: string }) {
   return (
-    <div className="dash-wrap mx-auto mt-16 max-w-[68rem] md:mt-20 xl:mb-16">
+    <div className={cn("dash-wrap reveal mx-auto max-w-[68rem] xl:mb-16", className)}>
       <div className="dash-glow" aria-hidden="true" />
       <figure className="dash" aria-label="Example: the Bgentic app with the sales pipeline open">
         <div className="dash-line flex items-center gap-3 border-b px-4 py-3">

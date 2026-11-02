@@ -4,7 +4,9 @@ import type { DeskEvent } from "@/components/ui/live-desk"
 
 
 export const hero = {
-  // The original bgentic.io hero, restored word for word at the user's request (2026-11-02).
+  // The original bgentic.io hero, restored word for word at the user's request (2026-11-02). The eyebrow keeps the
+  // consultancy positioning in the first line read.
+  eyebrow: "AI consultancy · Sydney",
   title: ["Your whole business,", "in one place."],
   lede: "Calendars, calls and messages, your CRM, website, ads, trade portals, and AI chat. Bgentic brings every part of your business together so you can run it all from one connected app.",
   primary: { label: "Book a discovery call", href: "/contact" },

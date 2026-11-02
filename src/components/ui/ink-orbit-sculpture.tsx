@@ -3,12 +3,15 @@
 // The cloud geometry (buildCloud) is the original, so seeds draw the same shapes. Around it:
 //  - decorative: no pointer or keyboard handlers; the page drives it through a small message handle (onReady)
 //  - drawn on black for a `screen`-blended layer, so it glows over any dark ground
+//  - no outline, spike lines or other chrome: just the ink and its glass core
 //  - two quality tiers (desktop, touch), a frame-rate cap, cached clouds and reversible morphs
+//  - a pulse (a shockwave ring and a small swell) separate from the reforge morph, so it can beat faster
 //  - it stays where it is placed: no scroll physics
 import * as React from "react"
 
 export type OrbCommand =
   | { type: "reforge"; seed: number }
+  | { type: "pulse"; strength?: number }
   | { type: "prewarm"; seed: number }
   | { type: "paused"; value: boolean }
   | { type: "lean"; yaw: number; pitch: number }
@@ -51,10 +54,9 @@ function fade(a: string, t: number, alpha = 1) {
   return `rgba(${Math.round(r * k)},${Math.round(g * k)},${Math.round(b * k)},${alpha})`
 }
 
-type Cloud = { core: Float32Array; grain: Float32Array; spikes: Float32Array }
+type Cloud = { core: Float32Array; grain: Float32Array }
 const CORE_N = 2800
 const GRAIN_N = 16000
-const SPIKE_N = 16
 const SPHERE_R = 0.3
 const NB = 7
 
@@ -152,16 +154,7 @@ function buildCloud(seed: number): Cloud {
     const r = rand() < 0.05 ? w * (1.3 + rand() * 1.6) : w * (0.35 + 0.82 * Math.sqrt(rand()))
     for (let a = 0; a < 3; a++) grain[g * 3 + a] = core[k * 4 + a] + o[a] * r
   }
-  const spikes = new Float32Array(SPIKE_N * 6)
-  for (let s = 0; s < SPIKE_N; s++) {
-    const k = Math.floor(rand() * CORE_N)
-    const p = [core[k * 4], core[k * 4 + 1], core[k * 4 + 2]]
-    const j = unit()
-    const dir = norm([p[0] + j[0] * 0.45, p[1] + j[1] * 0.45, p[2] + j[2] * 0.45])
-    const len = 0.18 + rand() * 0.42
-    spikes.set([p[0], p[1], p[2], p[0] + dir[0] * len, p[1] + dir[1] * len, p[2] + dir[2] * len], s * 6)
-  }
-  return { core, grain, spikes }
+  return { core, grain }
 }
 
 const clouds = new Map<number, Cloud>()
@@ -204,7 +197,8 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       fromSeed: NaN,
       toSeed: seed,
       morphT: 1,
-      ring: 0,
+      rings: [] as { t: number; k: number }[],
+      beat: 0,
       paused: false,
       dirty: true,
       lastT: 0,
@@ -268,9 +262,11 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       s.leanYaw += (s.tLeanYaw - s.leanYaw) * Math.min(1, dt * 3)
       s.leanPitch += (s.tLeanPitch - s.leanPitch) * Math.min(1, dt * 3)
       if (s.morphT < 1) s.morphT = Math.min(1, s.morphT + dt / 1.3)
-      if (s.ring > 0) s.ring = Math.max(0, s.ring - dt / 1.1)
+      for (const r of s.rings) r.t -= dt / 1.1
+      s.rings = s.rings.filter((r) => r.t > 0)
+      if (s.beat > 0) s.beat = Math.max(0, s.beat - dt / 0.7)
       const moving =
-        !reduced || s.morphT < 1 || s.ring > 0 || Math.abs(s.tLeanYaw - s.leanYaw) > 0.001 || Math.abs(s.tLeanPitch - s.leanPitch) > 0.001
+        !reduced || s.morphT < 1 || s.rings.length > 0 || s.beat > 0 || Math.abs(s.tLeanYaw - s.leanYaw) > 0.001 || Math.abs(s.tLeanPitch - s.leanPitch) > 0.001
       if (!moving && !s.dirty) {
         cancelAnimationFrame(raf)
         raf = 0
@@ -295,14 +291,23 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       ctx.clearRect(0, 0, W, H)
       const cx = W / 2
       const cy = H / 2
-      const scale = Math.min(W, H) * 0.34
+      // the heartbeat: a quick swell and settle on every pulse
+      const swell = s.beat > 0 ? Math.sin(Math.PI * (1 - s.beat)) * 0.035 : 0
+      const scale = Math.min(W, H) * 0.34 * (1 + swell)
       const zbin = (z: number) => clamp(Math.floor(((z + 1.25) / 2.5) * NB), 0, NB - 1)
-      if (s.ring > 0) {
-        const k = 1 - s.ring
-        ctx.strokeStyle = fade(accent, 0.2 + 0.7 * k, s.ring * 0.8)
-        ctx.lineWidth = Math.max(1, dpr * (1 + 2 * s.ring))
+      // shockwaves: a soft wide glow under a crisp line, both thinning and fading as they travel out
+      for (const r of s.rings) {
+        const k = 1 - r.t
+        const rad = scale * (0.32 + k * 1.25)
+        ctx.strokeStyle = fade(accent, 0.45 + 0.5 * k, r.t * 0.35 * r.k)
+        ctx.lineWidth = Math.max(2, dpr * (3 + 7 * r.t))
         ctx.beginPath()
-        ctx.arc(cx, cy, scale * (0.32 + k * 1.25), 0, Math.PI * 2)
+        ctx.arc(cx, cy, rad, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.strokeStyle = fade(accent, 0.15 + 0.7 * k, r.t * 0.85 * r.k)
+        ctx.lineWidth = Math.max(1, dpr * (1 + 2 * r.t))
+        ctx.beginPath()
+        ctx.arc(cx, cy, rad, 0, Math.PI * 2)
         ctx.stroke()
       }
       let n = 0
@@ -378,37 +383,6 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
           if (!isCore[i]) ctx.fillRect(px[i], py[i], gs, gs)
         }
       }
-      const spikes = (front: boolean) => {
-        ctx.lineWidth = Math.max(0.75, 0.8 * dpr)
-        for (let k = 0; k < SPIKE_N; k++) {
-          const o = k * 6
-          const sp = (q: number) => {
-            const arrA = A?.spikes
-            let x = B.spikes[o + q]
-            let y = B.spikes[o + q + 1]
-            let z = B.spikes[o + q + 2]
-            if (arrA) {
-              x = arrA[o + q] + (x - arrA[o + q]) * m
-              y = arrA[o + q + 1] + (y - arrA[o + q + 1]) * m
-              z = arrA[o + q + 2] + (z - arrA[o + q + 2]) * m
-            }
-            const [x1, y2, z2, sc] = proj(x, y, z)
-            return [cx + x1 * sc * scale, cy + y2 * sc * scale, z2]
-          }
-          const a = sp(0)
-          if (a[2] >= 0 !== front) continue
-          const e = sp(3)
-          const g = ctx.createLinearGradient(a[0], a[1], e[0], e[1])
-          g.addColorStop(0, fade(accent, front ? 0.1 : 0.5))
-          g.addColorStop(1, "rgba(0,0,0,1)")
-          ctx.strokeStyle = g
-          ctx.beginPath()
-          ctx.moveTo(a[0], a[1])
-          ctx.lineTo(e[0], e[1])
-          ctx.stroke()
-        }
-      }
-      spikes(false)
       for (let b = 0; b <= Math.floor(NB / 2); b++) pass(b)
       const rs = SPHERE_R * scale
       ctx.save()
@@ -447,13 +421,7 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       ctx.fillStyle = hl
       ctx.fillRect(cx - rs, cy - rs, rs * 2, rs * 2)
       ctx.restore()
-      ctx.strokeStyle = fade(accent, 0.45)
-      ctx.lineWidth = Math.max(1, dpr)
-      ctx.beginPath()
-      ctx.arc(cx, cy, rs, 0, Math.PI * 2)
-      ctx.stroke()
       for (let b = Math.floor(NB / 2) + 1; b < NB; b++) pass(b)
-      spikes(true)
     }
 
     const handle: OrbHandle = {
@@ -477,6 +445,14 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
           }
           return
         }
+        if (cmd.type === "pulse") {
+          if (reduced) return
+          s.rings.push({ t: 1, k: clamp(cmd.strength ?? 1, 0, 1) })
+          if (s.rings.length > 4) s.rings.shift()
+          s.beat = 1
+          schedule()
+          return
+        }
         if (cmd.type === "lean") {
           if (reduced) return
           s.tLeanYaw = clamp(cmd.yaw, -0.5, 0.5)
@@ -497,7 +473,10 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
           s.fromSeed = s.toSeed
           s.toSeed = cmd.seed
           s.morphT = reduced ? 1 : 0
-          s.ring = reduced ? 0 : 1
+          if (!reduced) {
+            s.rings.push({ t: 1, k: 1 })
+            s.beat = 1
+          }
         }
         s.dirty = true
         schedule()

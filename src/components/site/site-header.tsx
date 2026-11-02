@@ -8,7 +8,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button-variants"
-import { ThemeToggle } from "@/components/site/theme-toggle"
 import { ServiceIcon } from "@/components/site/service-icons"
 import { SERVICES } from "@/content/services"
 import { BOOK_CALL_HREF, LOGIN_HREF, NAV } from "@/content/site"
@@ -91,8 +90,7 @@ export function SiteHeader() {
     <div className="nav-shell">
       <header className="nav-pill" data-scrolled={scrolled || undefined}>
         <Link href="/" className="-m-1 mr-3 shrink-0 rounded-full p-1" aria-label="Bgentic home">
-          <Image src="/brand/bgentic-logo-on-light.svg" alt="" width={70} height={26} priority unoptimized className="logo-on-light h-[26px] w-auto" />
-          <Image src="/brand/bgentic-logo-on-dark.svg" alt="" width={70} height={26} unoptimized className="logo-on-dark h-[26px] w-auto" />
+          <Image src="/brand/bgentic-logo-on-dark.svg" alt="" width={70} height={26} priority unoptimized className="h-6.5 w-auto" />
         </Link>
 
         <nav aria-label="Main" className="relative hidden md:block" onPointerLeave={() => setHl((h) => ({ ...h, on: false }))}>
@@ -150,7 +148,6 @@ export function SiteHeader() {
           <a href={LOGIN_HREF} className="nav-item hidden md:inline-flex">
             Log in
           </a>
-          <ThemeToggle />
           <Link href={BOOK_CALL_HREF} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden sm:inline-flex")}>
             Book a call
           </Link>

@@ -10,7 +10,7 @@
 
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-geist), var(--font-sans);
 
   --color-ink: var(--b-ink);
   --color-body: var(--b-body);
@@ -162,14 +162,16 @@
       radial-gradient(60rem 30rem at 85% 0%, rgb(43 111 230 / 0.16), transparent 70%),
       linear-gradient(180deg, #1b3160 0%, #0f1e3a 70%);
   }
+  /* Dark only: the bands are the brand navy itself, lit from the top right and settling into the ground. */
   :root[data-theme="dark"] .band-navy {
-    --nv-ink: var(--b-ink);
-    --nv-body: var(--b-body);
-    --nv-quiet: var(--b-accent-text);
-    --nv-rule: rgb(255 255 255 / 0.08);
+    --nv-ink: #ffffff;
+    --nv-body: rgb(201 221 253 / 0.86);
+    --nv-quiet: #7fb0f7;
+    --nv-rule: rgb(127 176 247 / 0.16);
     background:
-      radial-gradient(60rem 30rem at 85% 0%, rgb(24 43 77 / 0.9), transparent 70%),
-      linear-gradient(180deg, #12151b 0%, #0f1217 70%);
+      radial-gradient(60rem 32rem at 88% -6%, rgb(43 111 230 / 0.3), transparent 68%),
+      radial-gradient(50rem 36rem at 0% 110%, rgb(43 111 230 / 0.12), transparent 70%),
+      linear-gradient(180deg, #1b3160 0%, #0f1e3a 62%, #0f1217 100%);
   }
   :root[data-theme="dark"] .band-surface {
     background: var(--b-column);
@@ -177,23 +179,27 @@
 
   /* ------------------------------------------------------------- typography */
 
+  /* Display sizes are set in Geist (--font-heading), lighter than the text face and tightly tracked. */
   .t-display {
+    font-family: var(--font-heading);
     font-size: clamp(2.75rem, 1.6rem + 3.9vw, 4.75rem);
-    font-weight: 650;
+    font-weight: 560;
     line-height: 1.02;
     letter-spacing: -0.038em;
   }
   .t-h1 {
+    font-family: var(--font-heading);
     font-size: clamp(2.5rem, 1.6rem + 3vw, 4rem);
-    font-weight: 650;
+    font-weight: 560;
     line-height: 1.04;
     letter-spacing: -0.035em;
   }
   .t-h2 {
+    font-family: var(--font-heading);
     font-size: clamp(2rem, 1.4rem + 2vw, 3.125rem);
-    font-weight: 640;
+    font-weight: 560;
     line-height: 1.06;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.035em;
   }
   .t-h3 {
     font-size: 1.25rem;
@@ -335,19 +341,6 @@
       background: #0f1e3a;
     }
   }
-  .logo-on-light,
-  .logo-on-dark {
-    display: block;
-  }
-  .logo-on-dark,
-  :root[data-theme="dark"] .logo-on-light,
-  .site-header[data-tone="navy"] .logo-on-light {
-    display: none;
-  }
-  :root[data-theme="dark"] .logo-on-dark,
-  .site-header[data-tone="navy"] .logo-on-dark {
-    display: block;
-  }
   .nav-link {
     font-size: 0.9375rem;
     font-weight: 500;
@@ -357,15 +350,6 @@
   .nav-link:hover,
   .nav-link[aria-current="page"] {
     color: currentColor;
-  }
-  .theme-toggle .icon-sun {
-    display: none;
-  }
-  :root[data-theme="dark"] .theme-toggle .icon-sun {
-    display: block;
-  }
-  :root[data-theme="dark"] .theme-toggle .icon-moon {
-    display: none;
   }
 
   /* ------------------------------------------------------------- hero */
