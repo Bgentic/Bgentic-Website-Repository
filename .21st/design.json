@@ -1,0 +1,325 @@
+{
+  "version": 1,
+  "project": {
+    "name": "bgentic-website",
+    "productType": null,
+    "stack": [
+      "nextjs",
+      "react",
+      "shadcn",
+      "tailwind-v4"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css"
+    ],
+    "components": [
+      "src/components/ui"
+    ],
+    "assets": [
+      "public/brand"
+    ],
+    "instructions": [
+      "DESIGN.md",
+      "PRODUCT.md",
+      "AGENTS.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light-and-dark",
+    "colors": {
+      "--color-ink": {
+        "value": "var(--b-ink)",
+        "source": "src/app/globals.css"
+      },
+      "--color-body": {
+        "value": "var(--b-body)",
+        "source": "src/app/globals.css"
+      },
+      "--color-slate": {
+        "value": "var(--b-slate)",
+        "source": "src/app/globals.css"
+      },
+      "--color-faint": {
+        "value": "var(--b-faint)",
+        "source": "src/app/globals.css"
+      },
+      "--color-ground": {
+        "value": "var(--b-ground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-surface": {
+        "value": "var(--b-surface)",
+        "source": "src/app/globals.css"
+      },
+      "--color-fill": {
+        "value": "var(--b-fill)",
+        "source": "src/app/globals.css"
+      },
+      "--color-line": {
+        "value": "var(--b-line)",
+        "source": "src/app/globals.css"
+      },
+      "--color-line-strong": {
+        "value": "var(--b-line-strong)",
+        "source": "src/app/globals.css"
+      },
+      "--color-brand": {
+        "value": "var(--b-accent)",
+        "source": "src/app/globals.css"
+      },
+      "--color-brand-hover": {
+        "value": "var(--b-accent-hover)",
+        "source": "src/app/globals.css"
+      },
+      "--color-brand-text": {
+        "value": "var(--b-accent-text)",
+        "source": "src/app/globals.css"
+      },
+      "--color-background": {
+        "value": "var(--background)",
+        "source": "src/app/globals.css"
+      },
+      "--color-foreground": {
+        "value": "var(--foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-card": {
+        "value": "var(--card)",
+        "source": "src/app/globals.css"
+      },
+      "--color-card-foreground": {
+        "value": "var(--card-foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-popover": {
+        "value": "var(--popover)",
+        "source": "src/app/globals.css"
+      },
+      "--color-popover-foreground": {
+        "value": "var(--popover-foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-primary": {
+        "value": "var(--primary)",
+        "source": "src/app/globals.css"
+      },
+      "--color-primary-foreground": {
+        "value": "var(--primary-foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-secondary": {
+        "value": "var(--secondary)",
+        "source": "src/app/globals.css"
+      },
+      "--color-secondary-foreground": {
+        "value": "var(--secondary-foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-muted": {
+        "value": "var(--muted)",
+        "source": "src/app/globals.css"
+      },
+      "--color-muted-foreground": {
+        "value": "var(--muted-foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-accent": {
+        "value": "var(--accent)",
+        "source": "src/app/globals.css"
+      },
+      "--color-accent-foreground": {
+        "value": "var(--accent-foreground)",
+        "source": "src/app/globals.css"
+      },
+      "--color-destructive": {
+        "value": "var(--destructive)",
+        "source": "src/app/globals.css"
+      },
+      "--color-border": {
+        "value": "var(--border)",
+        "source": "src/app/globals.css"
+      },
+      "--color-input": {
+        "value": "var(--input)",
+        "source": "src/app/globals.css"
+      },
+      "--color-ring": {
+        "value": "var(--ring)",
+        "source": "src/app/globals.css"
+      },
+      "--b-accent-hover": {
+        "value": "#1f5fcc",
+        "source": "src/app/globals.css"
+      },
+      "--background": {
+        "value": "var(--b-ground)",
+        "source": "src/app/globals.css"
+      },
+      "--foreground": {
+        "value": "var(--b-ink)",
+        "source": "src/app/globals.css"
+      },
+      "--card-foreground": {
+        "value": "var(--b-ink)",
+        "source": "src/app/globals.css"
+      },
+      "--popover-foreground": {
+        "value": "var(--b-ink)",
+        "source": "src/app/globals.css"
+      },
+      "--primary": {
+        "value": "var(--b-accent)",
+        "source": "src/app/globals.css"
+      },
+      "--primary-foreground": {
+        "value": "#ffffff",
+        "source": "src/app/globals.css"
+      },
+      "--secondary": {
+        "value": "var(--b-fill)",
+        "source": "src/app/globals.css"
+      },
+      "--secondary-foreground": {
+        "value": "var(--b-ink)",
+        "source": "src/app/globals.css"
+      },
+      "--muted": {
+        "value": "var(--b-fill)",
+        "source": "src/app/globals.css"
+      },
+      "--muted-foreground": {
+        "value": "var(--b-slate)",
+        "source": "src/app/globals.css"
+      },
+      "--accent": {
+        "value": "var(--b-fill)",
+        "source": "src/app/globals.css"
+      },
+      "--accent-foreground": {
+        "value": "var(--b-ink)",
+        "source": "src/app/globals.css"
+      },
+      "--destructive": {
+        "value": "var(--b-danger)",
+        "source": "src/app/globals.css"
+      },
+      "--border": {
+        "value": "var(--b-line)",
+        "source": "src/app/globals.css"
+      },
+      "--ring": {
+        "value": "var(--b-accent)",
+        "source": "src/app/globals.css"
+      },
+      "--st-accent-text": {
+        "value": "var(--b-accent-text)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "typography": {
+      "--font-sans": {
+        "value": "var(--font-inter), ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "source": "src/app/globals.css"
+      },
+      "--font-heading": {
+        "value": "var(--font-sans)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "spacing": {
+      "--gutter": {
+        "value": "clamp(1rem, 4vw, 2.5rem)",
+        "source": "src/app/globals.css"
+      },
+      "--container": {
+        "value": "80rem",
+        "source": "src/app/globals.css"
+      }
+    },
+    "radius": {
+      "--radius-sm": {
+        "value": "calc(var(--radius) * 0.6)",
+        "source": "src/app/globals.css"
+      },
+      "--radius-md": {
+        "value": "calc(var(--radius) * 0.8)",
+        "source": "src/app/globals.css"
+      },
+      "--radius-lg": {
+        "value": "var(--radius)",
+        "source": "src/app/globals.css"
+      },
+      "--radius-xl": {
+        "value": "calc(var(--radius) * 1.4)",
+        "source": "src/app/globals.css"
+      },
+      "--radius": {
+        "value": "0.75rem",
+        "source": "src/app/globals.css"
+      }
+    },
+    "shadows": {},
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [
+      "button",
+      "button-variants",
+      "ink-orbit-hero",
+      "ink-orbit-sculpture"
+    ],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [],
+    "avoid": []
+  },
+  "decisions": [],
+  "evidence": [
+    {
+      "fact": "components.installed",
+      "source": "src/components/ui"
+    },
+    {
+      "fact": "design.colorMode:light-and-dark",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "DESIGN.md"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "PRODUCT.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:shadcn",
+      "source": "components.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-11-02T05:57:02.966Z"
+}

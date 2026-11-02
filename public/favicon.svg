@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="5.2 9.17 28.28 28.28">
+  <!-- The Bgentic B (Logo/Logo Suite_Logo_Full_Colour.svg) on a square, trimmed to the mark so it fills the tab.
+       Navy on a light browser, white on a dark one; the blue is the same on both. -->
+  <style>
+    .ink { fill: #0f172a; }
+    .accent { fill: #3b82f6; }
+    @media (prefers-color-scheme: dark) { .ink { fill: #fff; } }
+  </style>
+  <path class="ink" d="M24.45,19.99c.75-1.07,1.2-2.36,1.2-3.77,0-3.6-2.9-6.51-6.49-6.55h0s-7.45,0-7.45,0c-1.13,0-2.04.91-2.04,2.04v16.19l8.99,9.05h.5s.51,0,.51,0c4.87,0,9.06-3.72,9.33-8.58.2-3.58-1.69-6.74-4.55-8.39Z"/>
+  <path class="accent" d="M16.74,27.9h-7.07s8.99,9.05,8.99,9.05v-7.14c0-1.06-.86-1.92-1.92-1.92Z"/>
+</svg>

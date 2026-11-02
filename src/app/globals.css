@@ -1,0 +1,550 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../styles/tokens.css";
+@import "../styles/depth.css";
+
+/* The theme lives on <html data-theme="dark">. `.dark` marks a region that is always dark (the navy bands), so
+   shadcn components inside one pick up their dark styles in either theme. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-ink: var(--b-ink);
+  --color-body: var(--b-body);
+  --color-slate: var(--b-slate);
+  --color-faint: var(--b-faint);
+  --color-ground: var(--b-ground);
+  --color-surface: var(--b-surface);
+  --color-fill: var(--b-fill);
+  --color-line: var(--b-line);
+  --color-line-strong: var(--b-line-strong);
+  --color-brand: var(--b-accent);
+  --color-brand-hover: var(--b-accent-hover);
+  --color-brand-text: var(--b-accent-text);
+  --color-danger: var(--b-danger);
+  --color-success: var(--b-success);
+  --color-warn: var(--b-warn);
+  --color-warn-ink: var(--b-warn-ink);
+  --color-warn-tint: var(--b-warn-tint);
+  --color-success-ink: var(--b-success-ink);
+  --color-success-tint: var(--b-success-tint);
+  --color-sky-100: var(--b-sky-100);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* shadcn's semantic names, pointed at the brand tokens. The dark theme needs no second copy: the tokens switch. */
+:root {
+  /* The accent's pressed step is the light theme's accent-600 in both themes: in the dark theme --b-accent-600
+     becomes a text tint, too light to carry a white label. */
+  --b-accent-hover: #1f5fcc;
+
+  --background: var(--b-ground);
+  --foreground: var(--b-ink);
+  --card: var(--b-surface);
+  --card-foreground: var(--b-ink);
+  --popover: var(--b-raised);
+  --popover-foreground: var(--b-ink);
+  --primary: var(--b-accent);
+  --primary-foreground: #ffffff;
+  --secondary: var(--b-fill);
+  --secondary-foreground: var(--b-ink);
+  --muted: var(--b-fill);
+  --muted-foreground: var(--b-slate);
+  --accent: var(--b-fill);
+  --accent-foreground: var(--b-ink);
+  --destructive: var(--b-danger);
+  --border: var(--b-line);
+  --input: var(--b-line-strong);
+  --ring: var(--b-accent);
+  --radius: 0.75rem;
+
+  --header-h: 4rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --container: 72rem;
+  --section-y: clamp(5rem, 9vw, 8.5rem);
+}
+@media (min-width: 1600px) {
+  :root {
+    --container: 78rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1.5rem);
+    background: var(--b-ground);
+  }
+  body {
+    background: var(--b-ground);
+    color: var(--b-ink);
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: -0.006em;
+  }
+  ::selection {
+    background: rgb(43 111 230 / 0.2);
+  }
+  :focus-visible {
+    outline: 2px solid var(--b-accent);
+    outline-offset: 3px;
+  }
+  .dark :focus-visible {
+    outline-color: var(--b-sky-400);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------- structure */
+
+  .container-b {
+    width: min(100% - 2 * var(--gutter), var(--container));
+    margin-inline: auto;
+  }
+  .section {
+    padding-block: var(--section-y);
+  }
+  /* Light sections alternate between the page ground and white surface; two navy bands carry the turning points. */
+  .band-ground {
+    background: var(--b-ground);
+  }
+  .band-surface {
+    background: var(--b-surface);
+  }
+  .band-navy {
+    --nv-ink: #ffffff;
+    --nv-body: var(--b-sky-200);
+    --nv-quiet: var(--b-sky-400);
+    --nv-rule: rgb(127 176 247 / 0.16);
+    color: var(--nv-ink);
+    background:
+      radial-gradient(60rem 30rem at 85% 0%, rgb(43 111 230 / 0.16), transparent 70%),
+      linear-gradient(180deg, #1b3160 0%, #0f1e3a 70%);
+  }
+  :root[data-theme="dark"] .band-navy {
+    --nv-ink: var(--b-ink);
+    --nv-body: var(--b-body);
+    --nv-quiet: var(--b-accent-text);
+    --nv-rule: rgb(255 255 255 / 0.08);
+    background:
+      radial-gradient(60rem 30rem at 85% 0%, rgb(24 43 77 / 0.9), transparent 70%),
+      linear-gradient(180deg, #12151b 0%, #0f1217 70%);
+  }
+  :root[data-theme="dark"] .band-surface {
+    background: var(--b-column);
+  }
+
+  /* ------------------------------------------------------------- typography */
+
+  .t-display {
+    font-size: clamp(2.75rem, 1.6rem + 3.9vw, 4.75rem);
+    font-weight: 650;
+    line-height: 1.02;
+    letter-spacing: -0.038em;
+  }
+  .t-h1 {
+    font-size: clamp(2.5rem, 1.6rem + 3vw, 4rem);
+    font-weight: 650;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+  .t-h2 {
+    font-size: clamp(2rem, 1.4rem + 2vw, 3.125rem);
+    font-weight: 640;
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+  }
+  .t-h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  .t-lede {
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--b-body);
+  }
+  .t-body {
+    color: var(--b-body);
+  }
+  .t-quiet {
+    font-size: 0.875rem;
+    color: var(--b-slate);
+  }
+  .t-num {
+    font-variant-numeric: tabular-nums;
+  }
+  .band-navy .t-lede,
+  .band-navy .t-body {
+    color: var(--nv-body);
+  }
+  .band-navy .t-quiet {
+    color: var(--nv-quiet);
+  }
+  .link-quiet {
+    color: var(--b-accent-text);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 160ms var(--ease-out);
+  }
+  .link-quiet:hover {
+    text-decoration-color: currentColor;
+  }
+  .band-navy .link-quiet {
+    color: var(--nv-quiet);
+  }
+
+  /* ------------------------------------------------------------- materials */
+
+  /* A solid card with a 1px edge and a line of light along its top: the specular border. */
+  .card-spec {
+    background: var(--b-card-bg);
+    border: 1px solid var(--b-card-edge);
+    box-shadow: var(--b-card-sheen), var(--b-shadow-card);
+  }
+  /* Frosted glass, for the one or two surfaces that float: the hero desk and the contact form. */
+  .glass {
+    background: var(--b-glass-bg);
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    backdrop-filter: blur(24px) saturate(170%);
+    border: 1px solid var(--b-glass-line);
+    box-shadow: var(--b-glass-shadow);
+  }
+  .band-navy .glass {
+    background: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.12);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      0 30px 60px -30px rgb(0 0 0 / 0.6);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background: var(--b-raised);
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background: var(--b-raised);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .band-navy .glass {
+      background: #1b3160;
+    }
+  }
+  .hairline {
+    border-color: var(--b-line);
+  }
+  .band-navy .hairline {
+    border-color: var(--nv-rule);
+  }
+
+  /* ------------------------------------------------------------- header */
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    padding: 0.5rem 0.875rem;
+    border-radius: 999px;
+    background: var(--b-surface);
+    color: var(--b-ink);
+    font-weight: 550;
+    transform: translateY(-200%);
+    transition: transform 160ms var(--ease-out);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    height: var(--header-h);
+    color: var(--b-ink);
+    background: var(--b-toolbar-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--b-hairline);
+    transition:
+      background-color 220ms var(--ease-out),
+      border-color 220ms var(--ease-out),
+      color 220ms var(--ease-out);
+  }
+  .site-header[data-tone="navy"] {
+    color: #ffffff;
+    background: rgb(15 30 58 / 0.72);
+    border-bottom-color: rgb(127 176 247 / 0.12);
+  }
+  :root[data-theme="dark"] .site-header[data-tone="navy"] {
+    color: var(--b-ink);
+    background: rgb(15 18 23 / 0.72);
+    border-bottom-color: var(--b-hairline);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .site-header {
+      background: var(--b-surface);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .site-header[data-tone="navy"] {
+      background: #0f1e3a;
+    }
+  }
+  .logo-on-light,
+  .logo-on-dark {
+    display: block;
+  }
+  .logo-on-dark,
+  :root[data-theme="dark"] .logo-on-light,
+  .site-header[data-tone="navy"] .logo-on-light {
+    display: none;
+  }
+  :root[data-theme="dark"] .logo-on-dark,
+  .site-header[data-tone="navy"] .logo-on-dark {
+    display: block;
+  }
+  .nav-link {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: color-mix(in srgb, currentColor 78%, transparent);
+    transition: color 160ms var(--ease-out);
+  }
+  .nav-link:hover,
+  .nav-link[aria-current="page"] {
+    color: currentColor;
+  }
+  .theme-toggle .icon-sun {
+    display: none;
+  }
+  :root[data-theme="dark"] .theme-toggle .icon-sun {
+    display: block;
+  }
+  :root[data-theme="dark"] .theme-toggle .icon-moon {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------- hero */
+
+  .hero {
+    position: relative;
+    padding-block: calc(var(--header-h) + clamp(3rem, 6vw, 5rem)) clamp(4rem, 8vw, 7rem);
+    background:
+      radial-gradient(42rem 32rem at 82% 38%, var(--b-sky-100), transparent 70%),
+      linear-gradient(180deg, var(--b-surface) 0%, var(--b-ground) 100%);
+  }
+  :root[data-theme="dark"] .hero {
+    background:
+      radial-gradient(42rem 32rem at 82% 38%, rgb(24 43 77 / 0.75), transparent 70%),
+      var(--b-ground);
+  }
+
+  /* ------------------------------------------------------------- live desk */
+
+  .desk-card {
+    background: var(--b-card-bg);
+    border: 1px solid var(--b-card-edge);
+    box-shadow: var(--b-card-sheen), var(--b-shadow-card);
+  }
+  .desk-tile {
+    background: color-mix(in oklab, currentColor 12%, transparent);
+  }
+
+  /* ------------------------------------------------------------- journey */
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 1.5rem;
+    padding-inline: 0.625rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 550;
+    white-space: nowrap;
+    color: var(--b-slate);
+    background: var(--b-fill);
+  }
+  .status-chip[data-tone="warn"] {
+    color: var(--b-warn-ink);
+    background: var(--b-warn-tint);
+  }
+  .status-chip[data-tone="success"] {
+    color: var(--b-success-ink);
+    background: var(--b-success-tint);
+  }
+
+  /* ------------------------------------------------------------- reveals */
+
+  /* Content is visible by default. Where scroll-driven animation is supported and motion is welcome, sections rise
+     in once as they enter: no pins, no hijacked scrolling. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: rise-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 22%;
+      }
+    }
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @media print {
+    .reveal {
+      animation: none !important;
+    }
+    .site-header {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skip-link,
+    .site-header,
+    .nav-link,
+    .link-quiet {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------------- forms */
+
+  .field {
+    width: 100%;
+    min-height: 2.875rem;
+    padding: 0.6875rem 0.875rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    color: var(--b-ink);
+    background: var(--b-surface);
+    border: 1px solid var(--b-line-strong);
+    box-shadow: inset 0 1px 1px rgb(15 30 58 / 0.04);
+    transition:
+      border-color 160ms var(--ease-out),
+      box-shadow 160ms var(--ease-out);
+  }
+  .field::placeholder {
+    color: var(--b-slate);
+  }
+  .field:hover {
+    border-color: var(--b-faint);
+  }
+  .field:focus-visible {
+    outline: none;
+    border-color: var(--b-accent);
+    box-shadow: var(--b-focus-ring);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--b-danger);
+  }
+  .field-hint {
+    color: var(--b-slate);
+  }
+  .field-error {
+    color: var(--b-danger-ink);
+  }
+  .band-navy .field {
+    color: #ffffff;
+    background: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.16);
+    box-shadow: none;
+  }
+  .band-navy .field::placeholder,
+  .band-navy .field-hint {
+    color: var(--nv-quiet);
+  }
+  .band-navy .field:focus-visible {
+    border-color: var(--b-sky-400);
+    box-shadow: 0 0 0 3px rgb(127 176 247 / 0.3);
+  }
+  .band-navy .field-error {
+    color: #f5a9ac;
+  }
+  .band-navy .field option {
+    color: var(--b-ink);
+    background: var(--b-surface);
+  }
+  :root[data-theme="dark"] .band-navy .field {
+    color: var(--b-ink);
+  }
+
+  /* ------------------------------------------------------------- faq */
+
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item .faq-mark {
+    transition: transform 220ms var(--ease-out);
+  }
+  .faq-item[open] .faq-mark {
+    transform: rotate(45deg);
+  }
+  .faq-item::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 250ms var(--ease-drawer),
+      content-visibility 250ms allow-discrete;
+  }
+  .faq-item[open]::details-content {
+    block-size: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::details-content,
+    .faq-item .faq-mark,
+    .field {
+      transition: none;
+    }
+  }
+}

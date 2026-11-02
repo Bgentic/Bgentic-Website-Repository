@@ -1,0 +1,298 @@
+/* Bgentic brand tokens.
+   Ported verbatim from the Deal Desk, the brand's source of truth:
+   `Deal Desk Project/src/index.css` L10–109 (light), L117–209 (dark), L211–313 (motion).
+   Only the prefix changed (--dd- → --b-) and app-only lines were dropped (the select chevron, inherited text colour).
+   Re-sync from that file; never edit a value here. */
+
+:root {
+  /* Light theme. */
+  --b-ink: #0f1e3a;
+  --b-body: #33415a;
+  --b-slate: #5b6b82;
+  --b-muted: #6b778a;
+  --b-faint: #8995a8;
+  --b-ground: #f4f6fa;
+  --b-column: #eef2f7;
+  --b-surface: #ffffff;
+  --b-surface-tint: #f8fbff;
+  --b-raised: #ffffff;
+  --b-fill: #eceff5;
+  --b-line: #e3e8ef;
+  --b-line-soft: #eef1f6;
+  --b-line-strong: #c9d2de;
+  --b-hairline: rgba(15, 30, 58, 0.08);
+  --b-divider: rgba(15, 30, 58, 0.12);
+  --b-rule-strong: rgba(15, 30, 58, 0.35);
+  --b-accent: #2b6fe6;
+  --b-accent-text: #1f5fcc;
+  --b-accent-600: #1f5fcc;
+  --b-sky-50: #f0f6ff;
+  --b-sky-100: #e8f1fe;
+  --b-sky-200: #c9ddfd;
+  --b-sky-400: #7fb0f7;
+  --b-navy: linear-gradient(180deg, #1b3160 0%, #0f1e3a 100%);
+  --b-on-navy: #ffffff;
+  --b-navy-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(15, 30, 58, 0.24);
+  --b-card-bg: #ffffff;
+  --b-card-bg-hover: #ffffff;
+  --b-sheen-core: rgba(255, 255, 255, 0);
+  --b-sheen-edge: rgba(91, 107, 130, 0.2);
+  --b-sheen-blend: multiply;
+  --b-switch-track: #dfe5ee;
+  --b-switch-track-hover: #d3dbe7;
+  --b-switch-knob: #ffffff;
+  --b-band: #0f1e3a;
+  --b-danger: #d93a40;
+  --b-danger-ink: #9b3236;
+  --b-danger-tint: #fdecec;
+  --b-danger-line: #f6c9cb;
+  --b-danger-wash: #fffafa;
+  --b-danger-wash-hover: #fffafa;
+  --b-danger-disabled: #e3b7b9;
+  --b-success: #13825a;
+  --b-success-ink: #0e7a51;
+  --b-success-tint: #e7f7ef;
+  --b-success-line: #bfe8d3;
+  --b-success-disabled: #a9dcc4;
+  --b-warn: #f0a020;
+  --b-warn-ink: #8a6100;
+  --b-warn-tint: #fff3dc;
+  --b-violet: #7b61ff;
+  --b-violet-ink: #5b3fc4;
+  --b-violet-tint: #f1ecff;
+  --b-team-it: #1539a3;
+  --b-disabled: #a3aab5;
+
+  /* Materials */
+  --b-toolbar-bg: rgba(255, 255, 255, 0.78);
+  --b-toast-bg: rgba(15, 30, 58, 0.88);
+  --b-seg-track: rgba(15, 30, 58, 0.06);
+  --b-seg-thumb: #ffffff;
+  --b-tool-hover: rgba(15, 30, 58, 0.06);
+  --b-scrollbar: #c4cdd9;
+
+  /* Depth: layered, multi-stop shadows (a tight contact shadow, then a soft ambient one) */
+  --b-shadow-sheet: 0 1px 1px rgba(15, 30, 58, 0.03), 0 1px 3px rgba(15, 30, 58, 0.05);
+  --b-shadow-card:
+    0 0 0 0.5px rgba(15, 30, 58, 0.04), 0 1px 1px rgba(15, 30, 58, 0.03), 0 2px 4px -1px rgba(15, 30, 58, 0.04);
+  --b-shadow-lift:
+    0 1px 1px rgba(15, 30, 58, 0.03), 0 4px 8px -2px rgba(15, 30, 58, 0.06), 0 12px 24px -6px rgba(15, 30, 58, 0.1),
+    0 24px 40px -16px rgba(15, 30, 58, 0.1);
+  --b-shadow-float: 0 2px 6px rgba(15, 30, 58, 0.08), 0 12px 32px -8px rgba(15, 30, 58, 0.22);
+  --b-card-edge: rgba(15, 30, 58, 0.09);
+  --b-card-edge-hover: rgba(15, 30, 58, 0.14);
+  --b-card-edge-on: rgba(43, 111, 230, 0.45);
+  --b-card-glass: rgba(255, 255, 255, 0.72);
+  --b-card-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --b-focus-ring: 0 0 0 3px rgba(43, 111, 230, 0.24);
+  --b-danger-ring: 0 0 0 3px rgba(217, 58, 64, 0.2);
+
+  /* Glass (the goal sheet): a translucent surface, a bright hairline edge and a deep float. */
+  --b-glass-bg: rgba(255, 255, 255, 0.72);
+  --b-glass-pane: rgba(255, 255, 255, 0.6);
+  --b-glass-line: rgba(15, 30, 58, 0.08);
+  --b-glass-edge: rgba(255, 255, 255, 0.75);
+  --b-glass-shadow:
+    0 0 0 0.5px rgba(15, 30, 58, 0.1), 0 2px 8px rgba(15, 30, 58, 0.08), 0 32px 80px -20px rgba(15, 30, 58, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --b-glass-scrim: rgba(15, 30, 58, 0.16);
+  --b-glass-thumb: rgba(15, 30, 58, 0.22);
+
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --b-ink: #ebedf1;
+  --b-body: #caced4;
+  --b-slate: #a8adb5;
+  --b-muted: #9ea3ac;
+  --b-faint: #70757d;
+  --b-ground: #0f1217;
+  --b-column: #12151b;
+  --b-surface: #191c22;
+  --b-surface-tint: #1d2128;
+  --b-raised: #23272d;
+  --b-fill: #2e323a;
+  --b-line: #31363d;
+  --b-line-soft: #262a30;
+  --b-line-strong: #434851;
+  --b-hairline: rgba(255, 255, 255, 0.08);
+  --b-divider: rgba(255, 255, 255, 0.12);
+  --b-rule-strong: rgba(255, 255, 255, 0.3);
+  --b-accent-text: #8db9fb;
+  --b-accent-600: #8db9fb;
+  --b-sky-50: #182233;
+  --b-sky-100: #1d3155;
+  --b-sky-200: #2c4678;
+  --b-navy: linear-gradient(180deg, #f6f6f8 0%, #dedfe3 100%);
+  --b-on-navy: #0f1e3a;
+  --b-navy-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 0 0.5px rgba(255, 255, 255, 0.24), 0 1px 2px rgba(0, 0, 0, 0.5);
+  /* Dark elevation is lightness, as on a Mac: cards sit a clear step above the wells, and lighten on hover. */
+  --b-card-bg: #21252c;
+  --b-card-bg-hover: #262a32;
+  --b-sheen-core: rgba(236, 238, 244, 0.3);
+  --b-sheen-edge: rgba(200, 204, 214, 0.1);
+  --b-sheen-blend: screen;
+  --b-switch-track: #2d5fb5;
+  --b-switch-track-hover: #356ac2;
+  --b-switch-knob: #ebedf1;
+  --b-band: #182b4d;
+  --b-danger: #f0787c;
+  --b-danger-ink: #f5a9ac;
+  --b-danger-tint: #3b1f22;
+  --b-danger-line: #6a2f35;
+  --b-danger-wash: #2f2121;
+  --b-danger-wash-hover: #342525;
+  --b-danger-disabled: #5a3236;
+  --b-success: #45cf92;
+  --b-success-ink: #5bd69e;
+  --b-success-tint: #0f3328;
+  --b-success-line: #1f5a44;
+  --b-success-disabled: #1f4a3a;
+  --b-warn: #f2b544;
+  --b-warn-ink: #f3c766;
+  --b-warn-tint: #3a2e12;
+  --b-violet: #9d88ff;
+  --b-violet-ink: #b9a8ff;
+  --b-violet-tint: #2a2150;
+  --b-team-it: #5e7fe0;
+  --b-disabled: #44484f;
+
+  --b-toolbar-bg: rgba(25, 28, 34, 0.7);
+  --b-toast-bg: rgba(44, 48, 56, 0.86);
+  --b-seg-track: rgba(255, 255, 255, 0.07);
+  --b-seg-thumb: #474c55;
+  --b-tool-hover: rgba(255, 255, 255, 0.08);
+  --b-scrollbar: #393d45;
+
+  --b-shadow-sheet: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --b-shadow-card:
+    0 0 0 0.5px rgba(255, 255, 255, 0.05), 0 1px 1px rgba(0, 0, 0, 0.3), 0 2px 5px -1px rgba(0, 0, 0, 0.35);
+  --b-shadow-lift:
+    0 1px 1px rgba(0, 0, 0, 0.3), 0 4px 8px -2px rgba(0, 0, 0, 0.32), 0 12px 24px -6px rgba(0, 0, 0, 0.42),
+    0 24px 44px -16px rgba(0, 0, 0, 0.6);
+  --b-shadow-float: 0 2px 6px rgba(0, 0, 0, 0.38), 0 16px 40px -8px rgba(0, 0, 0, 0.6);
+  --b-card-edge: rgba(255, 255, 255, 0.08);
+  --b-card-edge-hover: rgba(255, 255, 255, 0.14);
+  --b-card-edge-on: rgba(141, 185, 251, 0.5);
+  --b-card-glass: rgba(33, 37, 44, 0.72);
+  --b-card-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --b-focus-ring: 0 0 0 3px rgba(127, 176, 247, 0.3);
+  --b-danger-ring: 0 0 0 3px rgba(240, 120, 124, 0.26);
+
+  --b-glass-bg: rgba(35, 39, 45, 0.7);
+  --b-glass-pane: rgba(255, 255, 255, 0.035);
+  --b-glass-line: rgba(255, 255, 255, 0.08);
+  --b-glass-edge: rgba(255, 255, 255, 0.12);
+  --b-glass-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35), 0 32px 80px -16px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --b-glass-scrim: rgba(5, 7, 12, 0.42);
+  --b-glass-thumb: rgba(255, 255, 255, 0.2);
+
+  color-scheme: dark;
+}
+
+:root {
+  /* Motion: strong ease-outs, the iOS drawer curve for things that travel, and a real spring for tactile surfaces
+     (duration 0.2s, bounce 0.14: 90% there by 112ms, settled at 280ms, 0.5% overshoot), sampled into linear(). */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: linear(
+    0,
+    0.0752,
+    0.234,
+    0.4108,
+    0.5725,
+    0.7054,
+    0.8072,
+    0.8807,
+    0.9311,
+    0.964,
+    0.9842,
+    0.9958,
+    1.0018,
+    1.0044,
+    1.005,
+    1.0046,
+    1.0038,
+    1.003,
+    1.0021,
+    1.0015,
+    1
+  );
+  /* Landing (a dropped card, a card changing stage): duration 0.34s, bounce 0.2, 90% by 166ms, 1.5% overshoot. */
+  --ease-settle: linear(
+    0,
+    0.0482,
+    0.1604,
+    0.2998,
+    0.4425,
+    0.5747,
+    0.689,
+    0.7828,
+    0.8564,
+    0.9118,
+    0.9518,
+    0.9792,
+    0.997,
+    1.0075,
+    1.013,
+    1.015,
+    1.0149,
+    1.0135,
+    1.0115,
+    1.0093,
+    1.0072,
+    1.0053,
+    1.0038,
+    1.0026,
+    1
+  );
+  /* Letting go (a squished button, the Won pill): duration 0.26s, bounce 0.32, 90% by 121ms, 5.4% overshoot. */
+  --ease-pop: linear(
+    0,
+    0.0722,
+    0.2353,
+    0.4284,
+    0.613,
+    0.7684,
+    0.8869,
+    0.9688,
+    1.0193,
+    1.0453,
+    1.054,
+    1.0518,
+    1.0438,
+    1.0334,
+    1.0232,
+    1.0143,
+    1.0074,
+    1.0025,
+    0.9994,
+    0.9978,
+    0.9971,
+    0.9971,
+    0.9975,
+    0.9981,
+    1
+  );
+  --dur-press: 120ms;
+  --dur-quick: 160ms;
+  --dur-sheet: 220ms;
+  --dur-spring: 280ms;
+  --dur-travel: 280ms;
+  --dur-panel: 320ms;
+
+  caret-color: var(--b-accent);
+  accent-color: var(--b-accent);
+  scrollbar-color: var(--b-scrollbar) transparent;
+}
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root {
+    --ease-spring: var(--ease-out);
+    --ease-settle: var(--ease-out);
+    --ease-pop: var(--ease-out);
+  }
+}
