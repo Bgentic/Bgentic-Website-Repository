@@ -1,4 +1,4 @@
-import { ColorChangeCard, ColorChangeCards } from "@/components/ui/color-change-card"
+import { ColorChangeCard, ColorChangeCards, ColorChangeHint } from "@/components/ui/color-change-card"
 import { SectionHeader } from "@/components/site/section-header"
 import { leaks } from "@/content/home"
 
@@ -8,8 +8,9 @@ export function Leaks() {
   return (
     <section className="section lit-b edge" aria-labelledby="leaks-title">
       <div className="container-b">
-        <SectionHeader id="leaks-title" title={leaks.title} intro={leaks.intro} />
-        <div className="mt-14">
+        <SectionHeader id="leaks-title" title={leaks.title} intro={leaks.intro} align="center" />
+        <div className="mt-12">
+          <ColorChangeHint />
           <ColorChangeCards>
             {leaks.rows.map((row, i) => (
               <li key={row.problem} className="reveal">

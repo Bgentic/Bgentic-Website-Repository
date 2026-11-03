@@ -180,6 +180,12 @@ export const contact = {
   intro:
     "Book a discovery call. We'll ask how enquiries, jobs and orders move through your business, then tell you plainly what we'd automate first, and what we wouldn't.",
   promise: "We reply within one business day.",
+  // what happens after a visitor sends the form, in order
+  next: [
+    "Tell us how enquiries, jobs and orders move through your business today.",
+    "We map where the time goes with you on a discovery call.",
+    "You get a plan in plain English: what to automate first, and what not to.",
+  ],
 }
 
 // The hero desk's day. Fictional business, every card labelled Example in the panel.

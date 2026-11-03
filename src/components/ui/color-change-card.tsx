@@ -2,7 +2,7 @@
 // Colour-change cards, after 21st.dev's hover-reveal "ColorChangeCards", rebuilt for Bgentic. At rest a card shows a
 // problem over a photograph of it, a person in the middle of it. Turned on (mouse hover, keyboard focus, or a tap on
 // touch) a second image, the solution, cross-fades in, the headline rolls letter by letter from the problem to the
-// solution, the text cross-fades, and the arrow turns. Purely a visual reveal: the cards don't link anywhere.
+// solution, and the text cross-fades. Purely a visual reveal: the cards don't link anywhere.
 //
 // From the original: the letter roll (now between two different headlines) and the image that changes on hover (now
 // two images). Changed: react-icons -> lucide, slate -> Bgentic tokens, Geist and Inter, keyboard and touch states,
@@ -10,7 +10,7 @@
 import * as React from "react"
 import Image, { type ImageLoader } from "next/image"
 import { MotionConfig, motion, stagger, type Variants } from "framer-motion"
-import { ArrowRight, Check } from "lucide-react"
+import { Check } from "lucide-react"
 
 type Face = { heading: string; text: string }
 
@@ -101,6 +101,7 @@ export function ColorChangeCard({ index, images, problem, solution }: ColorChang
         </div>
       </div>
       <div className="cc-scrim" aria-hidden="true" />
+      <div className="cc-glass" aria-hidden="true" />
 
       {/* what a sighted visitor sees; screen readers get the plain version below */}
       <div className="cc-body" aria-hidden="true">
@@ -114,9 +115,6 @@ export function ColorChangeCard({ index, images, problem, solution }: ColorChang
               <Check className="size-3.5" strokeWidth={2.25} />
               With Bgentic
             </motion.span>
-          </span>
-          <span className="cc-arrow">
-            <ArrowRight className="size-4" strokeWidth={2} />
           </span>
         </div>
         <div>
@@ -156,5 +154,17 @@ export function ColorChangeCards({ children }: { children: React.ReactNode }) {
     <MotionConfig reducedMotion="user">
       <ul className="cc-grid">{children}</ul>
     </MotionConfig>
+  )
+}
+
+/** a quiet line telling people the cards respond: worded for a mouse or for touch (CSS picks one); hidden from screen
+ *  readers, who already hear both sides of every card */
+export function ColorChangeHint() {
+  return (
+    <p className="cc-hint" aria-hidden="true">
+      <span className="cc-hint-rule" />
+      <span className="cc-hint-mouse">Hover a card to see the fix</span>
+      <span className="cc-hint-touch">Tap a card to see the fix</span>
+    </p>
   )
 }
