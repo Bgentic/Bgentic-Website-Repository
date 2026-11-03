@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "../styles/tokens.css";
 @import "../styles/depth.css";
+@import "../styles/crm.css";
 
 /* The theme lives on <html data-theme="dark">. `.dark` marks a region that is always dark (the navy bands), so
    shadcn components inside one pick up their dark styles in either theme. */

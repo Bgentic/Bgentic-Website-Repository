@@ -2223,6 +2223,7 @@
      on the component's long stacked shadow and a faint sky ambient beneath. */
   .cs-frame {
     position: relative;
+    max-width: 72rem;
     border-radius: 30px;
     background:
       var(--grain),
@@ -2281,6 +2282,14 @@
     }
     .cs-screen {
       border-radius: 13px;
+    }
+  }
+  /* Where the window holds on screen with its headline (container-scroll-animation), the two fit together: the
+     header, the two-line headline and a gap above it, a margin below. The component measures the exact width; this
+     stands in until it does. The screen is 16:10, inside a 14px bezel. */
+  @media (min-width: 1024px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .cs-frame {
+      max-width: min(72rem, calc((100vh - 300px) * 1.6 + 28px));
     }
   }
   /* a small glass panel inside a card: the example panels on the wide service cards */

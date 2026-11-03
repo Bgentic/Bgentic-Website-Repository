@@ -1,19 +1,14 @@
+import { CrmApp } from "@/components/crm/crm-app"
 import { ContainerScroll } from "@/components/ui/container-scroll-animation"
 import { LiveDesk } from "@/components/ui/live-desk"
 import { desk, deskEvents, engine } from "@/content/home"
 
-// Every tool you juggle, pulled into one system. One headline, then the app itself in a glass window that leans back
-// and swings up over the headline's last line as the section scrolls (components/ui/container-scroll-animation). The
-// live desk floats nearer, at the window's lower right: the app at work. Beneath the window, on the centre line where
-// the eye lands once it settles, the caption rises in (the problem in slate, the answer in white) and the tools it
-// replaces sit in one frosted dock, the way a dock sits under a screen.
-//
-// The screen is the Opportunities board from app.bgentic.io, rebuilt in Bgentic tokens and rendered natively at each
-// screen density (1124px is the window's widest on screen), then served as lossless PNGs so text stays on the pixel
-// grid: the image optimiser's WebP re-encode blurs small UI text. The deals are example data.
-const SCREEN = "/images/system/crm-opportunities"
-const WIDTHS = [1124, 1405, 1686, 2248, 3372]
-
+// Every tool you juggle, pulled into one system. One headline, then the app itself in a glass window that lies back
+// and lifts upright over the headline's last line as the section scrolls; on desktop the two then hold together for a
+// moment, the whole headline readable over the flat app (components/ui/container-scroll-animation). Inside is the app, live: every sidebar tab opens its view
+// (components/crm). The live desk floats nearer, at the window's lower right: the app at work. Beneath the window,
+// on the centre line where the eye lands once it settles, the caption rises in (the problem in slate, the answer in
+// white) and the tools it replaces sit in one frosted dock, the way a dock sits under a screen.
 export function SystemSection() {
   return (
     <section className="system section" aria-labelledby="system-title">
@@ -26,18 +21,7 @@ export function SystemSection() {
           }
           overlay={<LiveDesk events={deskEvents} business={desk.business} day={desk.day} height="17rem" />}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- pre-rendered per density; see the note above */}
-          <img
-            src={`${SCREEN}-1124.png`}
-            srcSet={WIDTHS.map((w) => `${SCREEN}-${w}.png ${w}w`).join(", ")}
-            sizes="(min-width: 1232px) 1124px, calc(100vw - 4rem)"
-            width={1124}
-            height={702}
-            loading="eager"
-            decoding="async"
-            alt="Example: the Bgentic app with the Opportunities board open, six deals across New Lead, Contacted, Qualified and Proposal Sent in the marketing pipeline."
-            className="block h-auto w-full"
-          />
+          <CrmApp />
         </ContainerScroll>
 
         <p className="sys-caption reveal mx-auto mt-16 max-w-[40rem] text-center md:mt-32">
