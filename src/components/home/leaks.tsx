@@ -6,7 +6,7 @@ import { leaks } from "@/content/home"
 // a photograph of someone living it, and turned on shows what we build instead over an image of the fix.
 export function Leaks() {
   return (
-    <section className="section lit-b edge" aria-labelledby="leaks-title">
+    <section className="section paper" aria-labelledby="leaks-title">
       <div className="container-b">
         <SectionHeader id="leaks-title" title={leaks.title} intro={leaks.intro} align="center" />
         <div className="mt-12">

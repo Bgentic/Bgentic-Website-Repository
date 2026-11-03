@@ -2,31 +2,25 @@
 name: Bgentic
 description: AI built systems, managed. A navy observatory with one luminous system at its centre.
 colors:
-  accent-blue: "#2b6fe6"
-  accent-blue-pressed: "#1f5fcc"
-  accent-text: "#1f5fcc"
-  navy-top: "#1b3160"
-  navy-base: "#0f1e3a"
-  sky-200: "#c9ddfd"
-  sky-400: "#7fb0f7"
-  on-navy: "#ffffff"
-  ink: "#0f1e3a"
-  body: "#33415a"
-  slate: "#5b6b82"
-  ground: "#f4f6fa"
-  surface: "#ffffff"
-  fill: "#eceff5"
-  line: "#e3e8ef"
-  line-strong: "#c9d2de"
-  signal-danger: "#f0787c"
+  # the brand palette (Bgentic brand guidelines, 2026-11): navy the most, light blue the least
+  navy: "#060b17" # deepened from the guidelines' #0f172a: same hue and chroma ratio, OKLCH 0.150 / 0.029 / 266
+  light-blue: "#3b82f6"
+  cream: "#fbf7f3"
+  slate: "#5d5a63"
+  sand: "#d7cfc5"
+  # mixes of it, each with one job
+  navy-raised: "#0c101c"
+  navy-raised-2: "#0f141f"
+  navy-glow: "#152c55"
+  navy-glow-deep: "#112344"
+  text-on-navy: "#938f8c"
+  quiet-on-navy: "#82807f"
+  slate-on-sand: "#474650"
+  blue-hover: "#5692f6"
+  # semantic status only, never decoration
   signal-success: "#45cf92"
-  dark-ground: "#0f1217"
-  dark-column: "#12151b"
-  dark-glow: "#182b4d"
-  dark-ink: "#ebedf1"
-  dark-body: "#caced4"
-  dark-slate: "#a8adb5"
-  dark-accent-text: "#8db9fb"
+  signal-warn: "#f2b544"
+  signal-danger: "#f0787c"
 typography:
   display:
     fontFamily: "Inter Variable, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"
@@ -86,39 +80,35 @@ spacing:
   stack-lg: "2.5rem"
 components:
   button-primary:
-    backgroundColor: "{colors.accent-blue}"
-    textColor: "{colors.on-navy}"
-    rounded: "{rounded.pill}"
-    height: "48px"
-    padding: "0 24px"
+    backgroundColor: "{colors.light-blue}"
+    textColor: "{colors.navy}"
+    rounded: "{rounded.lg}"
+    height: "44px"
+    padding: "0 20px"
   button-primary-hover:
-    backgroundColor: "{colors.accent-blue-pressed}"
-    textColor: "{colors.on-navy}"
-  button-glass:
-    backgroundColor: "rgba(255, 255, 255, 0.04)"
-    textColor: "{colors.on-navy}"
-    rounded: "{rounded.pill}"
-    height: "48px"
-    padding: "0 24px"
-  button-glass-hover:
-    backgroundColor: "rgba(255, 255, 255, 0.08)"
-  button-outline:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    height: "36px"
-    padding: "0 16px"
-  button-outline-hover:
-    backgroundColor: "{colors.fill}"
-  button-quiet:
-    backgroundColor: "transparent"
-    rounded: "{rounded.pill}"
-    size: "36px"
-  node-icon:
-    backgroundColor: "rgba(127, 176, 247, 0.06)"
-    textColor: "{colors.sky-400}"
-    rounded: "{rounded.pill}"
-    size: "44px"
+    backgroundColor: "{colors.blue-hover}"
+    textColor: "{colors.navy}"
+  button-glass-on-navy:
+    backgroundColor: "rgba(255, 255, 255, 0.05)"
+    textColor: "{colors.cream}"
+    rounded: "{rounded.lg}"
+    height: "44px"
+    padding: "0 20px"
+  button-glass-on-paper:
+    backgroundColor: "rgba(255, 255, 255, 0.55)"
+    textColor: "{colors.navy}"
+    rounded: "{rounded.lg}"
+    height: "44px"
+    padding: "0 20px"
+  card-on-navy:
+    backgroundColor: "{colors.navy-raised}"
+    textColor: "{colors.text-on-navy}"
+  card-on-paper:
+    backgroundColor: "{colors.cream}"
+    textColor: "{colors.slate}"
+  icon-tile-on-paper:
+    backgroundColor: "rgba(59, 130, 246, 0.07)"
+    textColor: "{colors.light-blue}"
 ---
 
 # Design System: Bgentic
@@ -129,12 +119,12 @@ components:
 
 The site is a dark instrument room lit from one source. A deep navy field holds a single luminous point cloud, the ink orb, which stands for Bgentic's system and is carried through the opening of the page: it sits in the hero, takes the spine between each problem and its fix, then docks as the hub of the six services. Everything else on the stage is quiet so the light has somewhere to fall: white display type set tight, pale sky body copy, 1px hairlines, a faint technical grid that fades out from the orb.
 
-Below the stage the world turns to daylight: the Deal Desk's cool grey ground, ink type, white surfaces. The two halves share one token sheet, one type family and one button language, so the switch reads as stepping out of the observatory, not into another site. Depth comes from light and blending (a `screen`-blended canvas, a radial glow, an accent halo under the one filled action), never from neon or saturated colour. The palette is pinned by the brand: light blue, dark navy, slate and white. Do not invent colours.
+Below the hero the page alternates between two materials (2026-11, from the brand guidelines). Navy carries the product: the app, the film, the clients and the close. Warm paper carries the story between them: cream for the four leaks, how we work and pricing, sand for the services. Each band is one material, so the change between them reads as turning a page rather than a change of site. Depth comes from light (a radial glow, a lit top edge, a navy shadow under paper), never from neon or saturated colour. The palette is pinned by the brand: navy, light blue, cream, slate and sand. Do not invent colours; mix these.
 
 Density is low and rhythmic: one idea per viewport on the stage, generous fluid padding, measures held to 34–46ch.
 
 **Key Characteristics:**
-- One navy stage for sections 00–02, then the light page.
+- Navy bands for the product, cream and sand bands for the story, alternating down the page.
 - One luminous object (the ink orb) as the only illustration.
 - Inter Variable at every size, optical sizing on, display weights at 640 with negative tracking.
 - Pill buttons; exactly one filled accent action per view.
@@ -143,32 +133,35 @@ Density is low and rhythmic: one idea per viewport on the stage, generous fluid 
 
 ## Colors
 
-A pinned brand palette of navy, sky blues, slate and white, with one saturated blue held back for the single action.
+The Bgentic brand palette, exactly as the brand guidelines give it (2026-11). Navy is used the most and light blue the least; cream, slate and sand support them. Every other colour on the site is a mix of these five, named below with the one job it does. The palette lives in `src/styles/depth.css` (`:root`) and re-points the inherited tokens for the navy bands (`:root[data-theme="dark"]`) and the paper bands (`.paper`, `.paper-sand`).
 
-### Primary
-- **Signal Blue** (accent-blue): the filled call to action, the focus outline on light, the caret and form accent. It is also the hue of the stage's glow and the halo under the primary button. White on it meets 4.6:1.
-- **Pressed Blue** (accent-blue-pressed): the hover and pressed step of the filled button in both themes. The dark theme's `accent-600` turns into a text tint too light for a white label, so the light value is held.
-- **Link Blue** (accent-text): accent-coloured text on light surfaces; in the dark theme it becomes the lighter tint (dark-accent-text).
+### The palette
+- **Navy #060B17** (navy): the primary. The ground of every navy band, the ink of every paper band, and the label on the filled action. The guidelines give #0F172A; the site deepens it to a near-black navy for depth (2026-11-03), keeping its hue (266°) and its chroma for its lightness so it still reads as navy beside cream, not black.
+- **Light Blue #3B82F6** (light-blue): the accent, used least. The one filled action per view, the focus ring, the selected tab, the rail's fill, links and icons on navy, and small graphic marks on paper. Never text on paper: it's 3.5:1 on cream.
+- **Cream #FBF7F3** (cream): headings on navy (18.5:1), the paper bands' ground, and paper cards.
+- **Slate #5D5A63** (slate): body copy and notes on cream (6.3:1).
+- **Sand #D7CFC5** (sand): the services band's ground, and the warm base of the grey text on navy.
 
-### Secondary
-- **Pale Sky** (sky-200): body copy on the stage (12:1 on navy-base) and the orb's ink. The orb is drawn on black and `screen`-blended, so its depth falloff reads as light dimming into the navy.
-- **Index Sky** (sky-400): the hero's second headline line, service icons, the spine rail at rest on the stage (7.5:1), focus outlines inside the stage, and the orb's accent. At low alpha it is the stage's hairline (16%) and grid (7%).
-
-### Neutral
-- **Observatory Navy** (navy-top to navy-base): the stage field, a vertical gradient from the top colour to the base colour across the first viewport, then flat base. It is also the light theme's ink, the frosted header over the stage (74% alpha) and the theme colour.
-- **White** (on-navy): display type and titles on the stage, labels on the filled button.
-- **Ink, Body, Slate** (ink, body, slate): text on the light page: headings, intros, and quiet secondary text (slate is 5.0:1 on ground).
-- **Daylight Ground, Surface, Fill** (ground, surface, fill): the light page background, cards and the outline button, and hover wells.
-- **Lines** (line, line-strong): footer rule and default borders; line-strong is the outline button's stroke.
-- **Dark theme** (dark-ground, dark-column, dark-glow, dark-ink, dark-body, dark-slate, dark-accent-text): in the dark theme the stage drops the navy for near-black graphite (dark-column to dark-ground), its glow becomes dark-glow at 90%, its type takes the theme's ink/body/slate, and the grid and hairlines go white at 4.5% and 9%.
+### Mixes, each with one job
+- **Navy raised** (navy-raised #0c101c, navy-raised-2 #0f141f): navy lifted toward cream for surfaces on navy: cards, windows, panels.
+- **The inherited dark sheet** (cards #20242f, fills #2e313b, lines #32363f, glass, sky tints #102141 to #204685): the Deal Desk's dark tokens, which the subpages' components still use, moved onto navy at the lightness each had, so their elevation steps hold. They're re-pointed in `depth.css`; `tokens.css` is untouched.
+- **Navy glow** (navy-glow #152c55, navy-glow-deep #112344): navy tinted with blue for the faint light behind a navy band's content.
+- **Text on navy** (text-on-navy #938f8c, quiet-on-navy #82807f): sand dimmed into navy for body copy (6.1:1) and notes (5.0:1).
+- **Slate on sand** (slate-on-sand #474650): slate deepened with navy for body copy on sand (6.0:1); plain slate on sand is 4.4:1.
+- **Blue hover** (blue-hover #5692f6): the filled action's hover, the blue lifted toward cream.
+- White and black appear only as alphas for light and shadow: a lit top edge, a gloss, a shadow.
 
 ### Signal colours
-- **Danger and Success marks** (signal-danger, signal-success): the dark-theme danger and success tokens, used on the stage in both themes. They appear only as small marks beside text in 01 (an 18px outline icon) and as the 1px rules that fade from each side toward the orb's spine at 55% alpha. Never a fill, never a block of text.
+- **Success, warning, danger** (signal-success, signal-warn, signal-danger): the only colours outside the palette, and only ever a status, such as Paid, Overdue or Live, as a small mark or pill beside its words. Never decoration.
 
 ### Named Rules
-**The Stage Composition Rule.** The stage's own variables (`--st-top`, `--st-base`, `--st-ink`, `--st-body`, `--st-quiet`, `--st-accent-text`, `--st-rule`, `--st-grid`, `--st-glow`, `--st-danger`, `--st-success`) are compositions of existing token hexes and alphas, re-pointed per theme. A new stage surface reads from these, never from new hexes.
+**The Band Rule.** A band is one material. Navy carries the product (hero, the app, the film, clients, the close); paper carries the story (the leaks, how we work and pricing on cream, the services on sand). Bands alternate, so two navy bands never touch. Inside a paper band a few things stay navy, the product showing through: photographs, the example panels on the service cards, the step numbers, the engineering strip and the popular plan. They re-point their own tokens back to navy (`.paper :is(...)`).
 
-**The Verbatim Sheet Rule.** `src/styles/tokens.css` is the Deal Desk's sheet, ported verbatim. Re-sync it from the source; never edit a value in place. Site-only additions (the pressed step) live in `globals.css`.
+**The Pairing Rule.** Only the brand's approved pairings carry text: cream or sand on navy, navy or slate on cream, navy or deep slate on sand, navy on light blue. White on light blue is 3.7:1 and is not used; the filled action's label is navy.
+
+**The Least Rule.** Light blue is rare by design: one filled action per view, and otherwise only state (selected, focused, live) and fine graphic marks. If a view has two blue fills, one of them is wrong.
+
+**The Verbatim Sheet Rule.** `src/styles/tokens.css` is the Deal Desk's sheet, ported verbatim. Never edit a value in place; the brand palette re-points its tokens from `depth.css`.
 
 ## Typography
 
@@ -230,9 +223,9 @@ Round where the hand touches, square where the eye reads. Every action is a full
 ### Buttons
 Pills that press: the press answers in 120ms at 97% scale, hover and colour changes run 160ms on the ease-out curve.
 - **Shape:** full pill (999px); weight 550, -0.006em tracking; sizes sm (36px, 16px padding, 14px), md (44px, 20px, 15px), lg (48px, 24px, 16px), icon (36px square).
-- **Primary:** accent-blue fill, white label, the action halo; hover to the pressed blue. Carries a trailing arrow that nudges 2px right on hover.
-- **Glass (on the stage):** 4% white fill, 1px white border at 15%, sky sheen on top edge; hover to 8% fill and 25% border. The stage's secondary and the header's "Book a call" while over the stage.
-- **Outline (on light):** surface fill, line-strong border, ink label; hover to the fill well. The header's "Book a call" over the light page.
+- **Primary:** light blue fill with a navy label (the brand pairing, 5.35:1), a cream-lit top and a soft blue halo; hover lifts the blue toward cream. The one filled action in a view.
+- **Glass on navy:** a 5% white fill, a 1px white edge and a lit top, cream label. The partner action on navy bands, and inside the navy islands on paper.
+- **Glass on paper:** a white-lit cream fill, a 1px navy edge at 14% and a navy shadow, navy label. The partner action on cream and sand bands.
 - **Quiet:** no fill, current colour; hover to a 6% current-colour wash. The theme toggle.
 
 ### Navigation
@@ -261,9 +254,9 @@ The InkOrbit sculpture: a fixed-size point cloud (2,800 core points and 16,000 g
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep exactly one filled accent-blue action per view; its partner is glass on the stage or outline on light.
-- **Do** compose stage colour from the `--st-*` roles, which re-point per theme from existing token hexes.
-- **Do** verify every text pair at WCAG 2.2 AA: white on accent-blue 4.6:1, sky-200 on navy 12:1, sky-400 on navy 7.5:1, slate on ground 5.0:1.
+- **Do** keep exactly one filled light-blue action per view; its partner is glass, on navy or on paper.
+- **Do** alternate the bands (navy, then cream or sand) and keep each band one material; mark a new light band `.paper` (cream) or `.paper .paper-sand`.
+- **Do** verify every text pair at WCAG 2.2 AA: cream on navy 18.5:1, text-on-navy 6.1:1, light blue on navy 5.35:1, slate on cream 6.3:1, slate-on-sand 6.0:1, navy on light blue 5.35:1.
 - **Do** gate any travelling or pinned motion on `(min-width: 1024px) and (hover: hover) and (prefers-reduced-motion: no-preference)`, in CSS first.
 - **Do** use native scroll, sticky pins, CSS scroll timelines and the one critically damped spring for motion.
 - **Do** use the spine rail's numbers as the page's section index; that is where numbering lives.
@@ -273,6 +266,7 @@ The InkOrbit sculpture: a fixed-size point cloud (2,800 core points and 16,000 g
 - **Don't** add an animation library; the orb controller is plain DOM and the reveals are CSS.
 - **Don't** put eyebrow or kicker labels over headings, numbered or otherwise; the numbered spine is a navigation rail, not a heading ornament.
 - **Don't** reuse the technical grid outside the hero stage; it is pinned by the brief to the orb.
-- **Don't** invent colours outside the token sheet, or edit `tokens.css` values in place.
+- **Don't** invent colours outside the brand palette and its named mixes, or edit `tokens.css` values in place.
+- **Don't** set light blue text on cream or sand (3.5:1 and 2.4:1), or white text on light blue (3.7:1).
 - **Don't** animate the h1 on load, or let anything that starts on its own move for more than 5 seconds.
 - **Don't** set display type in a second face; Inter Variable carries every level.

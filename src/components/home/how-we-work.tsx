@@ -9,7 +9,7 @@ import { process } from "@/content/home"
 // node. The engineering panel closes the section: the people behind the builds. Styles: the 04 section of depth.css.
 export function HowWeWork() {
   return (
-    <section className="section lit-b edge" aria-labelledby="how-title">
+    <section className="section paper" aria-labelledby="how-title">
       <div className="container-b">
         <SectionHeader id="how-title" title={process.title} intro={process.intro} />
         <ol className="steps mt-14">

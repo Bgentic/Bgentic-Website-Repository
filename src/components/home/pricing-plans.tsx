@@ -14,7 +14,7 @@ const SHOWN = 5
 
 export function PricingPlans() {
   return (
-    <section className="section lit-b edge" aria-labelledby="pricing-title">
+    <section className="section paper" aria-labelledby="pricing-title">
       <div className="container-b">
         <SectionHeader id="pricing-title" title={pricingIntro.title} intro={pricingIntro.intro} />
         <ul className="plans mt-14">

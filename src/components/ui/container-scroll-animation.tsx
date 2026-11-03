@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { motion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion"
+import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion"
 import { PHONE } from "@/lib/media"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
@@ -49,6 +49,13 @@ function useMedia(query: string) {
 }
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v))
+
+/**
+ * True from the moment the window first lands flat on screen (or, under reduced motion, first comes into view), and
+ * true from then on. What's in the window reads it to cue that it can be used now.
+ */
+const Landed = React.createContext(false)
+export const useLanded = () => React.useContext(Landed)
 const easeOut = (v: number) => 1 - (1 - v) ** 3
 
 /**
@@ -169,29 +176,44 @@ export function ContainerScroll({
   // the overlay rides with the window's hinge, rising on its own nearer path as it goes
   const lift = useTransform(progress, (q) => (1 - riseAt(q)) * (phone ? 32 : 140) + shiftAt(q))
 
+  // landed: the tilt has all but gone and the lift is done, so the window is flat and in its place on screen
+  const [landed, setLanded] = React.useState(false)
+  useMotionValueEvent(progress, "change", (q) => {
+    if (!landed && !still && riseAt(q) >= 1 && tiltAt(q) < 0.3) setLanded(true)
+  })
+  React.useEffect(() => {
+    const c = card.current
+    if (!still || landed || !c) return
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setLanded(true), { threshold: 0.6 })
+    io.observe(c)
+    return () => io.disconnect()
+  }, [still, landed])
+
   return (
-    <div className="relative pt-16 md:pt-40">
-      <div ref={track} className="relative">
-        {/* the headline and the window hold together; under reduced motion everything is set settled explicitly */}
-        <div className="relative" style={hold ? { position: "sticky", top: geo.stick } : undefined}>
-          <Header ref={head} translate={still ? -(geo.reach + geo.clear) : translate} titleComponent={titleComponent} />
-          <div ref={slot} className="relative z-10 -mt-16 md:-mt-44">
-            <Card ref={card} transform={still ? undefined : transform} maxWidth={geo.maxW ?? undefined}>
-              {children}
-            </Card>
-            {overlay && (
-              <motion.div
-                style={{ y: still ? 0 : lift }}
-                className="relative z-20 mx-auto -mt-10 w-full max-w-[22rem] md:absolute md:right-4 md:-bottom-16 md:mt-0 md:w-[20rem] md:max-w-none xl:-right-16 xl:-bottom-24 xl:w-[21rem] 2xl:-right-24"
-              >
-                {overlay}
-              </motion.div>
-            )}
+    <Landed.Provider value={landed}>
+      <div className="relative pt-16 md:pt-40">
+        <div ref={track} className="relative">
+          {/* the headline and the window hold together; under reduced motion everything is set settled explicitly */}
+          <div className="relative" style={hold ? { position: "sticky", top: geo.stick } : undefined}>
+            <Header ref={head} translate={still ? -(geo.reach + geo.clear) : translate} titleComponent={titleComponent} />
+            <div ref={slot} className="relative z-10 -mt-16 md:-mt-44">
+              <Card ref={card} transform={still ? undefined : transform} maxWidth={geo.maxW ?? undefined}>
+                {children}
+              </Card>
+              {overlay && (
+                <motion.div
+                  style={{ y: still ? 0 : lift }}
+                  className="relative z-20 mx-auto -mt-10 w-full max-w-[22rem] md:absolute md:right-4 md:-bottom-16 md:mt-0 md:w-[20rem] md:max-w-none xl:-right-16 xl:-bottom-24 xl:w-[21rem] 2xl:-right-24"
+                >
+                  {overlay}
+                </motion.div>
+              )}
+            </div>
           </div>
+          {hold && <div aria-hidden="true" style={{ height: HOLD }} />}
         </div>
-        {hold && <div aria-hidden="true" style={{ height: HOLD }} />}
       </div>
-    </div>
+    </Landed.Provider>
   )
 }
 

@@ -197,16 +197,16 @@ export function SiteHeader() {
               className="sq group relative flex flex-col justify-end overflow-hidden rounded-[18px] p-6 text-white"
               style={{
                 background:
-                  "radial-gradient(18rem 14rem at 80% 0%, rgb(201 221 253 / 0.1), transparent 70%), linear-gradient(180deg, #1b3160, #0f1e3a)",
+                  "radial-gradient(18rem 14rem at 80% 0%, rgb(251 247 243 / 0.1), transparent 70%), linear-gradient(180deg, #152c55, #060b17)",
                 boxShadow: "inset 0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.1)",
               }}
             >
               {/* the card is navy in both themes, so its text uses the fixed light tints, not theme tokens */}
-              <span className="text-[13px] font-medium text-[#7fb0f7]">Not sure where to start?</span>
+              <span className="text-[13px] font-medium text-[#3b82f6]">Not sure where to start?</span>
               <span className="mt-2 text-[1.25rem] leading-tight font-semibold tracking-[-0.02em]">
                 Tell us where the time goes.
               </span>
-              <span className="mt-2 text-[13.5px] leading-snug text-[#c9ddfd]/85">
+              <span className="mt-2 text-[13.5px] leading-snug text-[#fbf7f3]/85">
                 A discovery call maps your enquiries, jobs and orders, then shows what to automate first.
               </span>
               <span className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-semibold">

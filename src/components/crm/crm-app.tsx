@@ -4,6 +4,11 @@
 // The sidebar is a vertical tablist (arrow keys, Home and End move and choose); only the tabs take focus. It's drawn
 // at 1600 x 1000 and scaled to fit its window, so it stays sharp at any size. Example data: content/crm-demo.ts.
 // Styles: styles/crm.css.
+//
+// It opens on Opportunities, the pipeline, and stays there until the visitor picks another tab. The moment its window
+// lands flat (container-scroll-animation's useLanded), it cues that the sidebar works, once: a light ripples down the
+// tabs and a small glass callout beside them says so, then clears after a few seconds or as soon as the sidebar is
+// touched. The cue never changes the tab.
 import * as React from "react"
 import {
   Award,
@@ -31,10 +36,15 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { VIEWS, type ViewId } from "@/components/crm/crm-views"
+import { useLanded } from "@/components/ui/container-scroll-animation"
 import { crmDemo } from "@/content/crm-demo"
 
 const W = 1600 // the drawing's width; it's 1000 tall (styles/crm.css)
 const ROW = 41 // a tab's height and the gap under it, for the highlight's glide
+/** the view the app opens on: the pipeline */
+const DEFAULT_VIEW: ViewId = "opportunities"
+/** how long the "every tab works" cue stays, unless the sidebar is touched first */
+const CUE_MS = 5200
 
 const NAV: { id: ViewId; label: string; icon: LucideIcon; beta?: boolean }[] = [
   { id: "launchpad", label: "Launchpad", icon: Rocket },
@@ -62,7 +72,7 @@ const BRAND = (
       fill="#fff"
       d="M24.45,20.88c.75-1.07,1.2-2.36,1.2-3.77,0-3.6-2.9-6.51-6.49-6.55h0s-7.45,0-7.45,0c-1.13,0-2.04.91-2.04,2.04v16.19l8.99,9.05h.5s.51,0,.51,0c4.87,0,9.06-3.72,9.33-8.58.2-3.58-1.69-6.74-4.55-8.39Z"
     />
-    <path fill="#7fb0f7" d="M16.74,28.79h-7.07s8.99,9.05,8.99,9.05v-7.14c0-1.06-.86-1.92-1.92-1.92Z" />
+    <path fill="#3b82f6" d="M16.74,28.79h-7.07s8.99,9.05,8.99,9.05v-7.14c0-1.06-.86-1.92-1.92-1.92Z" />
   </svg>
 )
 
@@ -82,12 +92,24 @@ function useFit(ref: React.RefObject<HTMLDivElement | null>) {
 export function CrmApp() {
   const box = React.useRef<HTMLDivElement>(null)
   const k = useFit(box)
-  const [active, setActive] = React.useState<ViewId>("opportunities")
+  const [active, setActive] = React.useState<ViewId>(DEFAULT_VIEW)
   const [toast, setToast] = React.useState(0)
   const tabs = React.useRef<Partial<Record<ViewId, HTMLButtonElement | null>>>({})
   const uid = React.useId()
 
+  // the cue: on from the moment the window lands until it has run its course or the sidebar is touched, then over
+  const landed = useLanded()
+  const [over, setOver] = React.useState(false)
+  React.useEffect(() => {
+    if (!landed) return
+    const t = window.setTimeout(() => setOver(true), CUE_MS)
+    return () => window.clearTimeout(t)
+  }, [landed])
+  const cue = landed && !over
+  const settle = () => setOver(true)
+
   const choose = (id: ViewId, focus = false) => {
+    settle()
     if (id !== active) setToast((n) => n + 1)
     setActive(id)
     if (focus) tabs.current[id]?.focus()
@@ -106,8 +128,9 @@ export function CrmApp() {
   const label = ALL.find((t) => t.id === active)!.label
   const Icon = ALL.find((t) => t.id === active)!.icon
 
-  const tab = ({ id, label, icon: TabIcon, beta }: { id: ViewId; label: string; icon: LucideIcon; beta?: boolean }) => (
+  const tab = ({ id, label, icon: TabIcon, beta }: { id: ViewId; label: string; icon: LucideIcon; beta?: boolean }, i = 0) => (
     <button
+      style={{ "--i": i } as React.CSSProperties}
       key={id}
       ref={(el) => {
         tabs.current[id] = el
@@ -149,7 +172,7 @@ export function CrmApp() {
           </span>
         </div>
         <div className="c-app">
-          <aside className="c-side">
+          <aside className="c-side" onPointerEnter={settle}>
             <div className="c-brand">
               <span className="c-mark">{BRAND}</span>
               <span>
@@ -164,11 +187,11 @@ export function CrmApp() {
               <Zap size={14} strokeWidth={2} className="c-zap" />
             </div>
             <div role="tablist" aria-orientation="vertical" aria-label="App sections" onKeyDown={onKeyDown} className="c-tabbox">
-              <div className="c-nav">
+              <div className="c-nav" data-ripple={cue || undefined}>
                 <span className="c-hl" style={{ transform: `translateY(${Math.max(0, index) * ROW}px)`, opacity: index < 0 ? 0 : 1 }} />
-                {NAV.map(tab)}
+                {NAV.map((t, i) => tab(t, i))}
               </div>
-              <div className="c-side-foot">{tab(ALL[ALL.length - 1])}</div>
+              <div className="c-side-foot">{tab(ALL[ALL.length - 1], NAV.length)}</div>
             </div>
           </aside>
           <main className="c-main">
@@ -217,6 +240,14 @@ export function CrmApp() {
           </main>
         </div>
       </div>
+      {/* the cue, outside the scaled drawing so its words stay a readable size at any window size */}
+      <p className="crm-cue" data-show={cue || undefined} aria-hidden="true">
+        <i />
+        <span>
+          <b>Every tab works</b>
+          Pick one to explore
+        </span>
+      </p>
     </div>
   )
 }

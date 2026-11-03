@@ -19,7 +19,7 @@ export default function Home() {
       <Leaks />
       <SystemSection />
 
-      <section className="section lit-a edge" aria-labelledby="services-title">
+      <section className="section paper paper-sand" aria-labelledby="services-title">
         <div className="container-b">
           <SectionHeader id="services-title" title={servicesIntro.title} intro={servicesIntro.intro} />
           <div className="mt-14">

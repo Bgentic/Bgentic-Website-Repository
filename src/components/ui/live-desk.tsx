@@ -161,7 +161,7 @@ function Booking({ e, play, reduced }: { e: Extract<DeskEvent, { kind: "booking"
           transition: reduced ? "none" : `transform 420ms ${SPRING}, opacity 240ms ease`,
         }}
       >
-        <span className="bg-brand py-0.5 text-[10px] font-semibold tracking-wide text-white uppercase">{e.day}</span>
+        <span className="bg-brand py-0.5 text-[10px] font-semibold tracking-wide text-[#060b17] uppercase">{e.day}</span>
         <span className="py-1 text-[11px] font-semibold text-ink tabular-nums">{e.slot}</span>
       </span>
       <span className="text-[13px] leading-snug text-body">{e.detail}</span>
