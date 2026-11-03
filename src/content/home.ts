@@ -84,10 +84,14 @@ export const servicesIntro = {
   intro: "Start with the one that hurts most. Each is built to plug into the others, and we keep all of it running.",
 }
 
-// 03 · See it working: one tab per service, each with its demo (the demo copy lives in services.ts).
+// 03 · See it working: a film of the app on an ordinary day at an example business (scripts/demo-film.mjs).
 export const demos = {
   title: "See it working",
-  intro: "Every service comes with a demo. Pick one to see what it does on an ordinary day.",
+  intro: "An ordinary Tuesday at a plumbing business, run from one system.",
+  caption: "Example: Brightwater Plumbing's Tuesday. Every name and number here is made up.",
+  /** what the film shows, for anyone who can't watch it */
+  film:
+    "Example video of the Bgentic app on a Tuesday at Brightwater Plumbing. The overview counts the day's calls, bookings and payments. In the inbox, the AI receptionist texts back a missed call and books the job. On the pipeline, that job moves from new lead to booked. The missed-call automation runs step by step. A quote form on the business's website lands in the pipeline. The search report shows visits from Google rising and rankings climbing.",
 }
 
 // The best operational story from the old site, kept nearly word for word. Fictional customer, labelled Example.
