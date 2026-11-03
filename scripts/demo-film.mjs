@@ -19,11 +19,12 @@ import { chromium } from "playwright-core"
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(HERE, "..")
 const EDGE = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
-const W = 1280
-const H = 800
-const SCALE = 1.5 // 1920 x 1200 frames: sharp in a window about 1120px wide
+// Attio's screen proportions (1.835:1, measured on attio.com); 2070 x 1128 frames, sharp in a window up to 1440px
+const W = 1380
+const H = 752
+const SCALE = 1.5
 const FPS = 30
-const BITRATE = 1_600_000
+const BITRATE = 2_000_000
 const STILLS = process.argv.includes("--stills")
 
 const icon = (name, size = 16, stroke = 1.75) => {
@@ -102,7 +103,7 @@ const RANKS = [
 const CHANGES = ["Titles rewritten on 6 pages", "New page: blocked drains in Paddington", "Google profile updated with this week's photos"]
 // the search chart's curve, drawn in a 600 x 220 sketch and mapped to the chart's real 530 x 470 box, so it stays
 // unstretched and the line, its dash and its leading point agree
-const CHART = [530, 470]
+const CHART = [586, 430]
 const sketch = "M0 196 C 40 190, 70 186, 100 182 S 160 168, 200 170 S 260 150, 300 140 S 360 128, 400 112 S 470 84, 520 62 S 570 40, 600 30"
 const LINE = sketch.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_, x, y) => `${((x * CHART[0]) / 600).toFixed(1)} ${((y * CHART[1]) / 220).toFixed(1)}`)
 const AREA = `${LINE} L ${CHART[0]} ${CHART[1]} L 0 ${CHART[1]} Z`
@@ -285,8 +286,8 @@ small{display:block;color:#8995a8}
 .kpi b{display:block;margin-top:4px;font-family:Geist,Inter,sans-serif;font-size:26px;letter-spacing:-.02em}
 .kpi small{margin-top:2px;font-size:11px;color:#7a8699}
 .row2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:12px}
-.row2 .card{padding:16px 18px;height:462px}
-.bars{display:flex;align-items:flex-end;gap:12px;height:362px;margin-top:18px}
+.row2 .card{padding:16px 18px;height:430px}
+.bars{display:flex;align-items:flex-end;gap:12px;height:330px;margin-top:18px}
 .bars i{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,rgba(127,176,247,.34),rgba(127,176,247,.08));transform-origin:bottom}
 .bars i.now{background:linear-gradient(180deg,#7fb0f7,#2b6fe6)}
 .axis{display:flex;justify-content:space-between;margin-top:10px;font-size:10.5px;color:#7a8699}
@@ -322,7 +323,7 @@ small{display:block;color:#8995a8}
 .booked svg{color:#7fb0f7}
 /* s2 pipeline */
 .board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.col{position:relative;display:flex;flex-direction:column;gap:10px;min-height:560px;padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.04)}
+.col{position:relative;display:flex;flex-direction:column;gap:10px;min-height:540px;padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.04)}
 .col-h{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 6px;font-size:12.5px}
 .cnt{min-width:22px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:700;text-align:center;color:#c9ddfd;background:rgba(127,176,247,.14)}
 .deal{position:relative;z-index:1;padding:12px 13px;border-radius:12px;background:linear-gradient(180deg,#22262e,#1b1e25);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px -14px rgba(0,0,0,.9)}
@@ -391,7 +392,7 @@ small{display:block;color:#8995a8}
 .sub-t{width:62px;text-align:right;font-size:11px;color:#7a8699}
 /* s5 reports */
 .report{display:grid;grid-template-columns:1.35fr 1fr;gap:12px}
-.chart2{position:relative;padding:16px 18px;height:600px}
+.chart2{position:relative;padding:16px 18px;height:560px}
 .tip{position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#c9ddfd;box-shadow:0 0 0 4px rgba(127,176,247,.2),0 0 12px rgba(127,176,247,.8)}
 .ch-h{display:flex;align-items:flex-start;justify-content:space-between}
 .big{display:flex;align-items:baseline;gap:10px}

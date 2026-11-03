@@ -88,7 +88,7 @@ export const servicesIntro = {
 export const demos = {
   title: "See it working",
   intro: "An ordinary Tuesday at a plumbing business, run from one system.",
-  caption: "Example: Brightwater Plumbing's Tuesday. Every name and number here is made up.",
+  caption: "Example: Brightwater Plumbing's Tuesday. The business, its customers and every number here are made up.",
   /** what the film shows, for anyone who can't watch it */
   film:
     "Example video of the Bgentic app on a Tuesday at Brightwater Plumbing. The overview counts the day's calls, bookings and payments. In the inbox, the AI receptionist texts back a missed call and books the job. On the pipeline, that job moves from new lead to booked. The missed-call automation runs step by step. A quote form on the business's website lands in the pipeline. The search report shows visits from Google rising and rankings climbing.",
