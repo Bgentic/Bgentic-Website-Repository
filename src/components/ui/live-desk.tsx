@@ -367,9 +367,10 @@ export function LiveDesk({ events, business, day, initial = 2, interval = 2600, 
           <span className="absolute size-2 rounded-full bg-success" />
           {running && <span className="absolute size-2 rounded-full bg-success motion-safe:animate-ping" />}
         </span>
-        <p className="min-w-0 text-sm">
-          <span className="font-semibold text-ink">{business}</span>
-          <span className="text-slate"> · {day}</span>
+        {/* the business over its day, so a long name never strands the day on a line of its own */}
+        <p className="min-w-0 text-sm leading-tight">
+          <span className="block truncate font-semibold text-ink">{business}</span>
+          <span className="block text-xs text-slate">{day}</span>
         </p>
         <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[11px] font-medium text-slate">
           Example

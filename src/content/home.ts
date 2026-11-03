@@ -70,11 +70,12 @@ export const leaks = {
   ],
 }
 
-// The engine: the transition into the services. Scattered tools drawn into one hub.
+// The engine: the transition into the services. Scattered tools drawn into one hub. The intro is the problem, then the
+// answer, which is set brighter.
 export const engine = {
   title: "Every tool you juggle, pulled into one system.",
-  intro:
-    "Phones, inboxes, calendars, invoices, Xero and your website usually live in separate apps. The Bgentic engine connects them, and our team keeps it running.",
+  intro: "Phones, inboxes, calendars, invoices, Xero and your website usually live in separate apps.",
+  answer: "The Bgentic engine connects them, and our team keeps it running.",
   tools: ["Phone calls", "Shared inbox", "Calendar", "Online bookings", "Invoices", "Xero", "Website", "Google reviews", "Facebook DMs", "Trade orders"],
 }
 
