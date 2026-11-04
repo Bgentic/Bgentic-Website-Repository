@@ -90,7 +90,7 @@ export function SiteHeader() {
     <div className="nav-shell">
       <header className="nav-pill" data-scrolled={scrolled || undefined}>
         <Link href="/" className="-m-1 mr-3 shrink-0 rounded-full p-1" aria-label="Bgentic home">
-          <Image src="/brand/bgentic-logo-on-dark.svg" alt="" width={70} height={26} priority unoptimized className="h-6.5 w-auto" />
+          <Image src="/brand/bgentic-logo-on-dark.svg" alt="" width={68} height={26} priority unoptimized className="h-6.5 w-auto" />
         </Link>
 
         <nav aria-label="Main" className="relative hidden md:block" onPointerLeave={() => setHl((h) => ({ ...h, on: false }))}>

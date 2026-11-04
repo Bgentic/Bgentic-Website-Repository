@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import { ContactSection } from "@/components/home/contact-section"
 import { ServiceDemo } from "@/components/services/service-demo"
@@ -11,6 +12,10 @@ import { buttonVariants } from "@/components/ui/button-variants"
 import { SERVICES, serviceBySlug } from "@/content/services"
 import { clientBySlug } from "@/content/clients"
 import { cn } from "@/lib/utils"
+
+// Six public pages, nothing personal on them: each is prerendered whole at build (generateStaticParams), and
+// ensureStatic keeps navigation to them instant, with no request-time rendering (Next's "keeping pages static").
+export const ensureStatic = "navigation"
 
 export function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }))
@@ -25,8 +30,21 @@ export async function generateMetadata(props: PageProps<"/services/[slug]">): Pr
 // One template for all six services, in the home page's bands: the outcome beside the service at a glance (navy);
 // what we build, as paper sheets (sand); the service working (navy, components/services/service-demo); who it's for,
 // who already runs it, the honest answers and the other five (cream); the close (navy).
-export default async function ServicePage(props: PageProps<"/services/[slug]">) {
-  const { slug } = await props.params
+//
+// The page itself reads no URL data: the shell every link to /services/[slug] shares stays the same for all six,
+// and the service is read from `params` inside Suspense (Next's "move URL data behind Suspense"). Each page is still
+// prerendered whole, so a page load gets the full HTML; on a client navigation the navy hero band holds the space
+// for the instant it takes to arrive.
+export default function ServicePage(props: PageProps<"/services/[slug]">) {
+  return (
+    <Suspense fallback={<section className="hero min-h-[38rem]" aria-busy="true" />}>
+      <Service params={props.params} />
+    </Suspense>
+  )
+}
+
+async function Service({ params }: { params: PageProps<"/services/[slug]">["params"] }) {
+  const { slug } = await params
   const s = serviceBySlug(slug)
   if (!s) notFound()
   const clients = s.clients.map(clientBySlug).filter((c) => !!c)
