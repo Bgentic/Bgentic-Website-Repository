@@ -11,6 +11,7 @@ export function SectionHeader({
   children,
   className,
   align = "end",
+  as: Heading = "h2",
 }: {
   id: string
   title: string
@@ -18,6 +19,8 @@ export function SectionHeader({
   children?: React.ReactNode
   className?: string
   align?: "end" | "center"
+  /** "h1" where the section opens its page */
+  as?: "h1" | "h2"
 }) {
   return (
     <div
@@ -27,9 +30,9 @@ export function SectionHeader({
         className,
       )}
     >
-      <h2 id={id} className="t-h2 md:col-span-6">
+      <Heading id={id} className={cn(Heading === "h1" ? "t-h1" : "t-h2", "md:col-span-6")}>
         {title}
-      </h2>
+      </Heading>
       {(intro || children) && (
         <div className="md:col-span-5 md:col-start-8">
           {intro && <p className="t-lede">{intro}</p>}

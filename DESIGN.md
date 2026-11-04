@@ -261,6 +261,19 @@ The four real clients as a product shoot.
 - **Below the studio:** the name (21px, 600), then a hairline and two facts: Trade and Runs on Bgentic, with 11px tracked labels. Then the glass "Visit site" action and the service chips, which link to their pages.
 - **No proof claims:** no quotes, logos or results.
 
+### Clients page (/clients)
+- **Gallery:** the home page's client gallery opens the page (navy, full width). Its title becomes the h1, with the page's own longer intro.
+- **Client carousel:** "What we run for them.", on sand, recreated from 21st.dev @vaib215/stagger-testimonials (`stagger-testimonials.tsx`). There's one card per client, four in all.
+  - **Cards:** square cards with the top-right corner cut, fanned across the band. Each has the client's logo on its own tile (navy or cream, to suit the logo), a "Runs on Bgentic" label and what we run for them (from `clients.ts`).
+  - **Active card:** in the centre of the fan. It's the core navy with cream type (18.5:1) and sand for its label and byline (12.7:1), lifted 65px with a navy offset shadow.
+  - **Layout:** the others fan across the band as in the original, alternating 15px up or down and tilted ±2.5°. With four cards, two sit on the left and one on the right; the user chose this over a symmetric stacked layout (2026-11-04).
+  - **Movement:** a card click or the square arrow buttons (cream, turning navy on hover) rotate the row in 500ms until that card is centred.
+  - **Phones:** 320px cards with tighter padding.
+  - **Screen readers:** one polite live line with the centre card.
+  - **Tokens:** `.stagger-paper` re-points them to cream cards on sand.
+- **Quotes:** a card becomes a quote (quotation marks, credited to the person) only once that client approves its exact wording. It goes in `APPROVED` in `content/testimonials.ts`, and drafts to send are in `docs/client-testimonial-drafts.md`. Once any card is a quote, the heading becomes "In their words."
+- **Close:** navy.
+
 ### Service pages (/services/[slug])
 One template for all six services, in bands:
 1. **Navy hero:** breadcrumb, headline, lede and the two actions, beside a dark glass "at a glance" panel (`service-glance.tsx`). It shows the icon, name, summary and the three highlights with checks, plus the clients running it.

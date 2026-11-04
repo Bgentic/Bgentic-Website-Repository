@@ -59,12 +59,14 @@ const DEVICES = [
   },
 ] as const
 
-export function ClientsShowcase() {
+/** `page`: the gallery opens /clients, so its title is the h1, it clears the floating header, and it takes the
+ *  page's own intro */
+export function ClientsShowcase({ page = false, intro = clientsIntro.intro }: { page?: boolean; intro?: string }) {
   return (
-    <section className="section lit-a edge clients-x" aria-labelledby="clients-title">
+    <section className={cn("section lit-a edge clients-x", page && "clients-page")} aria-labelledby="clients-title">
       {/* the words keep the page's margins; the gallery under them breaks out to the screen's edges on desktop */}
       <div className="container-b">
-        <SectionHeader id="clients-title" title={clientsIntro.title} intro={clientsIntro.intro} />
+        <SectionHeader id="clients-title" as={page ? "h1" : "h2"} title={clientsIntro.title} intro={intro} />
         <p className="clients-hint" aria-hidden="true">
           <i />
           <span className="cue-hover">Hover a card to scroll through its site · Click to view it live</span>

@@ -77,6 +77,12 @@ export const servicesPage = {
   },
 }
 
+export const clientsPage = {
+  // the gallery's title is the home page's (clientsIntro in home.ts); the page gives it a longer intro
+  intro:
+    "Traffic management, mobile inspections, sound systems and live music. Four different trades, the same outcome: the admin runs itself, and the team gets on with the work.",
+}
+
 export const contactPage = {
   // the page opens on booking: the heading is the home page's close (contact.title in home.ts)
   booking: {

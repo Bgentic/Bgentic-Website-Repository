@@ -2459,6 +2459,66 @@
     }
   }
 
+  /* ------------------------------------------------------------- /clients */
+  /* the gallery opens the page: clear the floating header the way .hero does */
+  .clients-page {
+    padding-top: calc(var(--header-h) + clamp(3rem, 6vw, 5rem));
+  }
+  /* The staggered client carousel (components/ui/stagger-testimonials.tsx) reads shadcn's tokens; on the sand band
+     they're re-pointed to paper: cream cards with navy type and slate bylines, navy hairlines and the active card's
+     shadow in navy at 16%. The active card is the core navy with cream type (18.5:1) and sand for its label and
+     byline (12.7:1); the arrows are navy squares that answer in the same colours. */
+  .stagger-paper {
+    --card: #fbf7f3;
+    --card-foreground: #060b17;
+    --foreground: #060b17;
+    --muted: #d7cfc5;
+    --muted-foreground: #5d5a63;
+    --border: rgb(6 11 23 / 0.16);
+    --background: #d7cfc5;
+    --stagger-active-bg: #060b17;
+    --stagger-active-fg: #fbf7f3;
+    --stagger-active-muted: #d7cfc5;
+  }
+  .stagger-card-active {
+    border-color: var(--stagger-active-bg, var(--primary));
+    color: var(--stagger-active-fg, var(--primary-foreground));
+    background: var(--grain), var(--stagger-active-bg, var(--primary));
+  }
+  .stagger-active-muted {
+    color: var(--stagger-active-muted, var(--primary-foreground));
+  }
+  .stagger-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 2px solid var(--border);
+    color: var(--foreground);
+    background: var(--card);
+    transition:
+      background-color 200ms var(--ease-out),
+      color 200ms var(--ease-out),
+      border-color 200ms var(--ease-out);
+  }
+  .stagger-arrow:focus-visible {
+    outline: 2px solid var(--stagger-active-bg, var(--ring));
+    outline-offset: 3px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .stagger-arrow:hover {
+      color: var(--stagger-active-fg, var(--primary-foreground));
+      background: var(--stagger-active-bg, var(--primary));
+      border-color: var(--stagger-active-bg, var(--primary));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stagger-card {
+      transition: none !important;
+    }
+  }
+
   /* ------------------------------------------------------------- the pricing block on paper */
   /* The pricing block (components/blocks/pricing.tsx) reads shadcn's tokens. On the home page's cream band they're
      re-pointed to paper: navy type, slate notes, navy hairlines, and light blue kept for the popular border, the
