@@ -1,67 +1,82 @@
 import type { Metadata } from "next"
-import { ContactForm } from "@/components/site/contact-form"
-import { contact } from "@/content/home"
-import { CONTACT_EMAIL, LEGAL, LOGIN_HREF } from "@/content/site"
+import Link from "next/link"
+import { ArrowRight, ArrowUpRight, LogIn, Mail, Rocket, type LucideIcon } from "lucide-react"
+import { BookingSection } from "@/components/contact/booking-section"
+import { Faq } from "@/components/site/faq"
+import { SectionHeader } from "@/components/site/section-header"
+import { contactPage } from "@/content/pages"
+import { CONTACT_EMAIL, LOGIN_HREF } from "@/content/site"
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Book a discovery call with Bgentic. Tell us where the time goes and we'll reply within one business day.",
 }
 
-const NEXT_STEPS = [
-  { title: "You tell us where the time goes", text: "A short note is enough. Calls you miss, orders you retype, follow-ups that slip." },
-  { title: "We book a discovery call", text: "We'll ask how enquiries, jobs and orders move through your business today." },
-  { title: "You get a plain answer", text: "What we'd automate first, what we wouldn't, and what it would change on a normal day." },
-]
-
+// /contact: booking first, the calendar then the form, over the hero's grid (navy); then the other ways in and the
+// questions people ask before their first call, on cream paper. Styles: the contact page section of depth.css.
 export default function ContactPage() {
+  const { ways, faq } = contactPage
+  const cards: { icon: LucideIcon; title: string; text: string; action: string; href: string; external?: boolean }[] = [
+    { icon: Mail, ...ways.email, action: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+    { icon: LogIn, ...ways.login, href: LOGIN_HREF, external: true },
+    { icon: Rocket, ...ways.plans, href: "/pricing" },
+  ]
   return (
-    <section className="hero" aria-labelledby="contact-page-title">
-      <div className="container-b grid gap-14 lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-5">
-          <h1 id="contact-page-title" className="t-h1">
-            {contact.title}
-          </h1>
-          <p className="t-lede mt-6">{contact.intro}</p>
-          <ol className="mt-12 grid gap-6">
-            {NEXT_STEPS.map((s, i) => (
-              <li key={s.title} className="grid grid-cols-[2rem_1fr] gap-x-3 border-t hairline pt-5">
-                <span className="t-quiet t-num pt-0.5">{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <h2 className="text-[1.0625rem] font-semibold text-ink">{s.title}</h2>
-                  <p className="t-body mt-1 text-[15px]">{s.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <dl className="mt-12 grid gap-4 text-[15px]">
-            <div>
-              <dt className="text-slate">Email</dt>
-              <dd>
-                <a href={`mailto:${CONTACT_EMAIL}`} className="link-quiet">
-                  {CONTACT_EMAIL}
-                </a>
-              </dd>
+    <>
+      <BookingSection />
+
+      <section className="section paper" aria-labelledby="ways-title">
+        <div className="container-b">
+          <SectionHeader id="ways-title" title={ways.title} />
+          <ul className="reach-grid mt-12">
+            {cards.map(({ icon: Icon, title, text, action, href, external }) => {
+              const body = (
+                <>
+                  <span className="tile size-11 rounded-[0.875rem]" aria-hidden="true">
+                    <Icon className="size-5" strokeWidth={1.75} />
+                  </span>
+                  <h3 className="reach-title">{title}</h3>
+                  <p className="reach-text">{text}</p>
+                  <span className="reach-action">
+                    {action}
+                    {external ? (
+                      <ArrowUpRight className="size-4" aria-hidden="true" />
+                    ) : (
+                      <ArrowRight className="size-4" aria-hidden="true" />
+                    )}
+                    {external && <span className="sr-only">(opens in a new tab)</span>}
+                  </span>
+                </>
+              )
+              return (
+                <li key={title} className="reveal flex">
+                  {href.startsWith("/") ? (
+                    <Link href={href} className="reach">
+                      {body}
+                    </Link>
+                  ) : (
+                    <a href={href} className="reach" {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                      {body}
+                    </a>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+
+          <div className="mt-24 grid gap-10 lg:grid-cols-12 lg:gap-8">
+            <div className="lg:col-span-4">
+              <h2 className="t-h2" id="contact-faq-title">
+                {faq.title}
+              </h2>
+              <p className="t-lede mt-6 max-w-[36ch]">{faq.intro}</p>
             </div>
-            <div>
-              <dt className="text-slate">Already a client?</dt>
-              <dd>
-                <a href={LOGIN_HREF} className="link-quiet">
-                  Log in to Bgentic
-                </a>
-              </dd>
+            <div className="lg:col-span-7 lg:col-start-6">
+              <Faq items={faq.items} />
             </div>
-            <div>
-              <dt className="text-slate">Where we are</dt>
-              <dd className="text-body">{LEGAL.city}</dd>
-            </div>
-          </dl>
+          </div>
         </div>
-        <div className="card-spec h-fit rounded-[28px] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
-          <p className="t-quiet mb-6">{contact.promise}</p>
-          <ContactForm />
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

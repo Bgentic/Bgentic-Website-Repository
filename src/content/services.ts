@@ -90,7 +90,7 @@ export const SERVICES: Service[] = [
       text: "Follow a lead from first call to paid invoice, and a trade order from portal to proof of delivery, branch by branch.",
     },
     forWho: ["Service businesses living on bookings", "Wholesalers and trade suppliers living on orders"],
-    clients: ["sydney-pink-slips", "npp-traffic-solutions"],
+    clients: ["npp-traffic-solutions", "sydney-pink-slips", "we-are-art", "sventy8-events"],
     faqs: [
       {
         q: "We already use Xero. Do we have to change?",
@@ -136,7 +136,7 @@ export const SERVICES: Service[] = [
       text: "A working CRM with an example business loaded: open the inbox, move a deal, book a job.",
     },
     forWho: ["Teams answering the same customer in three apps", "Sales teams and BDMs who need one view of each account"],
-    clients: ["we-are-art", "sydney-pink-slips"],
+    clients: ["npp-traffic-solutions", "sydney-pink-slips", "we-are-art", "sventy8-events"],
     faqs: [
       {
         q: "Can we move our existing contacts across?",
@@ -174,7 +174,7 @@ export const SERVICES: Service[] = [
       text: "Fill in a sample form and watch it arrive in the pipeline, with the reply the customer would get.",
     },
     forWho: ["Businesses whose site looks fine but never rings", "Trade suppliers taking account applications by email"],
-    clients: ["sventy8-events"],
+    clients: ["npp-traffic-solutions", "sydney-pink-slips", "we-are-art", "sventy8-events"],
     faqs: [
       {
         q: "Is a website included in the monthly plans?",

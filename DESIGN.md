@@ -238,6 +238,90 @@ A recognised leak paired with the system that closes it. Each cell is an 18px ou
 ### Service Node (02)
 A 44px icon circle (20px outline icon in sky-400, 6% sky fill, 1px stage hairline) beside a title and 34ch text. Where the orb travels, each node's glow fades in and a 1px rule draws toward the core, in reading order, as the pinned section scrolls.
 
+### Client Gallery (05)
+The four real clients as a product shoot.
+- **Grid:** from 1280px, one row of four across the full width of the screen. The cards are the one part of the page that drops the container, with a slim margin of `clamp(1rem, 2.2vw, 2.5rem)` each side. The heading, intro and hint above them keep the page's container, so they line up with every other section. From 1024px to 1279px it's a 2 × 2 grid; below that, one column.
+- **Studio shape:**
+  - **Row (1280px and up):** square. The monitor spans the top with a 16:10 screen. A smaller tablet (52%) and phone (18%) are grouped in front of its foot and overlap only its bottom edge, so almost all of the screen shows.
+  - **640px to 1279px:** wide (16:9). The monitor stands centred on its stand and foot, and the tablet and phone stand in front of its lower corners.
+  - **Phones:** tall (4:5).
+- **Card body:**
+  - **Head:** the name with the trade under it, and "Visit site" beside them. In the row, "Visit site" folds to its arrow; its words stay in the accessible name.
+  - **Facts:** under a hairline, Runs on Bgentic and the Services chips. They sit side by side on wide cards and stack in the row.
+- **Card:** dark glass (raised navy, grain, the 1px edge, a deep navy shadow) with an 8px inset studio at 4:5.
+- **Studio:** palette light. Cream falls from above onto a wall and settles into a navy floor. Warm cards use a sand wall; cool cards use cream mixed with light blue over navy-glow-deep. Neighbours alternate.
+- **Devices:** a monitor, a tablet and a phone, each a raised-navy bezel lit along its top, showing the client's live site. The screenshots come from `npm run shots:clients`. Everything inside is sized in container units, so the composition holds at any card width.
+- **Portrait:** a cut-out portrait dropped into `public/images/clients/<slug>/` stands at the right, and the devices close up to the left. See `docs/client-portraits.md`.
+- **Device scale:** the devices take the studio nearly edge to edge. The monitor is 94% of its width with a 4:3 screen, and starts at the studio's top. The tablet (73%) runs right up to the phone (23%), which overlaps its edge, so they read as one cluster.
+- **Card in hand (hover, or keyboard focus):** a light-blue 1px edge, a faint blue light under the card and a 4px lift, all in 260ms. The other cards step back to 62% opacity.
+- **Scroll:** the card in hand scrolls its site down the monitor over 7s and returns in 0.9s. Reduced motion keeps it still.
+- **Hint:** one quiet glass pill for the whole gallery, under the section heading. It reads "Hover a card to scroll through its site · Click to view it live" ("Tap a card to view the site live" on touch). Its light-blue dot pulses three times when the gallery comes into view.
+- **Services:** the services each client uses show as chips that link to the service pages.
+- **Studio click:** clicking the studio opens the live site. It's a pointer-only twin of "Visit site": out of the tab order and hidden from screen readers.
+- **Below the studio:** the name (21px, 600), then a hairline and two facts: Trade and Runs on Bgentic, with 11px tracked labels. Then the glass "Visit site" action and the service chips, which link to their pages.
+- **No proof claims:** no quotes, logos or results.
+
+### Service pages (/services/[slug])
+One template for all six services, in bands:
+1. **Navy hero:** breadcrumb, headline, lede and the two actions, beside a dark glass "at a glance" panel (`service-glance.tsx`). It shows the icon, name, summary and the three highlights with checks, plus the clients running it.
+2. **Sand:** "What we build", as paper sheets.
+3. **Navy:** the service working (`service-demo.tsx`).
+   - **CRM:** the live app in its glass window.
+   - **Automations:** the "See it working" film.
+   - **Ecommerce:** the order journey (Example).
+   - **Websites:** the client gallery.
+   - **Consultancy and SEO:** a plain "the interactive demo lands here next" panel that offers a call.
+4. **Cream:** who it's for, who's running it, the questions, and the other five as glass buttons.
+5. **Navy:** the close.
+
+### Subpages (/services, /contact)
+Built from the home page's bands and parts. Copy lives in `src/content/pages.ts`.
+- **/services, in bands:**
+  1. **Navy hero:** the promise, beside a triage panel ("Where it hurts").
+  2. **Sand:** the services bento.
+  3. **Navy:** the path ("How the six fit together").
+  4. **Cream:** common questions.
+  5. **Navy:** the close.
+- **/contact, in bands:**
+  1. **Navy:** the close, set as the page's h1 and clearing the header (`.contact-page`).
+  2. **Cream:** three "other ways in" paper sheets (email, log in, the plans), then common questions.
+- **Triage panel:** dark glass. Each of the four leaks is a row linking to the service that closes it, with a glass chip naming the service. The chip's edge turns light blue on hover. Below 480px the chip drops under the text.
+- **Path:** five dark glass stops, one customer's path from search to reorder. From 1280px they sit in one row, joined by a fine light-blue line through their icons. Each stop links to its service and lifts 3px with a light-blue edge on hover. The engineering strip closes the band as "AI consultancy sits behind all five".
+- **Reach sheet:** a cream paper card: a tile, a 21px title, a body line and an action naming its target. It lifts 3px on hover.
+
+### Pricing block (home 06 and /pricing)
+The 21st.dev pricing block (`src/components/blocks/pricing.tsx`), on the shadcn tokens, with one set of plans for both pages (`src/lib/pricing-plans.ts`).
+- **On /pricing:** it opens the page on navy, with light blue as primary; `--primary-foreground` is navy, the brand pairing.
+- **On the home page:** it holds the cream band between the clients and the close, under "Serious systems. Predictable pricing." There, `.pricing-paper` re-points its tokens to paper:
+  - **Type:** navy text, slate notes and navy hairlines.
+  - **Light blue:** only on the popular border, the badge, the switch, the checks and the popular button. The "Save 9%" text turns navy.
+  - **Cards:** cream paper sheets lit from above.
+- **Kept as designed:** the monthly/annual switch, which fires confetti in light blue, blue-hover, cream and sand. NumberFlow rolls the AUD prices. On entry the three cards spring into a 3D fan: the outer two lean back and in at 94%, and the popular one rises 20px with a light-blue 2px border and badge.
+- **Prices and features:** the real plans from `content/pricing.ts`. Each card shows its users and AI credits, then its features in full. The terms sit under the switch.
+- **Annual on:** the big number is the year's price over twelve months, to the cent, with "Billed annually at $X" (the year's total) under it. The switch's saving is computed from the totals ("Save 9%").
+- **Bands:** the plans in navy; then, on cream, what sits outside the plans and the questions; then the close.
+
+### Booking (/contact)
+/contact opens on booking, over the hero's kinetic grid (`booking-grid.tsx`), which is lit from behind the calendar.
+- **Two numbered steps:** they sit side by side from 1024px and stack below that.
+  1. Book your call: Bgentic's own booking widget, embedded as given in a dark glass frame. Its script sizes the iframe.
+  2. Tell us where the time goes: the enquiry form in the contact card.
+- **Below:** the other ways in and the questions, on cream.
+
+### Footer (site-wide)
+The 21st.dev "cinematic" motion footer (`src/components/ui/motion-footer.tsx`), in the site's fonts and tokens.
+- **Curtain reveal:** from 768px wide and 700px tall, it sits fixed under the page, and the last section scrolls away to reveal it. Smaller screens get it in the normal flow.
+- **Motion:** a giant BGENTIC and the heading ("Get your hours back.") rise in on a scrubbed GSAP ScrollTrigger. The pills lean toward a fine pointer.
+- **Content:** the two ways to start (book a call, free trial), the six services, the other pages, the inbox, log in, the legal pages, and the company line with ACN and ABN.
+- **Bottom bar:** three columns from 768px, so the "Built and run in Sydney, NSW" badge is truly centred. The company line is on the left, and the developer's credit and back to top are on the right. Phones stack them.
+- **Developer credit:** the CP monogram (`public/brand/cp-logo.webp`, 20px, at 80%) with "Designed & developed by Christian Padilla", the name in cream. It's a link to christianpadilla.online that opens in a new tab and underlines the name on hover.
+
+### The close (home 07, and /services and /pricing)
+The enquiry form, and under it the other way in: an engineering-strip card, "Rather talk it through?", whose glass "Book a call" goes to the calendar on /contact.
+- **Marquee:** a tilted marquee of the services runs across the top. It pauses under the pointer and is hidden from screen readers.
+- **Reduced motion:** nothing moves.
+- **GSAP:** the footer is the one place it's used, added at the user's request (2026-11-04).
+
 ### Ink Orb (signature)
 The InkOrbit sculpture: a fixed-size point cloud (2,800 core points and 16,000 grains on desktop) of ink loops and bridges in pale sky with a sky-400 accent and a glass core, drawn on black and `screen`-blended over the stage. Any two seeds morph grain for grain, so the orb can reforge from the hero form to the hub form once, at the dock. Touch and narrow devices draw a lighter tier (5,600 grains, 30fps). Its idle spin comes to rest after 3.2s, and it fades out over any text block it would cover.
 

@@ -1,13 +1,16 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowRight, ArrowUpRight, MousePointerClick } from "lucide-react"
-import { PageHero, SectionHeader } from "@/components/site/section-header"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { ContactSection } from "@/components/home/contact-section"
+import { ServiceDemo } from "@/components/services/service-demo"
+import { ServiceGlance } from "@/components/services/service-glance"
 import { Faq } from "@/components/site/faq"
-import { ContactBand } from "@/components/home/contact-band"
+import { SectionHeader } from "@/components/site/section-header"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { SERVICES, serviceBySlug } from "@/content/services"
 import { clientBySlug } from "@/content/clients"
+import { cn } from "@/lib/utils"
 
 export function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }))
@@ -19,8 +22,9 @@ export async function generateMetadata(props: PageProps<"/services/[slug]">): Pr
   return s ? { title: s.name, description: `${s.headline} ${s.summary}` } : {}
 }
 
-// One template for all six services: the outcome, what we build, the working demo, who it's for, who already runs
-// it, the honest answers, and the way in.
+// One template for all six services, in the home page's bands: the outcome beside the service at a glance (navy);
+// what we build, as paper sheets (sand); the service working (navy, components/services/service-demo); who it's for,
+// who already runs it, the honest answers and the other five (cream); the close (navy).
 export default async function ServicePage(props: PageProps<"/services/[slug]">) {
   const { slug } = await props.params
   const s = serviceBySlug(slug)
@@ -30,116 +34,111 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
 
   return (
     <>
-      <PageHero
-        title={s.headline}
-        lede={s.lede}
-        trail={
-          <nav aria-label="Breadcrumb">
-            <Link href="/services" className="hover:text-ink">
-              Services
-            </Link>
-            <span aria-hidden="true"> / </span>
-            <span aria-current="page" className="text-ink">
-              {s.name}
-            </span>
-          </nav>
-        }
-      >
-        <Link href="/contact" className={buttonVariants({ variant: "primary", size: "lg" })}>
-          Book a discovery call
-          <ArrowRight aria-hidden="true" />
-        </Link>
-      </PageHero>
+      <section className="hero" aria-labelledby="service-title">
+        <div className="container-b grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-6">
+            <nav aria-label="Breadcrumb" className="mb-8 text-sm text-slate">
+              <Link href="/services" className="transition-colors hover:text-ink">
+                Services
+              </Link>
+              <span aria-hidden="true"> / </span>
+              <span aria-current="page" className="text-ink">
+                {s.name}
+              </span>
+            </nav>
+            <h1 id="service-title" className="t-h1 max-w-[16ch]">
+              {s.headline}
+            </h1>
+            <p className="t-lede mt-6 max-w-[46ch]">{s.lede}</p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="/contact" className={buttonVariants({ variant: "primary", size: "lg" })}>
+                Book a discovery call
+                <ArrowRight aria-hidden="true" />
+              </Link>
+              <Link href="/pricing" className={buttonVariants({ variant: "glass", size: "lg" })}>
+                See pricing
+              </Link>
+            </div>
+          </div>
+          <div className="lg:col-span-6 xl:col-span-5 xl:col-start-8">
+            <ServiceGlance service={s} clients={clients} />
+          </div>
+        </div>
+      </section>
 
-      <section className="section band-surface" aria-labelledby="builds-title">
+      <section className="section paper paper-sand" aria-labelledby="builds-title">
         <div className="container-b">
           <SectionHeader id="builds-title" title="What we build" intro={s.summary} />
-          <ul className="mt-14 grid gap-px overflow-hidden rounded-[24px] border hairline bg-line md:grid-cols-2">
+          <ul className={cn("mt-14 grid gap-4 md:grid-cols-2", s.builds.length % 3 === 0 && "lg:grid-cols-3")}>
             {s.builds.map((b) => (
-              <li key={b.title} className="reveal bg-surface p-7 md:p-9 dark:bg-[var(--b-card-bg)]">
-                <h3 className="t-h3">{b.title}</h3>
-                <p className="t-body mt-2">{b.text}</p>
+              <li key={b.title} className="reveal flex">
+                <div className="step-card w-full">
+                  <h3 className="text-[1.1875rem] font-semibold tracking-[-0.016em] text-ink">{b.title}</h3>
+                  <p className="t-body mt-2 text-[15px]">{b.text}</p>
+                </div>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      <section className="section band-ground" aria-labelledby="demo-title">
-        <div className="container-b grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-8">
-          <div className="lg:col-span-5">
-            <h2 id="demo-title" className="t-h2">
-              {s.demo.title}
-            </h2>
-            <p className="t-lede mt-5">{s.demo.text}</p>
-          </div>
-          <div className="glass grid min-h-[20rem] place-items-center rounded-[28px] p-10 text-center lg:col-span-6 lg:col-start-7">
-            <div className="max-w-[30ch]">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-sky-100 text-brand-text" aria-hidden="true">
-                <MousePointerClick className="size-6" strokeWidth={1.75} />
-              </span>
-              <p className="mt-5 text-[15px] font-semibold text-ink">The interactive demo lands here next.</p>
-              <p className="t-quiet mt-2">Until then, we&apos;re happy to walk you through it on a call.</p>
+      <ServiceDemo service={s} />
+
+      <section className="section paper" aria-labelledby="fit-title">
+        <div className="container-b">
+          <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
+            <div className="lg:col-span-5">
+              <h2 id="fit-title" className="t-h2">
+                Who it&apos;s for
+              </h2>
+              <ul className="mt-8 grid gap-4">
+                {s.forWho.map((w) => (
+                  <li key={w} className="border-t border-[color:var(--b-line)] pt-4 text-[1.0625rem] text-body">
+                    {w}
+                  </li>
+                ))}
+              </ul>
+              {clients.length > 0 && (
+                <div className="mt-12">
+                  <h3 className="text-sm font-semibold text-ink">Already running it</h3>
+                  <ul className="mt-4 grid gap-3">
+                    {clients.map((c) => (
+                      <li key={c.slug} className="text-[15px] text-body">
+                        <Link href="/clients" className="font-medium text-ink underline-offset-4 hover:underline">
+                          {c.name}
+                        </Link>
+                        <span> · {c.sector}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="lg:col-span-6 lg:col-start-7">
+              <h2 className="mb-2 text-[1.3125rem] font-semibold tracking-[-0.02em] text-ink">Questions we get asked</h2>
+              <Faq items={s.faqs} />
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="section band-surface" aria-labelledby="fit-title">
-        <div className="container-b grid gap-14 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-5">
-            <h2 id="fit-title" className="t-h2">
-              Who it&apos;s for
+          <div className="mt-24">
+            <h2 id="others-title" className="text-[1.3125rem] font-semibold tracking-[-0.02em] text-ink">
+              The other five
             </h2>
-            <ul className="mt-8 grid gap-4">
-              {s.forWho.map((w) => (
-                <li key={w} className="border-t hairline pt-4 text-[1.0625rem] text-body">
-                  {w}
+            <ul className="mt-6 flex flex-wrap gap-3" aria-labelledby="others-title">
+              {others.map((o) => (
+                <li key={o.slug}>
+                  <Link href={`/services/${o.slug}`} className={buttonVariants({ variant: "glass", size: "md" })}>
+                    {o.name}
+                    <ArrowUpRight aria-hidden="true" />
+                  </Link>
                 </li>
               ))}
             </ul>
-            {clients.length > 0 && (
-              <div className="mt-12">
-                <h3 className="text-sm font-semibold text-ink">Already running it</h3>
-                <ul className="mt-4 grid gap-3">
-                  {clients.map((c) => (
-                    <li key={c.slug} className="text-[15px] text-body">
-                      <Link href={`/clients#${c.slug}`} className="font-medium text-ink hover:underline hover:underline-offset-4">
-                        {c.name}
-                      </Link>
-                      <span className="text-slate"> · {c.sector}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-          <div className="lg:col-span-6 lg:col-start-7">
-            <h2 className="t-h3 mb-2">Questions we get asked</h2>
-            <Faq items={s.faqs} />
           </div>
         </div>
       </section>
 
-      <section className="section band-ground" aria-labelledby="others-title">
-        <div className="container-b">
-          <h2 id="others-title" className="t-h3">
-            The other five
-          </h2>
-          <ul className="mt-6 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-5">
-            {others.map((o) => (
-              <li key={o.slug} className="border-t hairline">
-                <Link href={`/services/${o.slug}`} className="group flex items-center justify-between gap-3 py-4 text-[15px] font-medium text-ink">
-                  {o.name}
-                  <ArrowUpRight className="size-4 text-slate transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <ContactBand />
+      <ContactSection />
     </>
   )
 }

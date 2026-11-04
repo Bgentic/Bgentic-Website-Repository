@@ -1,10 +1,14 @@
-import { Mail } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight, CalendarDays, Mail } from "lucide-react"
 import { ContactForm } from "@/components/site/contact-form"
+import { buttonVariants } from "@/components/ui/button-variants"
 import { contact } from "@/content/home"
 import { CONTACT_EMAIL } from "@/content/site"
 
 // 07 · The close: one next step. The promise and what happens after you send on the left, the form in a lit glass
-// panel on the right. The page's strongest light sits here, still faint. Styles: the 07 section of depth.css.
+// panel on the right, and the other way in under the form: a call booked straight on the calendar (/contact). The
+// page's strongest light sits here, still faint. Styles: the 07 section of depth.css.
+// (/contact opens on its own booking section instead: components/contact/booking-section.tsx.)
 export function ContactSection() {
   return (
     <section className="section contact-x edge" aria-labelledby="contact-title">
@@ -32,8 +36,24 @@ export function ContactSection() {
             </a>
           </div>
         </div>
-        <div className="contact-card lg:col-span-7">
-          <ContactForm />
+        <div className="lg:col-span-7">
+          <div className="contact-card">
+            <ContactForm />
+          </div>
+          {/* the other way in, under the form: straight to the calendar */}
+          <div className="eng mt-5">
+            <span className="tile size-11 rounded-[0.875rem]" aria-hidden="true">
+              <CalendarDays className="size-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h3 className="eng-title">{contact.book.title}</h3>
+              <p className="eng-text">{contact.book.text}</p>
+            </div>
+            <Link href="/contact" className={buttonVariants({ variant: "glass", size: "md" })}>
+              {contact.book.action}
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

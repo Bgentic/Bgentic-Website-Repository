@@ -175,9 +175,9 @@ export const clientsIntro = {
 }
 
 export const pricingIntro = {
-  title: "Prefer to run it yourself?",
+  title: "Serious systems. Predictable pricing.",
   intro:
-    "Every service above starts with a conversation. If you'd rather set up the platform yourself, these are our monthly plans.",
+    "Three plans in Australian dollars, GST included.\nPay monthly with no lock-in, or annually and save. Every plan starts with a 14-day free trial.",
 }
 
 export const contact = {
@@ -185,6 +185,12 @@ export const contact = {
   intro:
     "Book a discovery call. We'll ask how enquiries, jobs and orders move through your business, then tell you plainly what we'd automate first, and what we wouldn't.",
   promise: "We reply within one business day.",
+  // the other way in: straight to the calendar on /contact
+  book: {
+    title: "Rather talk it through?",
+    text: "Pick a time for a 30-minute discovery call on our calendar.",
+    action: "Book a call",
+  },
   // what happens after a visitor sends the form, in order
   next: [
     "Tell us how enquiries, jobs and orders move through your business today.",

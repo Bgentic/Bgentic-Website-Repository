@@ -72,7 +72,7 @@
   --popover: var(--b-raised);
   --popover-foreground: var(--b-ink);
   --primary: var(--b-accent);
-  --primary-foreground: #ffffff;
+  --primary-foreground: #060b17; /* navy on light blue: the brand pairing (white on it is 3.7:1) */
   --secondary: var(--b-fill);
   --secondary-foreground: var(--b-ink);
   --muted: var(--b-fill);

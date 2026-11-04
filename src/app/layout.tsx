@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Geist, Inter } from "next/font/google"
 import { SiteHeader } from "@/components/site/site-header"
-import { SiteFooter } from "@/components/site/site-footer"
+import { CinematicFooter } from "@/components/ui/motion-footer"
 import "./globals.css"
 
 // Inter carries the text, as on the Deal Desk and the proposals. Geist sets the display: a lighter, more engineered
@@ -50,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <SiteHeader />
         <main id="main">{children}</main>
-        <SiteFooter />
+        <CinematicFooter />
       </body>
     </html>
   )

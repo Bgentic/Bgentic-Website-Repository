@@ -7,7 +7,7 @@ import { ServicesBento } from "@/components/home/services-bento"
 import { SeeItWorking } from "@/components/home/see-it-working"
 import { HowWeWork } from "@/components/home/how-we-work"
 import { ClientsShowcase } from "@/components/home/clients-showcase"
-import { PricingPlans } from "@/components/home/pricing-plans"
+import { PricingSection } from "@/components/home/pricing-section"
 import { ContactSection } from "@/components/home/contact-section"
 import { SectionHeader } from "@/components/site/section-header"
 import { servicesIntro } from "@/content/home"
@@ -31,7 +31,7 @@ export default function Home() {
       <SeeItWorking />
       <HowWeWork />
       <ClientsShowcase />
-      <PricingPlans />
+      <PricingSection />
       <ContactSection />
     </>
   )

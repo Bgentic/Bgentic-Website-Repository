@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { PageHero } from "@/components/site/section-header"
 import { ClientsGrid } from "@/components/home/clients-grid"
-import { ContactBand } from "@/components/home/contact-band"
+import { ContactSection } from "@/components/home/contact-section"
 
 export const metadata: Metadata = {
   title: "Clients",
@@ -20,7 +20,7 @@ export default function ClientsPage() {
           <ClientsGrid />
         </div>
       </section>
-      <ContactBand />
+      <ContactSection />
     </>
   )
 }
