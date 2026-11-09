@@ -1,15 +1,15 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { ServicesBento } from "@/components/home/services-bento"
 import { ContactSection } from "@/components/home/contact-section"
+import { ConnectedShowcase, type ShowcaseItem } from "@/components/services/connected-showcase"
 import { ServicePath } from "@/components/services/service-path"
-import { TriagePanel } from "@/components/services/triage-panel"
+import { Showreel } from "@/components/services/showreel"
 import { Faq } from "@/components/site/faq"
 import { SectionHeader } from "@/components/site/section-header"
 import { buttonVariants } from "@/components/ui/button-variants"
-import { servicesIntro } from "@/content/home"
 import { servicesPage } from "@/content/pages"
+import { serviceBySlug } from "@/content/services"
 
 export const metadata: Metadata = {
   title: "Services",
@@ -17,20 +17,27 @@ export const metadata: Metadata = {
     "AI consultancy, automations, CRM, websites, ecommerce and SEO marketing, built for your business and kept running by our team in Sydney.",
 }
 
-// /services, in the home page's bands: the promise beside the four leaks, each pointed at its service (navy); the six
-// as the bento (sand); how they hand off to each other (navy); common questions (cream); the close (navy).
+// The one services page (the per-service pages are folded into it), in the home page's bands: the promise and the
+// showreel (navy); the four services in the connected showcase (sand); how all six fit together, where consultancy
+// and ecommerce live (navy); common questions (cream); the close (navy). Links to a service land here at
+// /services#slug (serviceHref).
+const showcase: ShowcaseItem[] = servicesPage.showcase.items.map((it) => {
+  const s = serviceBySlug(it.service)!
+  return { ...it, name: s.name, headline: s.headline, summary: s.summary, highlights: s.highlights }
+})
+
 export default function ServicesPage() {
-  const { faq } = servicesPage
+  const { faq, showcase: copy } = servicesPage
   return (
     <>
-      <section className="hero" aria-labelledby="services-page-title">
-        <div className="container-b grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-6">
-            <h1 id="services-page-title" className="t-h1 max-w-[14ch]">
+      <section className="hero services-hero" aria-labelledby="services-page-title">
+        <div className="container-b">
+          <div className="mx-auto max-w-[52rem] text-center">
+            <h1 id="services-page-title" className="t-h1">
               {servicesPage.title}
             </h1>
-            <p className="t-lede mt-6 max-w-[46ch]">{servicesPage.lede}</p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <p className="t-lede mx-auto mt-6 max-w-[48ch]">{servicesPage.lede}</p>
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Link href="/contact" className={buttonVariants({ variant: "primary", size: "lg" })}>
                 Book a discovery call
                 <ArrowRight aria-hidden="true" />
@@ -40,18 +47,19 @@ export default function ServicesPage() {
               </Link>
             </div>
           </div>
-          <div className="lg:col-span-6 xl:col-span-5 xl:col-start-8">
-            <TriagePanel />
+          <div className="mt-14 md:mt-16">
+            <Showreel />
           </div>
         </div>
       </section>
 
-      <section id="all-services" className="section paper paper-sand" aria-labelledby="services-title">
+      <section className="section paper paper-sand" aria-labelledby="showcase-title">
         <div className="container-b">
-          <SectionHeader id="services-title" title={servicesIntro.title} intro={servicesIntro.intro} />
-          <div className="mt-14">
-            <ServicesBento />
-          </div>
+          <SectionHeader id="showcase-title" title={copy.title} intro={copy.intro} />
+        </div>
+        {/* the carousel is wider than the page's text, so the card and its screen have room */}
+        <div className="showcase-wrap mt-14">
+          <ConnectedShowcase items={showcase} />
         </div>
       </section>
 

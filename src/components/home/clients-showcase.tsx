@@ -8,7 +8,7 @@ import { SectionHeader } from "@/components/site/section-header"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { CLIENTS } from "@/content/clients"
 import { clientsIntro } from "@/content/home"
-import { SERVICES } from "@/content/services"
+import { SERVICES, serviceHref, type ServiceSlug } from "@/content/services"
 import { cn } from "@/lib/utils"
 
 // 05 · Clients: the four real businesses as a gallery, like a product shoot. Each card is dark glass holding a lit
@@ -141,7 +141,7 @@ export function ClientsShowcase({ page = false, intro = clientsIntro.intro }: { 
                           <ul className="flex flex-wrap gap-1.5 pt-1">
                             {c.services.map((s) => (
                               <li key={s}>
-                                <Link href={`/services/${s}`} className="svc-chip client-chip">
+                                <Link href={serviceHref(s as ServiceSlug)} className="svc-chip client-chip">
                                   {serviceName(s)}
                                 </Link>
                               </li>

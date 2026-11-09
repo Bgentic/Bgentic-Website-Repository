@@ -257,3 +257,7 @@ export const SERVICES: Service[] = [
 ]
 
 export const serviceBySlug = (slug: string) => SERVICES.find((s) => s.slug === slug)
+
+/** Every service lives on the one /services page: four in its showcase (picked by the hash), consultancy and ecommerce
+ *  on the path band. A link to a service goes there. */
+export const serviceHref = (slug: ServiceSlug) => `/services#${slug}`

@@ -1,23 +1,45 @@
 // Copy for the subpages' own sections: /services and /contact. Copy lives here, not in components, so the SEO agent
-// can edit it. Every line is drawn from what's already on file (the services, the four leaks, the plans and the
+// can edit it. Every line is drawn from what's already on file (the services, the clients, the plans and the
 // contact promise); nothing here is a new claim.
-import { leaks } from "@/content/home"
 import type { ServiceSlug } from "@/content/services"
 
 export const servicesPage = {
   title: "Six services, one team.",
   lede: "Start with the one that hurts most. Each service is built to plug into the others, and we keep all of it running, so you're never left holding a system nobody understands.",
-  // the four leaks from the home page, each pointed at the service that closes it
-  triage: {
-    title: "Where it hurts",
-    note: "Start with",
-    rows: [
-      { problem: leaks.rows[0].problem, fix: leaks.rows[0].fix, service: "ai-consultancy" },
-      { problem: leaks.rows[1].problem, fix: leaks.rows[1].fix, service: "ecommerce" },
-      { problem: leaks.rows[2].problem, fix: leaks.rows[2].fix, service: "automations" },
-      { problem: leaks.rows[3].problem, fix: leaks.rows[3].fix, service: "crm" },
-    ] satisfies { problem: string; fix: string; service: ServiceSlug }[],
-    more: "Or see all six",
+  // the showreel's place at the top of the page, until the reel itself is cut
+  showreel: { label: "Showreel", note: "One minute of the systems at work. Coming soon." },
+  // the connected showcase: one slide per service, each with a screen of it at work
+  showcase: {
+    title: "See each one at work.",
+    intro: "Pick a service to see the screen your team would use. Every one plugs into the others.",
+    items: [
+      {
+        service: "crm",
+        tab: "CRM",
+        image: "/images/services/crm.png",
+        imageAlt: "A sales pipeline in the Bgentic CRM, with deals in each stage",
+      },
+      {
+        service: "automations",
+        tab: "Automations",
+        image: "/images/services/automations.webp",
+        imageAlt: "An appointment confirmation workflow: every branch of messages, reminders and updates it runs",
+      },
+      {
+        service: "websites",
+        tab: "Websites",
+        image: "/images/services/websites.jpg",
+        imageAlt: "npptrafficsolutions.com.au, a site Bgentic built and runs",
+      },
+      {
+        service: "seo-marketing",
+        tab: "SEO",
+        image: "/images/services/seo-sample.svg",
+        imageAlt: "A sample of the SEO agent's daily report",
+        // the only screen that isn't real yet, so it says so
+        tag: "Sample",
+      },
+    ] satisfies { service: ServiceSlug; tab: string; image: string; imageAlt: string; tag?: string }[],
   },
   path: {
     title: "How the six fit together.",

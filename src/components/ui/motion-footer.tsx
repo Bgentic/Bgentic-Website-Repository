@@ -16,7 +16,7 @@ import Link from "next/link"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowUp, CalendarDays, LogIn, Rocket } from "lucide-react"
-import { SERVICES } from "@/content/services"
+import { SERVICES, serviceHref } from "@/content/services"
 import { CONTACT_EMAIL, LEGAL, LOGIN_HREF, ONBOARDING_HREF } from "@/content/site"
 import { FINE_POINTER, REDUCED_MOTION } from "@/lib/media"
 import { cn } from "@/lib/utils"
@@ -360,7 +360,7 @@ export function CinematicFooter() {
               <ul className="flex flex-wrap justify-center gap-3 md:gap-4 w-full mt-2">
                 {SERVICES.map((s) => (
                   <li key={s.slug}>
-                    <MagneticButton as={Link} href={`/services/${s.slug}`} className={cn(PILL, "inline-block px-6 py-3")}>
+                    <MagneticButton as={Link} href={serviceHref(s.slug)} className={cn(PILL, "inline-block px-6 py-3")}>
                       {s.name}
                     </MagneticButton>
                   </li>

@@ -67,8 +67,6 @@
   .nav-pill::before,
   .nav-item,
   .nav-hl,
-  .mega,
-  .mega-link,
   .tile,
   .nav-sheet,
   .btn-primary,
@@ -102,9 +100,10 @@
   .plan-badge,
   .contact-card,
   .booking-frame,
-  .triage,
-  .triage-row,
-  .triage-chip,
+  .reel-frame,
+  .reel-screen,
+  .showcase-card,
+  .showcase-screen,
   .path-stop,
   .reach,
   .clients-hint {
@@ -158,7 +157,7 @@
     color: var(--b-ink);
   }
   /* The glass sits on a pseudo-element, not the pill: an element with a backdrop-filter becomes the backdrop root
-     for everything inside it, and the mega-menu and phone sheet would then blur only the pill, not the page. */
+     for everything inside it, and the phone sheet would then blur only the pill, not the page. */
   .nav-pill::before {
     content: "";
     position: absolute;
@@ -204,15 +203,8 @@
     transition: color 200ms var(--ease-out);
   }
   .nav-item:hover,
-  .nav-item[aria-current="page"],
-  .nav-item[aria-expanded="true"] {
+  .nav-item[aria-current="page"] {
     color: var(--b-ink);
-  }
-  .nav-item .chev {
-    transition: transform 280ms var(--ease-spring);
-  }
-  .nav-item[aria-expanded="true"] .chev {
-    transform: rotate(180deg);
   }
   /* The highlight glides between items on a spring and fades when the pointer leaves the list. */
   .nav-hl {
@@ -235,53 +227,6 @@
     transition: opacity 180ms var(--ease-out);
   }
 
-  /* The services mega-menu: grows from the trigger on the settle spring, leaves faster than it came. */
-  .mega {
-    position: absolute;
-    top: calc(100% + 0.625rem);
-    left: 50%;
-    width: min(54rem, calc(100vw - 1.5rem));
-    padding: 0.625rem;
-    border-radius: 26px;
-    color: var(--b-ink);
-    background: var(--grain), linear-gradient(180deg, rgb(17 22 33 / 0.88), rgb(6 11 23 / 0.92));
-    -webkit-backdrop-filter: blur(28px) saturate(150%);
-    backdrop-filter: blur(28px) saturate(150%);
-    box-shadow:
-      var(--edge),
-      0 2px 4px rgb(0 0 0 / 0.3),
-      0 28px 64px -24px rgb(0 0 0 / 0.9);
-    transform-origin: 50% 0;
-    transform: translateX(-50%) translateY(-6px) scale(0.98);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-      transform 160ms var(--ease-out),
-      opacity 140ms var(--ease-out),
-      visibility 0s linear 160ms;
-  }
-  .mega[data-open] {
-    transform: translateX(-50%);
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transition:
-      transform 300ms var(--ease-settle),
-      opacity 200ms var(--ease-out),
-      visibility 0s;
-  }
-  .mega-link {
-    display: flex;
-    gap: 0.875rem;
-    padding: 0.875rem;
-    border-radius: 16px;
-    transition: background-color 200ms var(--ease-out);
-  }
-  .mega-link:hover,
-  .mega-link:focus-visible {
-    background: rgb(255 255 255 / 0.05);
-  }
   .tile {
     display: grid;
     place-items: center;
@@ -2860,134 +2805,390 @@
     background: transparent;
   }
 
-  /* /services hero · the four leaks, each a row that leads to its service: a dark glass panel lit from its top */
-  .triage {
+  /* /services hero · the showreel: a 16:9 screen in a dark frosted-glass bezel, a faint blue glow behind it, and
+     on the screen a quiet grid, a soft light and a glass play mark; a small note under it says the reel is coming */
+  .services-hero {
+    padding-bottom: clamp(4rem, 8vw, 6rem);
+  }
+  .reel {
     position: relative;
-    padding: 0.375rem;
-    border-radius: 26px;
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+  .reel-glow {
+    position: absolute;
+    inset: 8% 6% -4%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(59 130 246 / 0.22), rgb(21 44 85 / 0.18) 55%, transparent);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .reel-frame {
+    padding: 0.625rem;
+    border-radius: 30px;
     background:
       var(--grain),
-      radial-gradient(90% 60% at 50% 0%, rgb(59 130 246 / 0.1), transparent 70%),
-      linear-gradient(180deg, rgb(17 22 33 / 0.86), rgb(6 11 23 / 0.9));
+      linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02) 40%, rgb(255 255 255 / 0.03)),
+      rgb(12 16 28 / 0.72);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
     box-shadow:
-      inset 0 0 0 1px rgb(255 255 255 / 0.09),
-      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      inset 0 0 0 1px rgb(255 255 255 / 0.1),
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
       0 2px 4px rgb(0 0 0 / 0.4),
-      0 40px 80px -36px rgb(0 0 0 / 0.85),
-      0 30px 80px -50px rgb(59 130 246 / 0.35);
+      0 50px 100px -40px rgb(0 0 0 / 0.9),
+      0 30px 90px -50px rgb(59 130 246 / 0.5);
   }
-  .triage-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.125rem 1.25rem 0.75rem;
-  }
-  .triage-title {
-    font-family: var(--font-heading);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--b-ink);
-  }
-  .triage-note {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--b-slate);
-  }
-  .triage-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.75rem 1.25rem;
-    padding: 1rem 1.25rem;
-    border-radius: 18px;
-    transition: background-color 160ms var(--ease-out);
-  }
-  @media (max-width: 479px) {
-    .triage-row {
-      grid-template-columns: minmax(0, 1fr);
-      justify-items: start;
+  @media (min-width: 768px) {
+    .reel-frame {
+      padding: 0.875rem;
     }
   }
-  .triage li + li .triage-row {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+  .reel-screen {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 21px;
+    background:
+      radial-gradient(60% 70% at 50% 45%, rgb(21 44 85 / 0.55), transparent 70%),
+      linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px) 0 0 / 48px 48px,
+      #070c18;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.6);
   }
-  .triage li + li {
-    border-top: 1px solid rgb(255 255 255 / 0.06);
+  /* the screen's edges fall into shadow, so the grid fades out toward them */
+  .reel-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 100% at 50% 50%, transparent 45%, rgb(6 11 23 / 0.85) 100%);
+    pointer-events: none;
   }
-  .triage-problem {
-    display: block;
-    font-size: 1rem;
-    font-weight: 550;
-    letter-spacing: -0.012em;
-    color: var(--b-ink);
+  .reel-play {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    color: #fbf7f3;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.05));
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.2),
+      inset 0 1px 0 rgb(255 255 255 / 0.3),
+      0 0 0 10px rgb(255 255 255 / 0.03),
+      0 20px 40px -12px rgb(0 0 0 / 0.6);
   }
-  .triage-fix {
-    display: block;
-    margin-top: 0.1875rem;
+  .reel-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
     font-size: 0.875rem;
-    line-height: 1.45;
     color: var(--b-body);
   }
-  .triage-chip {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    gap: 0.4375rem;
-    height: 2rem;
-    padding: 0 0.75rem;
-    border-radius: 11px;
-    font-size: 0.8125rem;
-    font-weight: 550;
+  .reel-note b {
+    font-weight: 600;
     color: var(--b-ink);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025));
-    box-shadow:
-      inset 0 0 0 1px rgb(255 255 255 / 0.09),
-      inset 0 1px 0 rgb(255 255 255 / 0.08);
-    transition:
-      box-shadow 160ms var(--ease-out),
-      color 160ms var(--ease-out);
   }
-  .triage-chip svg {
-    color: #3b82f6;
+  .reel-note i {
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 50%;
+    background: #3b82f6;
+    box-shadow: 0 0 0 4px rgb(59 130 246 / 0.16);
   }
-  .triage-chip svg:last-child {
-    color: var(--b-slate);
-    transition:
-      transform 280ms var(--ease-spring),
-      color 160ms var(--ease-out);
+
+  /* /services · the connected carousel (connected-showcase.tsx), a replica of 21st.dev's connected-carousel, on the
+     sand band: one navy object. The active card, and either side two vertical pills (the taller beside the card),
+     each joined to the next by a curved neck of the same navy, with one shadow under the whole silhouette. The
+     carousel runs nearly edge to edge (the clients gallery's slim margin) and everything in it scales with the
+     screen's width: the card about 40vw tall (34rem to 54rem, never taller than the screen allows), the pills and
+     necks with it. Each screen is shown whole, contained and never cropped, over a blurred wash of itself so the
+     space around it isn't empty. The
+     service names underneath as tabs, the active one underlined by a navy line that fills while it waits. Inner pills
+     from 1024px, outer from 1440px; below 1024px the card alone, its screen over its words. */
+  .showcase-wrap {
+    --sc-navy: #0f141f;
+    width: calc(100% - 2 * clamp(1rem, 2.2vw, 2.5rem));
+    margin-inline: auto;
   }
-  .triage-more {
+  .showcase {
+    position: relative;
+  }
+  .showcase-anchor {
+    position: absolute;
+    top: 0;
+    scroll-margin-top: calc(var(--header-h) + 11rem);
+  }
+  .showcase-row {
     display: flex;
     align-items: center;
     justify-content: center;
+    filter: drop-shadow(0 1px 1px rgb(6 11 23 / 0.18)) drop-shadow(0 26px 34px rgb(6 11 23 / 0.32));
+  }
+  .showcase-side {
+    display: none;
+    flex: none;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .showcase-side-inner {
+      display: flex;
+    }
+  }
+  @media (min-width: 1440px) {
+    .showcase-side-outer {
+      display: flex;
+    }
+  }
+
+  /* a neighbour: its screen in a navy frame */
+  .showcase-pill {
+    display: block;
+    flex: none;
+    background: var(--sc-navy);
+    cursor: pointer;
+  }
+  /* sized with the screen, so the row keeps its proportions at any width; the screen inside follows the frame's
+     curve (its radius less the frame's padding) */
+  .showcase-pill {
+    --pad: 0.5rem;
+    padding: var(--pad);
+    border-radius: var(--r);
+  }
+  .showcase-pill-inner {
+    --r: clamp(3rem, 3.3vw, 4.5rem);
+    width: clamp(6.5rem, 7vw, 9.5rem);
+    height: clamp(24rem, 27vw, 37rem);
+  }
+  .showcase-pill-outer {
+    --pad: 0.4375rem;
+    --r: clamp(2.25rem, 2.4vw, 3.25rem);
+    width: clamp(4.75rem, 5vw, 6.75rem);
+    height: clamp(15rem, 16.5vw, 23rem);
+  }
+  .showcase-pill-screen {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: calc(var(--r) - var(--pad));
+    background: #060b17;
+  }
+  .showcase-pill-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: filter 240ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .showcase-pill:hover .showcase-pill-img {
+      filter: brightness(1.12);
+    }
+  }
+  /* the neck: the same navy, overlapping each side by a hair so no seam shows */
+  .showcase-neck {
+    flex: none;
+    width: clamp(1rem, 1.1vw, 1.5rem);
+    height: clamp(5rem, 5.5vw, 7.5rem);
+    margin-inline: -1px;
+    fill: var(--sc-navy);
+  }
+
+  /* the active card */
+  .showcase-card {
+    position: relative;
+    display: grid;
+    flex: 1 1 auto;
+    gap: 1.25rem;
+    width: 100%;
+    min-width: 0;
+    padding: 0.75rem;
+    border-radius: 1.75rem;
+    color: #fbf7f3;
+    background: var(--sc-navy);
+  }
+  @media (min-width: 1024px) {
+    .showcase-card {
+      grid-template-columns: minmax(16rem, min(21vw, 28rem)) minmax(0, 1fr);
+      gap: clamp(1.75rem, 2vw, 2.75rem);
+      min-height: max(32rem, min(clamp(34rem, 2rem + 40vw, 54rem), 100svh - 9rem));
+      padding: clamp(1.75rem, 2vw, 2.75rem);
+      border-radius: clamp(2.25rem, 2.4vw, 3.25rem);
+    }
+  }
+  .showcase-words {
+    order: 2;
+    min-width: 0;
+    padding: 0.5rem 0.75rem 0.75rem;
+  }
+  @media (min-width: 1024px) {
+    .showcase-words {
+      order: 1;
+      padding: 0.25rem 0 0.25rem 0.25rem;
+    }
+  }
+  .showcase-headline {
+    font-family: var(--font-heading);
+    font-size: clamp(1.625rem, 0.9rem + 1.7vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: #fbf7f3;
+    text-wrap: balance;
+  }
+  /* the one line sits in the middle of the card, the chips at its foot */
+  .showcase-summary {
+    max-width: 30ch;
+    margin-block: auto;
+    padding-block: 1.5rem;
+    font-size: clamp(1.0625rem, 0.85rem + 0.45vw, 1.5rem);
+    line-height: 1.5;
+    color: #d7cfc5;
+    text-wrap: pretty;
+  }
+  .showcase-chips {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0.375rem;
-    margin-top: 0.25rem;
-    padding: 0.875rem 1rem;
-    border-top: 1px solid rgb(255 255 255 / 0.06);
-    font-size: 0.875rem;
+  }
+  .showcase-chip {
+    padding: 0.3125rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: clamp(0.75rem, 0.6rem + 0.2vw, 0.875rem);
+    font-weight: 500;
+    line-height: 1.35;
+    color: #938f8c;
+    background: rgb(255 255 255 / 0.06);
+  }
+  .showcase-chip-name {
+    font-weight: 600;
+    color: #fbf7f3;
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  /* the screen: a 16:10 box at least, taller if the words need it, the shot contained in it */
+  .showcase-screen {
+    position: relative;
+    order: 1;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    background: #060b17;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+  }
+  .showcase-screen::before {
+    content: "";
+    display: block;
+    padding-top: 62.5%;
+  }
+  @media (min-width: 1024px) {
+    .showcase-screen {
+      order: 2;
+      border-radius: 1.375rem;
+    }
+  }
+  .showcase-shot {
+    position: absolute;
+    inset: 0;
+  }
+  /* larger than the screen by more than the blur's reach, so it never fades out at the screen's edges */
+  .showcase-img-wash {
+    position: absolute;
+    inset: -25%;
+    width: 150%;
+    max-width: none; /* the base img rule caps it at 100%, which left the right of the screen bare */
+    height: 150%;
+    object-fit: cover;
+    filter: blur(32px) saturate(1.15);
+    opacity: 0.38;
+  }
+  .showcase-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 28px rgb(0 0 0 / 0.5));
+  }
+  @media (min-width: 1024px) {
+    .showcase-img {
+      padding: 1.125rem;
+    }
+  }
+  .showcase-tag {
+    position: absolute;
+    bottom: 0.875rem;
+    left: 0.875rem;
+    z-index: 2;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fbf7f3;
+    background: rgb(6 11 23 / 0.72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  }
+
+  /* the tabs: the service names, the active one underlined by a navy line that fills while the carousel waits */
+  .showcase-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.75rem;
+    margin-top: 2rem;
+  }
+  .showcase-tab {
+    position: relative;
+    padding: 0.5rem 0 0.75rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     color: var(--b-body);
     transition: color 160ms var(--ease-out);
   }
+  .showcase-tab[aria-selected="true"] {
+    font-weight: 600;
+    color: var(--b-ink);
+  }
   @media (hover: hover) and (pointer: fine) {
-    .triage-row:hover {
-      background: rgb(255 255 255 / 0.035);
-    }
-    .triage-row:hover .triage-chip {
-      box-shadow:
-        inset 0 0 0 1px rgb(59 130 246 / 0.45),
-        inset 0 1px 0 rgb(255 255 255 / 0.1);
-    }
-    .triage-row:hover .triage-chip svg:last-child {
-      color: #3b82f6;
-      transform: translateX(2px);
-    }
-    .triage-more:hover {
+    .showcase-tab:hover {
       color: var(--b-ink);
     }
+  }
+  .showcase-tab:focus-visible {
+    outline: 2px solid #060b17;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .showcase-progress {
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: rgb(6 11 23 / 0.12);
+  }
+  .showcase-progress-fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: left;
+    background: #060b17;
   }
 
   /* /services · the path: five glass stops, joined by a fine light-blue line through their icons from 1280px */
@@ -3077,7 +3278,7 @@
     transition: transform 280ms var(--ease-spring);
   }
   @media (hover: hover) and (pointer: fine) {
-    .path-stop:hover {
+    .path-stop:not(.path-stop-static):hover {
       translate: 0 -3px;
       box-shadow:
         inset 0 0 0 1px rgb(59 130 246 / 0.5),
@@ -3424,7 +3625,6 @@
   /* ------------------------------------------------------------- reduced motion and transparency */
   @media (prefers-reduced-transparency: reduce) {
     .nav-pill::before,
-    .mega,
     .nav-sheet,
     .btn-glass,
     .side-panel {
@@ -3435,8 +3635,6 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .nav-hl,
-    .mega,
-    .mega[data-open],
     .btn-spring,
     .svc,
     .svc .go {

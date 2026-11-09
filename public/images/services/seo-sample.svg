@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+  <!-- A placeholder for the SEO agent's daily report, until the real one runs on bgentic.io. Marked "Sample". -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f141f"/>
+      <stop offset="1" stop-color="#060b17"/>
+    </linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b82f6" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#3b82f6" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.78" cy="0.1" r="0.7">
+      <stop offset="0" stop-color="#152c55" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#152c55" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+
+  <!-- window bar -->
+  <rect x="0" y="0" width="1600" height="64" fill="#0c101c"/>
+  <circle cx="40" cy="32" r="7" fill="#32363f"/><circle cx="64" cy="32" r="7" fill="#32363f"/><circle cx="88" cy="32" r="7" fill="#32363f"/>
+  <text x="130" y="39" font-size="20" fill="#82807f">app.bgentic.io / seo</text>
+  <rect x="1420" y="18" width="140" height="28" rx="14" fill="none" stroke="#32363f" stroke-width="1.5"/>
+  <text x="1490" y="38" font-size="15" font-weight="600" fill="#938f8c" text-anchor="middle">Sample</text>
+  <rect x="0" y="64" width="1600" height="1" fill="#1b202b"/>
+
+  <!-- heading -->
+  <text x="80" y="160" font-size="44" font-weight="600" fill="#fbf7f3" letter-spacing="-1">This morning's check</text>
+  <text x="80" y="205" font-size="22" fill="#938f8c">bgentic.io · checked at 6:00 am</text>
+
+  <!-- the checks -->
+  <g font-size="24" fill="#fbf7f3">
+    <rect x="80" y="260" width="640" height="96" rx="20" fill="#0c101c" stroke="#1b202b"/>
+    <circle cx="128" cy="308" r="16" fill="#3b82f6" fill-opacity="0.16"/>
+    <path d="M120 308 l6 6 l11 -12" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="166" y="316">Every page crawled and checked</text>
+
+    <rect x="80" y="372" width="640" height="96" rx="20" fill="#0c101c" stroke="#1b202b"/>
+    <circle cx="128" cy="420" r="16" fill="#3b82f6" fill-opacity="0.16"/>
+    <path d="M120 420 l6 6 l11 -12" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="166" y="428">Titles rewritten where they slipped</text>
+
+    <rect x="80" y="484" width="640" height="96" rx="20" fill="#0c101c" stroke="#1b202b"/>
+    <circle cx="128" cy="532" r="16" fill="#3b82f6" fill-opacity="0.16"/>
+    <path d="M120 532 l6 6 l11 -12" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="166" y="540">Service pages refreshed for local search</text>
+
+    <rect x="80" y="596" width="640" height="96" rx="20" fill="#0c101c" stroke="#1b202b"/>
+    <circle cx="128" cy="644" r="16" fill="#fbf7f3" fill-opacity="0.08"/>
+    <circle cx="128" cy="644" r="5" fill="#3b82f6"/>
+    <text x="166" y="652">Summary on your phone</text>
+    <rect x="580" y="626" width="112" height="36" rx="10" fill="#3b82f6"/>
+    <text x="636" y="651" font-size="18" font-weight="600" fill="#060b17" text-anchor="middle">6:00 am</text>
+  </g>
+
+  <!-- the trend: a shape, not a number -->
+  <rect x="780" y="260" width="740" height="432" rx="24" fill="#0c101c" stroke="#1b202b"/>
+  <text x="820" y="312" font-size="22" font-weight="600" fill="#fbf7f3">Search visibility</text>
+  <text x="820" y="344" font-size="18" fill="#82807f">Last 12 weeks · sample</text>
+  <g stroke="#1b202b" stroke-width="1">
+    <line x1="820" y1="420" x2="1480" y2="420"/><line x1="820" y1="500" x2="1480" y2="500"/><line x1="820" y1="580" x2="1480" y2="580"/><line x1="820" y1="652" x2="1480" y2="652"/>
+  </g>
+  <path d="M820 630 C 880 622, 920 610, 980 600 S 1080 590, 1120 560 S 1220 540, 1270 500 S 1380 470, 1480 410 L1480 652 L820 652 Z" fill="url(#area)"/>
+  <path d="M820 630 C 880 622, 920 610, 980 600 S 1080 590, 1120 560 S 1220 540, 1270 500 S 1380 470, 1480 410" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="1480" cy="410" r="9" fill="#3b82f6"/><circle cx="1480" cy="410" r="18" fill="#3b82f6" fill-opacity="0.2"/>
+
+  <!-- pages changed -->
+  <rect x="80" y="732" width="1440" height="188" rx="24" fill="#0c101c" stroke="#1b202b"/>
+  <text x="120" y="788" font-size="22" font-weight="600" fill="#fbf7f3">Pages changed today</text>
+  <g font-size="20">
+    <rect x="120" y="816" width="420" height="68" rx="14" fill="#0f141f" stroke="#1b202b"/>
+    <text x="146" y="858" fill="#d7cfc5">/services · title and summary</text>
+    <rect x="560" y="816" width="420" height="68" rx="14" fill="#0f141f" stroke="#1b202b"/>
+    <text x="586" y="858" fill="#d7cfc5">/pricing · questions updated</text>
+    <rect x="1000" y="816" width="480" height="68" rx="14" fill="#0f141f" stroke="#1b202b"/>
+    <text x="1026" y="858" fill="#d7cfc5">/contact · local search details</text>
+  </g>
+</svg>

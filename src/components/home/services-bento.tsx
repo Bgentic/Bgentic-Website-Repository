@@ -8,7 +8,7 @@ import * as React from "react"
 import Link from "next/link"
 import { ArrowRight, Check } from "lucide-react"
 import { ServiceIcon } from "@/components/site/service-icons"
-import { SERVICES } from "@/content/services"
+import { SERVICES, serviceHref } from "@/content/services"
 import { leaks } from "@/content/home"
 import { cn } from "@/lib/utils"
 
@@ -84,7 +84,7 @@ export function ServicesBento() {
         const wide = WIDE.has(s.slug)
         return (
           <li key={s.slug} className={cn("reveal", wide && "bento-wide")}>
-            <Link href={`/services/${s.slug}`} className="svc">
+            <Link href={serviceHref(s.slug)} className="svc">
               <span className="svc-glow" aria-hidden="true" />
               <div className="flex flex-1 gap-8">
                 <div className="flex flex-1 flex-col">

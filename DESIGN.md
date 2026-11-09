@@ -274,32 +274,29 @@ The four real clients as a product shoot.
 - **Quotes:** a card becomes a quote (quotation marks, credited to the person) only once that client approves its exact wording. It goes in `APPROVED` in `content/testimonials.ts`, and drafts to send are in `docs/client-testimonial-drafts.md`. Once any card is a quote, the heading becomes "In their words."
 - **Close:** navy.
 
-### Service pages (/services/[slug])
-One template for all six services, in bands:
-1. **Navy hero:** breadcrumb, headline, lede and the two actions, beside a dark glass "at a glance" panel (`service-glance.tsx`). It shows the icon, name, summary and the three highlights with checks, plus the clients running it.
-2. **Sand:** "What we build", as paper sheets.
-3. **Navy:** the service working (`service-demo.tsx`).
-   - **CRM:** the live app in its glass window.
-   - **Automations:** the "See it working" film.
-   - **Ecommerce:** the order journey (Example).
-   - **Websites:** the client gallery.
-   - **Consultancy and SEO:** a plain "the interactive demo lands here next" panel that offers a call.
-4. **Cream:** who it's for, who's running it, the questions, and the other five as glass buttons.
-5. **Navy:** the close.
-
-### Subpages (/services, /contact)
-Built from the home page's bands and parts. Copy lives in `src/content/pages.ts`.
-- **/services, in bands:**
-  1. **Navy hero:** the promise, beside a triage panel ("Where it hurts").
-  2. **Sand:** the services bento.
+### Services (/services, one page)
+Every service lives on this one page; the per-service pages were folded into it (2026-11-04). A link to a service is `serviceHref(slug)`, which gives `/services#slug`. Copy lives in `src/content/pages.ts`.
+- **Bands:**
+  1. **Navy hero:** the centred promise and the two actions, over the showreel.
+  2. **Sand:** the connected showcase.
   3. **Navy:** the path ("How the six fit together").
   4. **Cream:** common questions.
   5. **Navy:** the close.
-- **/contact, in bands:**
-  1. **Navy:** the close, set as the page's h1 and clearing the header (`.contact-page`).
+- **Showreel** (`showreel.tsx`): a 16:9 screen in a dark frosted-glass bezel, with a faint blue glow behind. Until the one-minute reel is cut, the screen shows a quiet grid and soft light, a glass play mark sits at the centre, and a small note under it says "Showreel · coming soon". Nothing is clickable; a `<video>` replaces the screen when the reel arrives.
+- **Connected carousel** (`connected-showcase.tsx`), a replica of 21st.dev @arunachalam/connected-carousel. It runs nearly edge to edge (`.showcase-wrap`, the clients gallery's slim margin of `clamp(1rem, 2.2vw, 2.5rem)`) and reads as one navy (#0f141f) object on the sand band, with a single drop shadow under the whole silhouette. Everything in it scales with the screen's width, so it keeps its proportions at any size.
+  - **Card:** the active service, about 40vw tall on desktop: 34rem to 54rem, never taller than the screen less 9rem (1272 × 783 at 1877px). The words column is `min(21vw, 28rem)`, so the extra width goes to the screen. A bold headline at the top, its one-line summary in the middle, and two small chips at the foot (the name, then the highlights). Beside them is the screen, shown whole (contained, never cropped) with a soft drop shadow, over a blurred wash of the same image so the space around it isn't empty. Only the SEO sample carries a tag ("Sample").
+  - **Neighbours:** vertical pills either side, a taller one (about 7vw × 27vw, from 6.5 × 24rem) beside the card and a shorter one (about 5vw × 16.5vw, from 4.75 × 15rem) beyond it. Each holds its screen in a navy frame and is joined to the next by a curved navy neck. Inner pills show from 1024px, outer from 1440px.
+  - **Changing service:** a tab, a pill or a `/services#slug` link swaps it. The words rise in, and the new screen opens over the old through an expanding clip-path aperture (0.7s).
+  - **Tabs:** the service names under the card (CRM, Automations, Websites, SEO), the active one underlined by a navy line that fills while the carousel waits. It moves on every 6s while on screen, whether or not anyone clicks: picking a service restarts the count from it. The user asked for this, 2026-11-09, and removed the pause button. It holds only while keyboard focus is inside it, so someone tabbing through can read. Under reduced motion it never moves by itself.
+  - **Smaller screens:** below 1024px, the card alone, the screen over the words.
+  - **Screens** (`public/images/services/`): `crm.png` and `automations.webp` were supplied by the user; `websites.jpg` is npptrafficsolutions.com.au, captured; `seo-sample.svg` is a designed sample.
+- **Navigation:** every item, Services included, is a plain link. There's no dropdown.
+- **Path:** five dark glass stops, one customer's path from search to reorder. From 1280px they sit in one row, joined by a fine light-blue line through their icons. A stop whose service is in the showcase links back up to it. Ecommerce's stop and the closing "AI consultancy sits behind all five" strip are where links to those two land.
+
+### Contact (/contact)
+- **Bands:**
+  1. **Navy:** the booking section.
   2. **Cream:** three "other ways in" paper sheets (email, log in, the plans), then common questions.
-- **Triage panel:** dark glass. Each of the four leaks is a row linking to the service that closes it, with a glass chip naming the service. The chip's edge turns light blue on hover. Below 480px the chip drops under the text.
-- **Path:** five dark glass stops, one customer's path from search to reorder. From 1280px they sit in one row, joined by a fine light-blue line through their icons. Each stop links to its service and lifts 3px with a light-blue edge on hover. The engineering strip closes the band as "AI consultancy sits behind all five".
 - **Reach sheet:** a cream paper card: a tile, a 21px title, a body line and an action naming its target. It lifts 3px on hover.
 
 ### Pricing block (home 06 and /pricing)
