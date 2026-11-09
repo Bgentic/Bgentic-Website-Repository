@@ -16,7 +16,7 @@ export const servicesPage = {
       {
         service: "crm",
         tab: "CRM",
-        image: "/images/services/crm.png",
+        image: "/images/services/crm.webp",
         imageAlt: "A sales pipeline in the Bgentic CRM, with deals in each stage",
       },
       {

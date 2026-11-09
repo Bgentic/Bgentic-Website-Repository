@@ -172,6 +172,19 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
     let frameNo = 0
     let lastRaf = 0
     let raf = 0
+    // While the page is in a view transition (moving to another page, or gliding back to the top), the orb holds its
+    // last frame: its thousands of grains would otherwise compete with the screen-sized transition for the GPU and
+    // stutter it, and nobody follows its slow drift during a move that's over in under a second. Its clock isn't
+    // advanced meanwhile, so it carries on from where it was. It always draws its first frame, so it's never blank.
+    let drawn = false
+    const transitioning = (() => {
+      try {
+        document.documentElement.matches(":active-view-transition")
+        return () => document.documentElement.matches(":active-view-transition")
+      } catch {
+        return () => false
+      }
+    })()
     const schedule = () => {
       if (!raf && !s.paused) raf = requestAnimationFrame(frame)
     }
@@ -186,6 +199,10 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
         else if (!refreshHz) refreshHz = 1000 / [...deltas].sort((a, b) => a - b)[12]
       }
       lastRaf = now
+      if (drawn && transitioning()) {
+        s.lastT = 0
+        return
+      }
       frameNo++
       const div = refreshHz ? Math.max(1, Math.round(refreshHz / tier.fps)) : 1
       if (frameNo % div) return
@@ -213,6 +230,7 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       }
       s.dirty = false
       draw()
+      drawn = true
     }
 
     /* ----------------------------------------------------------- a frame, in stages */

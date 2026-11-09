@@ -108,6 +108,9 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-padding-top: calc(var(--header-h) + 1.5rem);
+    /* every scroll within a page glides (anchors, the logo back to the hero, back to top); moving to another page
+       doesn't, as <html data-scroll-behavior="smooth"> has Next.js jump to the new page's top behind the transition */
+    scroll-behavior: smooth;
     background: var(--b-ground);
   }
   body {
@@ -147,48 +150,10 @@
   .section {
     padding-block: var(--section-y);
   }
-  /* Light sections alternate between the page ground and white surface; two navy bands carry the turning points. */
-  .band-ground {
-    background: var(--b-ground);
-  }
-  .band-surface {
-    background: var(--b-surface);
-  }
-  .band-navy {
-    --nv-ink: #fbf7f3;
-    --nv-body: var(--b-sky-200);
-    --nv-quiet: var(--b-sky-400);
-    --nv-rule: rgb(59 130 246 / 0.16);
-    color: var(--nv-ink);
-    background:
-      radial-gradient(60rem 30rem at 85% 0%, rgb(59 130 246 / 0.16), transparent 70%),
-      linear-gradient(180deg, #152c55 0%, #060b17 70%);
-  }
-  /* Dark only: the bands are the brand navy itself, lit from the top right and settling into the ground. On the
-     deeper navy the top is navy tinted 16% with blue, so the band eases in rather than stepping up to a bright edge. */
-  :root[data-theme="dark"] .band-navy {
-    --nv-ink: #fbf7f3;
-    --nv-body: rgb(251 247 243 / 0.86);
-    --nv-quiet: #3b82f6;
-    --nv-rule: rgb(59 130 246 / 0.16);
-    background:
-      radial-gradient(60rem 32rem at 88% -6%, rgb(251 247 243 / 0.05), transparent 68%),
-      linear-gradient(180deg, #0f1e3b 0%, #060b17 62%, #060b17 100%);
-  }
-  :root[data-theme="dark"] .band-surface {
-    background: var(--b-column);
-  }
 
   /* ------------------------------------------------------------- typography */
 
   /* Display sizes are set in Geist (--font-heading), lighter than the text face and tightly tracked. */
-  .t-display {
-    font-family: var(--font-heading);
-    font-size: clamp(2.75rem, 1.6rem + 3.9vw, 4.75rem);
-    font-weight: 560;
-    line-height: 1.02;
-    letter-spacing: -0.038em;
-  }
   .t-h1 {
     font-family: var(--font-heading);
     font-size: clamp(2.5rem, 1.6rem + 3vw, 4rem);
@@ -203,12 +168,6 @@
     line-height: 1.06;
     letter-spacing: -0.035em;
   }
-  .t-h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.015em;
-  }
   .t-lede {
     font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
     line-height: 1.55;
@@ -216,20 +175,6 @@
   }
   .t-body {
     color: var(--b-body);
-  }
-  .t-quiet {
-    font-size: 0.875rem;
-    color: var(--b-slate);
-  }
-  .t-num {
-    font-variant-numeric: tabular-nums;
-  }
-  .band-navy .t-lede,
-  .band-navy .t-body {
-    color: var(--nv-body);
-  }
-  .band-navy .t-quiet {
-    color: var(--nv-quiet);
   }
   .link-quiet {
     color: var(--b-accent-text);
@@ -241,18 +186,9 @@
   .link-quiet:hover {
     text-decoration-color: currentColor;
   }
-  .band-navy .link-quiet {
-    color: var(--nv-quiet);
-  }
 
   /* ------------------------------------------------------------- materials */
 
-  /* A solid card with a 1px edge and a line of light along its top: the specular border. */
-  .card-spec {
-    background: var(--b-card-bg);
-    border: 1px solid var(--b-card-edge);
-    box-shadow: var(--b-card-sheen), var(--b-shadow-card);
-  }
   /* Frosted glass, for the one or two surfaces that float: the hero desk and the contact form. */
   .glass {
     background: var(--b-glass-bg);
@@ -260,13 +196,6 @@
     backdrop-filter: blur(24px) saturate(170%);
     border: 1px solid var(--b-glass-line);
     box-shadow: var(--b-glass-shadow);
-  }
-  .band-navy .glass {
-    background: rgb(255 255 255 / 0.06);
-    border-color: rgb(255 255 255 / 0.12);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.12),
-      0 30px 60px -30px rgb(0 0 0 / 0.6);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .glass {
@@ -279,15 +208,9 @@
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
-    .band-navy .glass {
-      background: #152c55;
-    }
   }
   .hairline {
     border-color: var(--b-line);
-  }
-  .band-navy .hairline {
-    border-color: var(--nv-rule);
   }
 
   /* ------------------------------------------------------------- header */
@@ -307,51 +230,6 @@
   }
   .skip-link:focus-visible {
     transform: none;
-  }
-  .site-header {
-    position: fixed;
-    inset: 0 0 auto 0;
-    z-index: 50;
-    height: var(--header-h);
-    color: var(--b-ink);
-    background: var(--b-toolbar-bg);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    backdrop-filter: blur(16px) saturate(180%);
-    border-bottom: 1px solid var(--b-hairline);
-    transition:
-      background-color 220ms var(--ease-out),
-      border-color 220ms var(--ease-out),
-      color 220ms var(--ease-out);
-  }
-  .site-header[data-tone="navy"] {
-    color: #ffffff;
-    background: rgb(6 11 23 / 0.72);
-    border-bottom-color: rgb(59 130 246 / 0.12);
-  }
-  :root[data-theme="dark"] .site-header[data-tone="navy"] {
-    color: var(--b-ink);
-    background: rgb(6 11 23 / 0.72);
-    border-bottom-color: var(--b-hairline);
-  }
-  @media (prefers-reduced-transparency: reduce) {
-    .site-header {
-      background: var(--b-surface);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-    .site-header[data-tone="navy"] {
-      background: #060b17;
-    }
-  }
-  .nav-link {
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: color-mix(in srgb, currentColor 78%, transparent);
-    transition: color 160ms var(--ease-out);
-  }
-  .nav-link:hover,
-  .nav-link[aria-current="page"] {
-    color: currentColor;
   }
 
   /* ------------------------------------------------------------- hero */
@@ -380,30 +258,6 @@
     background: color-mix(in oklab, currentColor 12%, transparent);
   }
 
-  /* ------------------------------------------------------------- journey */
-
-  .status-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    height: 1.5rem;
-    padding-inline: 0.625rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 550;
-    white-space: nowrap;
-    color: var(--b-slate);
-    background: var(--b-fill);
-  }
-  .status-chip[data-tone="warn"] {
-    color: var(--b-warn-ink);
-    background: var(--b-warn-tint);
-  }
-  .status-chip[data-tone="success"] {
-    color: var(--b-success-ink);
-    background: var(--b-success-tint);
-  }
-
   /* ------------------------------------------------------------- reveals */
 
   /* Content is visible by default. Where scroll-driven animation is supported and motion is welcome, sections rise
@@ -427,14 +281,12 @@
     .reveal {
       animation: none !important;
     }
-    .site-header {
-      display: none;
-    }
   }
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
     .skip-link,
-    .site-header,
-    .nav-link,
     .link-quiet {
       transition: none;
     }
@@ -475,30 +327,6 @@
   }
   .field-error {
     color: var(--b-danger-ink);
-  }
-  .band-navy .field {
-    color: #ffffff;
-    background: rgb(255 255 255 / 0.06);
-    border-color: rgb(255 255 255 / 0.16);
-    box-shadow: none;
-  }
-  .band-navy .field::placeholder,
-  .band-navy .field-hint {
-    color: var(--nv-quiet);
-  }
-  .band-navy .field:focus-visible {
-    border-color: var(--b-sky-400);
-    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.3);
-  }
-  .band-navy .field-error {
-    color: #f5a9ac;
-  }
-  .band-navy .field option {
-    color: var(--b-ink);
-    background: var(--b-surface);
-  }
-  :root[data-theme="dark"] .band-navy .field {
-    color: var(--b-ink);
   }
 
   /* ------------------------------------------------------------- faq */

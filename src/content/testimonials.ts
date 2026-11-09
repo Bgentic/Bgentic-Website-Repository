@@ -43,7 +43,7 @@ export const CLIENT_CARDS: ClientCard[] = CLIENTS.map((c) => {
     text: approved ? approved.text : (SAYS[c.slug] ?? c.runs),
     quote: !!approved,
     by: approved ? approved.by : `${c.name} · ${c.sector}`,
-    logo: `/images/clients/${c.slug}/logo.png`,
+    logo: `/images/clients/${c.slug}/logo.webp`,
     logoAlt: c.name,
     logoOn: LOGO_ON[c.slug] ?? "dark",
   }

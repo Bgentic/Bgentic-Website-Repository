@@ -1,9 +1,10 @@
 "use client"
 // 03 · See it working: one window, one film. An ordinary Tuesday at an example plumbing business, moving through six
 // screens of the app (overview, inbox, pipeline, automations, website, reports), the sidebar steady as each changes. It's
-// rendered by scripts/demo-film.mjs (npm run film); this is its player. It autoplays muted and looped from the moment
-// the page loads, starting where its poster is so the first frame doesn't jump. Under reduced motion it stays on the
-// poster.
+// rendered by scripts/demo-film.mjs (npm run film); this is its player. It autoplays muted and looped once the page has
+// loaded and settled, or at once if it's already near the screen (the film is 9 MB, so it doesn't compete with the
+// first screen for the connection), starting where its poster is so the first frame doesn't jump. Under reduced motion
+// it stays on the poster.
 //
 // What runs it floats either side: Claude as a terminal working through a request (lower left) and the engineering
 // team as a shared code editor (upper right): two engineers' live cursors in the file, the team's activity beneath it,
@@ -15,6 +16,7 @@
 import * as React from "react"
 import { Asterisk, Check, ChevronsRight, FileCode2, LoaderCircle } from "lucide-react"
 import { demos } from "@/content/home"
+import { onIdle } from "@/lib/idle"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 const FILM = "/video/see-it-working.mp4"
@@ -404,6 +406,7 @@ export function WorkingFilm() {
   const video = React.useRef<HTMLVideoElement>(null)
   const still = useReducedMotion()
   const [onScreen, setOnScreen] = React.useState(false)
+  const [src, setSrc] = React.useState<string>()
   const [tick, setTick] = React.useState(0)
   const running = onScreen && !still
 
@@ -415,14 +418,33 @@ export function WorkingFilm() {
     return () => io.disconnect()
   }, [])
 
-  // the film autoplays from the HTML; this only holds it on the poster under reduced motion, and nudges it to play
-  // if the browser held it back before the page was interactive
+  // the film's source is attached once the page is idle, or straight away if the film is within a screen of view (a
+  // reload part way down the page); the poster holds its place until then
+  React.useEffect(() => {
+    const el = wrap.current
+    if (!el) return
+    const attach = () => {
+      near.disconnect()
+      cancelIdle()
+      setSrc(`${FILM}#t=${POSTER_AT}`)
+    }
+    const near = new IntersectionObserver(([e]) => e.isIntersecting && attach(), { rootMargin: "100% 0px" })
+    near.observe(el)
+    const cancelIdle = onIdle(attach)
+    return () => {
+      near.disconnect()
+      cancelIdle()
+    }
+  }, [])
+
+  // the film autoplays from its attributes; this only holds it on the poster under reduced motion, and nudges it to
+  // play if the browser held it back
   React.useEffect(() => {
     const v = video.current
-    if (!v) return
+    if (!v || !src) return
     if (still) v.pause()
     else if (v.paused) v.play().catch(() => {})
-  }, [still])
+  }, [still, src])
 
   // the panels' clock runs only while the section is on screen
   React.useEffect(() => {
@@ -456,7 +478,7 @@ export function WorkingFilm() {
           <video
             ref={video}
             className="film-video"
-            src={`${FILM}#t=${POSTER_AT}`}
+            src={src}
             poster={POSTER}
             width={2070}
             height={1128}

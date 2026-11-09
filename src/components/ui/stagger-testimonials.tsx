@@ -60,7 +60,7 @@ function Card({
         style={{ boxShadow: "3px 3px 0px var(--background)" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- a small logo, moved with its card */}
-        <img src={item.logo} alt="" className="max-h-9 w-auto max-w-full object-contain" />
+        <img src={item.logo} alt="" loading="lazy" className="max-h-9 w-auto max-w-full object-contain" />
       </span>
       {!item.quote && (
         <p className={cn("mb-2 text-xs font-semibold tracking-[0.08em] uppercase", active ? "stagger-active-muted" : "text-muted-foreground")}>

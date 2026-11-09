@@ -41,9 +41,20 @@ export const viewport: Viewport = {
 }
 
 // The site is dark only: the theme is set in the markup, so there is nothing to detect and nothing to flash.
+// The root's view-transition-name is the browser's own default, written inline because React otherwise switches the
+// root out of a transition whose only named change is inside a ViewTransition (app/template.tsx's marker), and the
+// page change animates the root snapshot (styles/depth.css, "page transitions"). Scrolling within a page is smooth
+// (globals.css); data-scroll-behavior="smooth" has Next.js set that aside while it moves to another page, so the new
+// page starts at its top at once, behind the transition.
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-AU" data-theme="dark" className={`${inter.variable} ${geist.variable}`}>
+    <html
+      lang="en-AU"
+      data-theme="dark"
+      data-scroll-behavior="smooth"
+      className={`${inter.variable} ${geist.variable}`}
+      style={{ viewTransitionName: "root" }}
+    >
       <body>
         <a href="#main" className="skip-link">
           Skip to content

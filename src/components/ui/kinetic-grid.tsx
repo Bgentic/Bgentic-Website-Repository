@@ -264,8 +264,10 @@ export function KineticGrid({
       ptr.seen = true
       aim()
     }
+    // re-aimed on scroll only while the grid is on screen (aiming measures the canvas, which would otherwise make every
+    // scroll down the page wait on a layout); it aims afresh as it comes back into view
     const onScroll = () => {
-      if (ptr.seen) aim()
+      if (ptr.seen && visible) aim()
     }
     const onLeave = () => {
       ptr.target = 0
@@ -300,8 +302,10 @@ export function KineticGrid({
     ro.observe(canvas)
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting
-      if (visible) kick()
-      else {
+      if (visible) {
+        if (ptr.seen) aim()
+        kick()
+      } else {
         cancelAnimationFrame(raf)
         raf = 0
         last = 0

@@ -278,7 +278,24 @@
     "must": [],
     "avoid": []
   },
-  "decisions": [],
+  "decisions": [
+    {
+      "date": "2026-11-09",
+      "area": "navigation motion",
+      "choice": "Lift & focus",
+      "rejected": [
+        "Directional glide",
+        "Navy veil"
+      ],
+      "summary": "Frosted selected capsule glides to the clicked nav item at once (340ms settle spring, compositor FLIP); pages change with a native view transition: the old page dissolves (160ms, 3px blur) and the new one rises 14px out of a 5px blur (440ms, cubic-bezier(0.16,1,0.3,1)); header anchored; reduced motion cross-fades.",
+      "files": [
+        "src/components/site/site-header.tsx",
+        "src/app/template.tsx",
+        "src/app/layout.tsx",
+        "src/styles/depth.css"
+      ]
+    }
+  ],
   "evidence": [
     {
       "fact": "components.installed",

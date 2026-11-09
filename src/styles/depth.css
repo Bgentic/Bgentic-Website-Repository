@@ -96,8 +96,6 @@
   .eng,
   .client,
   .client-stage,
-  .plan,
-  .plan-badge,
   .contact-card,
   .booking-frame,
   .reel-frame,
@@ -147,6 +145,7 @@
   .nav-pill {
     pointer-events: auto;
     position: relative;
+    view-transition-name: site-nav;
     width: min(100%, 56rem);
     height: 3.5rem;
     display: flex;
@@ -200,11 +199,16 @@
     font-weight: 500;
     letter-spacing: -0.006em;
     color: var(--b-body);
-    transition: color 200ms var(--ease-out);
+    transition:
+      color 200ms var(--ease-out),
+      scale 160ms var(--ease-out);
   }
   .nav-item:hover,
-  .nav-item[aria-current="page"] {
+  .nav-item[data-active] {
     color: var(--b-ink);
+  }
+  .nav-item:active {
+    scale: 0.97;
   }
   /* The highlight glides between items on a spring and fades when the pointer leaves the list. */
   .nav-hl {
@@ -225,6 +229,52 @@
   }
   .nav-hl[data-instant] {
     transition: opacity 180ms var(--ease-out);
+  }
+  /* The capsule on the page you're on: a frosted step brighter than the pointer's highlight, lit along its top edge
+     and resting on a soft shadow. It glides to a clicked item on the settle spring the moment you click (340ms, a
+     compositor animation of transform run from the header's script, so it stays smooth while the next page is
+     built); arriving from nowhere (leaving the home page) it fades and grows in where it lands; as a page loads it
+     is simply there.
+     Until the script has placed it, the current item draws the same capsule itself, so the server's HTML shows it
+     from the first paint and nothing pops in when the page wakes up. */
+  .nav-sel,
+  .nav-item[data-active]::before {
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.055));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.13),
+      inset 0 0 0 1px rgb(255 255 255 / 0.05),
+      0 1px 2px rgb(0 0 0 / 0.35),
+      0 6px 14px -8px rgb(0 0 0 / 0.6);
+    pointer-events: none;
+  }
+  .nav-item[data-active]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  nav:has(> .nav-sel[data-on]) .nav-item::before {
+    content: none;
+  }
+  .nav-sel {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 2.25rem;
+    margin-top: -1.125rem;
+    opacity: 0;
+    scale: 0.94;
+    transition:
+      opacity 220ms var(--ease-out),
+      scale 320ms var(--ease-spring);
+  }
+  .nav-sel[data-on] {
+    opacity: 1;
+    scale: 1;
+  }
+  .nav-sel[data-still] {
+    transition: none;
   }
 
   .tile {
@@ -256,6 +306,132 @@
       opacity 200ms var(--ease-out);
     @starting-style {
       transform: translateY(-6px) scale(0.98);
+      opacity: 0;
+    }
+  }
+
+  /* ------------------------------------------------------------- page transitions: the sheet */
+  /* Moving to another page (app/template.tsx), the way iOS presents a sheet: the page you're leaving recedes, scaling
+     down to 92% and dimming as its corners round into a card on the dark ground behind it, while the new page rides
+     up from below the screen as a sheet (rounded top corners, a lit top edge and a shadow cast up onto the old page)
+     and lands with its corners squaring off. Both run 720ms on the drawer curve, quick off the mark and a long
+     friction-damped glide into place. It's the screen's root snapshot that moves (always just the screen, so it's
+     cheap to capture, however long the page), with the navigation lifted out and anchored above, untouched. The
+     movement and the dimming are in their own animations so they run on the compositor; only the corners, a small
+     paint, are separate. Clicks pass through to the live page while it plays. Under reduced motion the pages simply
+     cross-fade. The template's marker is a pixel with nothing to show. */
+  .page-mark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+  ::view-transition {
+    pointer-events: none;
+    background: color-mix(in srgb, var(--b-ground), #000 45%);
+  }
+  ::view-transition-group(site-nav) {
+    animation: none;
+    z-index: 100;
+  }
+  ::view-transition-old(site-nav) {
+    display: none;
+  }
+  ::view-transition-new(site-nav) {
+    animation: none;
+  }
+  ::view-transition-group(.page-mark) {
+    display: none;
+  }
+  ::view-transition-old(root) {
+    mix-blend-mode: normal;
+    transform-origin: 50% 50%;
+    animation:
+      page-recede 720ms var(--ease-drawer) both,
+      page-card 720ms var(--ease-drawer) both;
+  }
+  ::view-transition-new(root) {
+    mix-blend-mode: normal;
+    box-shadow:
+      0 -1px 0 rgb(255 255 255 / 0.1),
+      0 -22px 56px -10px rgb(0 0 0 / 0.6);
+    animation:
+      page-sheet 720ms var(--ease-drawer) both,
+      page-land 720ms var(--ease-drawer) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root) {
+      animation: page-fade-out 120ms linear both;
+    }
+    ::view-transition-new(root) {
+      box-shadow: none;
+      animation: page-fade-in 180ms linear both;
+    }
+  }
+  /* Back to the top from far down (lib/scroll-to-top): the screen you're on glides down and away and the top of the
+     page comes down from above, joined edge to edge, so it reads as one long scroll up. 900ms on a soft ease-in-out
+     (gentle off the mark, a long settle), with a touch of motion blur at full speed. The navigation stays put. */
+  html.vt-glide::view-transition-old(root) {
+    animation:
+      glide-away 900ms cubic-bezier(0.6, 0, 0.2, 1) both,
+      glide-blur 900ms linear both;
+  }
+  html.vt-glide::view-transition-new(root) {
+    box-shadow: none;
+    animation:
+      glide-in 900ms cubic-bezier(0.6, 0, 0.2, 1) both,
+      glide-blur 900ms linear both;
+  }
+  @keyframes glide-away {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes glide-in {
+    from {
+      transform: translateY(-100%);
+    }
+  }
+  @keyframes glide-blur {
+    45% {
+      filter: blur(5px);
+    }
+  }
+  @keyframes page-recede {
+    to {
+      transform: scale(0.92);
+      filter: brightness(0.5);
+    }
+  }
+  @keyframes page-card {
+    to {
+      border-radius: 28px;
+    }
+  }
+  @keyframes page-sheet {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  /* the corners stay rounded while the sheet travels and square off as it settles */
+  @keyframes page-land {
+    0%,
+    55% {
+      border-radius: 28px 28px 0 0;
+    }
+    100% {
+      border-radius: 0;
+    }
+  }
+  @keyframes page-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes page-fade-in {
+    from {
       opacity: 0;
     }
   }
@@ -403,7 +579,7 @@
     background: #060b17;
   }
   /* navy islands inside a light band take the navy tokens back */
-  .paper :is(.cc-card, .dash-card, .plan-pop, .eng, .step-node) {
+  .paper :is(.cc-card, .dash-card, .eng, .step-node) {
     --b-ink: #fbf7f3;
     --b-body: #938F8C;
     --b-slate: #82807F;
@@ -415,7 +591,7 @@
     color: #fbf7f3;
   }
   /* the partner button, on paper: clear glass with a navy label */
-  .paper .btn-glass:not(:is(.eng, .plan-pop) *) {
+  .paper .btn-glass:not(.eng *) {
     color: #060b17;
     background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.35));
     -webkit-backdrop-filter: none;
@@ -427,7 +603,7 @@
       0 8px 18px -10px rgb(6 11 23 / 0.3);
   }
   @media (hover: hover) and (pointer: fine) {
-    .paper .btn-glass:not(:is(.eng, .plan-pop) *):hover {
+    .paper .btn-glass:not(.eng *):hover {
       background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.55));
       box-shadow:
         inset 0 0 0 1px rgb(6 11 23 / 0.2),
@@ -445,7 +621,7 @@
       0 10px 22px -10px rgb(59 130 246 / 0.55);
   }
   /* icon tiles on paper: a blue mark on a faint blue well (3.5:1, a graphic, not text) */
-  .paper .tile:not(:is(.eng, .plan-pop) *) {
+  .paper .tile:not(.eng *) {
     color: #3b82f6;
     background: linear-gradient(180deg, rgb(59 130 246 / 0.1), rgb(59 130 246 / 0.04));
     box-shadow:
@@ -2486,155 +2662,6 @@
     background-image: none;
   }
 
-  /* ------------------------------------------------------------- 06 · pricing */
-  .plans {
-    display: grid;
-    gap: 1rem;
-  }
-  @media (min-width: 1024px) {
-    .plans {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      align-items: stretch;
-    }
-  }
-  .plan {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 1.875rem;
-    border-radius: 26px;
-    background:
-      var(--grain),
-      linear-gradient(180deg, rgb(12 16 28 / 0.82), rgb(12 16 28 / 0.66));
-    box-shadow:
-      var(--edge),
-      0 1px 2px rgb(0 0 0 / 0.4),
-      0 24px 48px -24px rgb(0 0 0 / 0.7);
-  }
-  /* the popular plan: lit from its top, a sky edge and a glow beneath */
-  .plan-pop {
-    background:
-      var(--grain),
-      radial-gradient(110% 60% at 50% 0%, rgb(59 130 246 / 0.2), transparent 70%),
-      linear-gradient(180deg, rgb(17 35 68 / 0.62), rgb(12 16 28 / 0.72));
-    box-shadow:
-      inset 0 0 0 1px rgb(59 130 246 / 0.42),
-      inset 0 1px 0 rgb(255 255 255 / 0.16),
-      0 1px 2px rgb(0 0 0 / 0.4),
-      0 30px 60px -26px rgb(0 0 0 / 0.8),
-      0 24px 70px -34px rgb(59 130 246 / 0.5);
-  }
-  .plan-name {
-    font-family: var(--font-heading);
-    font-size: 1.375rem;
-    font-weight: 560;
-    letter-spacing: -0.025em;
-    color: var(--b-ink);
-  }
-  .plan-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4375rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #fbf7f3;
-    background: rgb(59 130 246 / 0.2);
-    box-shadow: inset 0 0 0 1px rgb(59 130 246 / 0.3);
-  }
-  .plan-badge::before {
-    content: "";
-    width: 0.375rem;
-    height: 0.375rem;
-    border-radius: 50%;
-    background: #3b82f6;
-    box-shadow: 0 0 8px #3b82f6;
-  }
-  .plan-tagline {
-    margin-top: 0.5rem;
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    color: var(--b-body);
-  }
-  .plan-price {
-    display: flex;
-    align-items: baseline;
-    gap: 0.625rem;
-    margin-top: 1.75rem;
-  }
-  .plan-amount {
-    font-family: var(--font-heading);
-    font-size: 3.25rem;
-    font-weight: 560;
-    line-height: 1;
-    letter-spacing: -0.045em;
-    font-variant-numeric: tabular-nums;
-    color: var(--b-ink);
-  }
-  .plan-per {
-    font-size: 0.875rem;
-    color: var(--b-slate);
-  }
-  .plan-meta {
-    display: grid;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-  }
-  .plan-meta li {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: 0.875rem;
-    color: var(--b-body);
-  }
-  .plan-meta svg {
-    width: 1rem;
-    height: 1rem;
-    color: #3b82f6;
-  }
-  .plan-features {
-    margin-top: 1.75rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgb(255 255 255 / 0.07);
-  }
-  .plan-intro {
-    margin-bottom: 0.875rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--b-ink);
-  }
-  .plan-feature {
-    display: flex;
-    gap: 0.625rem;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    color: var(--b-body);
-  }
-  .plan-feature svg {
-    width: 1rem;
-    height: 1rem;
-    flex: none;
-    margin-top: 0.0625rem;
-    color: var(--b-success);
-  }
-  .plan-more {
-    margin-top: 0.875rem;
-    font-size: 0.8125rem;
-    color: var(--b-slate);
-  }
-  .plan-terms {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 2rem;
-    margin-top: 1.75rem;
-    font-size: 0.875rem;
-    color: var(--b-slate);
-  }
-
   /* ------------------------------------------------------------- 07 · contact: the close */
   /* The strongest light on the page, still faint: brand navy behind the form and a low horizon under it. */
   .contact-x {
@@ -3583,8 +3610,7 @@
       0 0 0 6px var(--b-column),
       0 10px 22px -10px rgb(6 11 23 / 0.5);
   }
-  .paper .step-card,
-  .paper .plan:not(.plan-pop) {
+  .paper .step-card {
     background: var(--grain), var(--paper);
     box-shadow: var(--paper-edge), var(--paper-shadow);
   }
@@ -3599,28 +3625,6 @@
       0 1px 2px rgb(6 11 23 / 0.3),
       0 26px 50px -26px rgb(6 11 23 / 0.6);
   }
-  /* 06 · two paper plans and the popular one in navy, the one lit object on the band */
-  .paper .plan:not(.plan-pop) .plan-features {
-    border-top-color: rgb(6 11 23 / 0.1);
-  }
-  .paper .plan:not(.plan-pop) .plan-feature svg {
-    color: #060b17;
-  }
-  .paper .plan-pop {
-    background:
-      var(--grain),
-      radial-gradient(110% 60% at 50% 0%, rgb(59 130 246 / 0.24), transparent 70%),
-      linear-gradient(180deg, #112344, #060b17);
-    box-shadow:
-      inset 0 0 0 1px rgb(59 130 246 / 0.45),
-      inset 0 1px 0 rgb(255 255 255 / 0.16),
-      0 1px 2px rgb(6 11 23 / 0.3),
-      0 34px 64px -26px rgb(6 11 23 / 0.6),
-      0 26px 70px -34px rgb(59 130 246 / 0.45);
-  }
-  .paper .plan-pop .plan-feature svg {
-    color: #3b82f6;
-  }
 
   /* ------------------------------------------------------------- reduced motion and transparency */
   @media (prefers-reduced-transparency: reduce) {
@@ -3634,7 +3638,11 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
+    .nav-item:active {
+      scale: none;
+    }
     .nav-hl,
+    .nav-sel,
     .btn-spring,
     .svc,
     .svc .go {

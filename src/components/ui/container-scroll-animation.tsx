@@ -9,9 +9,11 @@ import { useReducedMotion } from "@/lib/use-reduced-motion"
 // as the section scrolls, hinged at its bottom edge like a laptop lid opening, its top edge cutting across the
 // headline's last line all the way up. It lands flat just as the headline and the window reach their place on screen;
 // then, on desktop, the two hold there together (a short sticky pin) while the headline lifts clear of the window,
-// so the whole sentence reads beside the flat app for a moment before both scroll on. A spring smooths the scroll so a
-// quick flick still plays the motion out. Phones and tablets get the same lift without the hold; reduced motion shows
-// it settled.
+// so the whole sentence reads beside the flat app for a moment before both scroll on. The lift eases in and out along
+// the scroll (it starts gently and settles flat gently rather than stopping dead), and a quick, critically damped spring
+// rounds off the steps of a mouse wheel without trailing the page. While it tilts, the window has its own compositor
+// layer, so a scroll frame only moves it and never repaints it; a moment after it lands flat it gives the layer up, so
+// the flat app is drawn crisp. Phones and tablets get the same lift without the hold; reduced motion shows it settled.
 //
 // Changed from the original: real props (it passed "{titleComponent}" and "{translate}" as string literals), a glass
 // bezel (styles/depth.css .cs-frame), the screen keeps its content's aspect, the hold and the spring, the hinge at the
@@ -49,6 +51,13 @@ function useMedia(query: string) {
 }
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v))
+/** ease in and out (smoothstep): no jolt as the lift begins, and a soft landing as the window comes flat */
+const easeInOut = (v: number) => v * v * (3 - 2 * v)
+/** responsive with no overshoot: critically damped, trailing the scroll by under a tenth of a second and settling in
+ * about 0.15 s (the original 170 / 34 / 0.6 was overdamped, trailing by 0.2 s and drifting on for over half a second) */
+const SPRING = { stiffness: 900, damping: 60, mass: 1, restDelta: 0.0005 }
+/** how long the window keeps its own layer after landing flat, so a scroll that pauses there doesn't repaint it */
+const LAYER_GRACE = 250
 
 /**
  * True from the moment the window first lands flat on screen (or, under reduced motion, first comes into view), and
@@ -129,13 +138,14 @@ export function ContainerScroll({
 
   // from the pair's top at the bottom of the screen to its end at the top: track + vh px of scroll
   const { scrollYProgress } = useScroll({ target: track, offset: ["start end", "end start"] })
-  const progress = useSpring(scrollYProgress, { stiffness: 170, damping: 34, mass: 0.6, restDelta: 0.0005 })
+  const progress = useSpring(scrollYProgress, SPRING)
 
   const scrolled = (q: number) => q * (geoRef.current.track + geoRef.current.vh)
-  // the lift: from the window's edge entering the screen to the pair reaching its place
+  // the lift: from the window's edge entering the screen to the pair reaching its place, eased in and out (everything
+  // below reads it, so the headline still climbs in step with the window's edge)
   const riseAt = (q: number) => {
     const { vh, stick, start } = geoRef.current
-    return clamp((scrolled(q) - start) / Math.max(1, vh - stick - start))
+    return easeInOut(clamp((scrolled(q) - start) / Math.max(1, vh - stick - start)))
   }
   // the headline lifting clear of the flat window: over the start of the hold, or (no hold) the end of the lift
   const clearAt = (q: number) => {
@@ -175,6 +185,31 @@ export function ContainerScroll({
   })
   // the overlay rides with the window's hinge, rising on its own nearer path as it goes
   const lift = useTransform(progress, (q) => (1 - riseAt(q)) * (phone ? 32 : 140) + shiftAt(q))
+
+  // the window's own layer: on while it tilts, off a moment after it's flat (set on the element, not through React,
+  // so it costs no render)
+  React.useEffect(() => {
+    if (still) return
+    let timer = 0
+    const set = (v: string) => {
+      const c = card.current
+      if (c && c.style.willChange !== v) c.style.willChange = v
+    }
+    const follow = (t: string) => {
+      window.clearTimeout(timer)
+      if (t === "none") timer = window.setTimeout(() => set("auto"), LAYER_GRACE)
+      else set("transform")
+    }
+    follow(transform.get())
+    const off = transform.on("change", follow)
+    return () => {
+      off()
+      window.clearTimeout(timer)
+      // give the layer back: under reduced motion this runs once before the preference is read, and the still window
+      // must not keep a layer it never moves on
+      set("auto")
+    }
+  }, [transform, still])
 
   // landed: the tilt has all but gone and the lift is done, so the window is flat and in its place on screen
   const [landed, setLanded] = React.useState(false)

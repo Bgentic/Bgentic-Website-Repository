@@ -13,16 +13,27 @@ import * as React from "react"
 import { useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { usePathname } from "next/navigation"
 import { ArrowUp, CalendarDays, LogIn, Rocket } from "lucide-react"
 import { SERVICES, serviceHref } from "@/content/services"
 import { CONTACT_EMAIL, LEGAL, LOGIN_HREF, ONBOARDING_HREF } from "@/content/site"
+import { onIdle } from "@/lib/idle"
 import { FINE_POINTER, REDUCED_MOTION } from "@/lib/media"
+import { scrollToTop } from "@/lib/scroll-to-top"
 import { cn } from "@/lib/utils"
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
+// GSAP and ScrollTrigger drive only this footer, at the foot of every page, so they aren't part of the page's own
+// bundle: they're fetched once the page has loaded and is idle, or straight away where the footer starts within reach
+// of the first screen (a short page), so the reveal is ready before anyone can scroll to it.
+type Gsap = typeof import("gsap").gsap
+type Trigger = typeof import("gsap/ScrollTrigger").ScrollTrigger
+let gsapLoad: Promise<{ gsap: Gsap; ScrollTrigger: Trigger }> | null = null
+function loadGsap() {
+  gsapLoad ??= Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
+    gsap.registerPlugin(ScrollTrigger)
+    return { gsap, ScrollTrigger }
+  })
+  return gsapLoad
 }
 
 // -------------------------------------------------------------------------
@@ -181,7 +192,12 @@ function MagneticButton({ className, children, as: Component = "button", ...prop
     const element = ref.current
     if (!element || !matchMedia(FINE_POINTER).matches || matchMedia(REDUCED_MOTION).matches) return
 
+    let gsap: Gsap | null = null
+    let cancelled = false
+    const cancelIdle = onIdle(() => loadGsap().then((g) => !cancelled && (gsap = g.gsap)))
+
     const handleMouseMove = (e: MouseEvent) => {
+      if (!gsap) return
       const rect = element.getBoundingClientRect()
       const x = e.clientX - rect.left - rect.width / 2
       const y = e.clientY - rect.top - rect.height / 2
@@ -196,6 +212,7 @@ function MagneticButton({ className, children, as: Component = "button", ...prop
       })
     }
     const handleMouseLeave = () => {
+      if (!gsap) return
       gsap.to(element, {
         x: 0,
         y: 0,
@@ -210,10 +227,14 @@ function MagneticButton({ className, children, as: Component = "button", ...prop
     element.addEventListener("mousemove", handleMouseMove)
     element.addEventListener("mouseleave", handleMouseLeave)
     return () => {
+      cancelled = true
+      cancelIdle()
       element.removeEventListener("mousemove", handleMouseMove)
       element.removeEventListener("mouseleave", handleMouseLeave)
-      gsap.killTweensOf(element)
-      gsap.set(element, { clearProps: "transform" })
+      if (gsap) {
+        gsap.killTweensOf(element)
+        gsap.set(element, { clearProps: "transform" })
+      }
     }
   }, [])
 
@@ -249,54 +270,125 @@ export function CinematicFooter() {
   const giantTextRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const linksRef = useRef<HTMLDivElement>(null)
+  const remeasureRef = useRef<() => void>(() => {})
+  const pathname = usePathname()
 
   useEffect(() => {
-    if (!wrapperRef.current || matchMedia(REDUCED_MOTION).matches) return
+    const wrapper = wrapperRef.current
+    if (!wrapper || matchMedia(REDUCED_MOTION).matches) return
 
-    const ctx = gsap.context(() => {
-      // the giant word rises and grows in behind
-      gsap.fromTo(
-        giantTextRef.current,
-        { y: "10vh", scale: 0.8, opacity: 0 },
-        {
-          y: "0vh",
-          scale: 1,
-          opacity: 1,
-          ease: "power1.out",
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: "top 80%",
-            end: "bottom bottom",
-            scrub: 1,
+    let lib: Awaited<ReturnType<typeof loadGsap>> | null = null
+    let ctx: { revert(): void } | undefined
+    let reveals: { scrollTrigger?: InstanceType<Trigger> }[] = []
+    let near = false
+    let cancelled = false
+    let timer = 0
+
+    // The reveal exists only while the footer is within reach (a screen and a half below the screen, or nearer). The
+    // footer is clipped to its own box at the foot of the page, so further away it can't be seen; and while
+    // ScrollTrigger has anything to watch it reads the scroll position on every scroll event, which makes the browser
+    // bring the page's styles up to date then and there, so leaving it nothing to watch spares the rest of the page.
+    const build = () => {
+      if (!lib || ctx || !near) return
+      const { gsap } = lib
+      ctx = gsap.context(() => {
+        // the giant word rises and grows in behind
+        const giant = gsap.fromTo(
+          giantTextRef.current,
+          { y: "10vh", scale: 0.8, opacity: 0 },
+          {
+            y: "0vh",
+            scale: 1,
+            opacity: 1,
+            ease: "power1.out",
+            scrollTrigger: {
+              trigger: wrapper,
+              start: "top 80%",
+              end: "bottom bottom",
+              scrub: 1,
+            },
           },
-        },
-      )
+        )
 
-      // the heading, then the links, rise in
-      gsap.fromTo(
-        [headingRef.current, linksRef.current],
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: "top 40%",
-            end: "bottom bottom",
-            scrub: 1,
+        // the heading, then the links, rise in
+        const rise = gsap.fromTo(
+          [headingRef.current, linksRef.current],
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: wrapper,
+              start: "top 40%",
+              end: "bottom bottom",
+              scrub: 1,
+            },
           },
-        },
-      )
-    }, wrapperRef)
+        )
+        reveals = [giant, rise]
+      }, wrapper)
+    }
+    // out of reach: the footer goes back to its resting styles, out of sight, and the reveal is set up afresh on the
+    // way back down, starting where the scroll then is
+    const teardown = () => {
+      ctx?.revert()
+      ctx = undefined
+      reveals = []
+    }
+    const load = () =>
+      loadGsap().then((g) => {
+        if (cancelled) return
+        lib = g
+        build()
+      })
 
-    return () => ctx.revert()
+    // The footer sits in the layout, under every page, so it outlives each one: moving to another page (or the page
+    // growing once its images and questions open) moves the footer, and the reveal has to measure again where it now
+    // starts and ends, or it would wait for a scroll position the new page never reaches. A measure pauses any scrub
+    // in flight and, if the scroll's progress hasn't changed, nothing starts it again; so each is sent on to where the
+    // scroll now is, or a reveal caught part way would stop there.
+    remeasureRef.current = () => {
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => {
+        if (!lib || !ctx) return
+        lib.ScrollTrigger.refresh()
+        for (const { scrollTrigger: t } of reveals) {
+          const scrub = t?.animation && t.getTween()
+          if (scrub) scrub.resetTo("totalProgress", t.progress, t.animation!.totalProgress())
+        }
+      }, 120)
+    }
+    const ro = new ResizeObserver(() => remeasureRef.current())
+    ro.observe(document.body)
+
+    const reach = new IntersectionObserver(
+      ([e]) => {
+        near = e.isIntersecting
+        if (near) void load()
+        else teardown()
+      },
+      { rootMargin: "0px 0px 150% 0px" },
+    )
+    reach.observe(wrapper)
+    // fetched once the page is idle in any case, so it's in hand before the footer comes within reach
+    const cancelIdle = onIdle(() => void load())
+
+    return () => {
+      cancelled = true
+      reach.disconnect()
+      cancelIdle()
+      ro.disconnect()
+      window.clearTimeout(timer)
+      remeasureRef.current = () => {}
+      teardown()
+    }
   }, [])
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: matchMedia(REDUCED_MOTION).matches ? "auto" : "smooth" })
-  }
+  // a new page: measure again once it's in place
+  useEffect(() => remeasureRef.current(), [pathname])
+
 
   return (
     <>

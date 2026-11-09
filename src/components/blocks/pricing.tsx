@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { Check, Star } from "lucide-react"
 import Link from "next/link"
-import { useState, useRef } from "react"
-import confetti from "canvas-confetti"
+import { useEffect, useState, useRef } from "react"
 import NumberFlow from "@number-flow/react"
+import { onIdle } from "@/lib/idle"
 
 export interface PricingPlan {
   name: string
@@ -64,6 +64,12 @@ const AUD = {
 } as const satisfies Intl.NumberFormatOptions
 const aud = new Intl.NumberFormat("en-AU", AUD)
 
+// The confetti only ever fires from the annual switch, so its library isn't part of the page's bundle: it's fetched
+// once the page has loaded and is idle (or on the first flip, if that comes sooner), and fires as soon as it's in hand.
+const importConfetti = () => import("canvas-confetti").then((m) => m.default)
+let confettiLoad: ReturnType<typeof importConfetti> | null = null
+const loadConfetti = () => (confettiLoad ??= importConfetti())
+
 export function Pricing({
   plans,
   title = "Simple, Transparent Pricing",
@@ -78,6 +84,8 @@ export function Pricing({
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const switchRef = useRef<HTMLButtonElement>(null)
 
+  useEffect(() => onIdle(() => void loadConfetti()), [])
+
   const handleToggle = (checked: boolean) => {
     setIsMonthly(!checked)
     if (checked && switchRef.current) {
@@ -85,21 +93,23 @@ export function Pricing({
       const x = rect.left + rect.width / 2
       const y = rect.top + rect.height / 2
 
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: {
-          x: x / window.innerWidth,
-          y: y / window.innerHeight,
-        },
-        colors: CONFETTI,
-        ticks: 200,
-        gravity: 1.2,
-        decay: 0.94,
-        startVelocity: 30,
-        shapes: ["circle"],
-        disableForReducedMotion: true,
-      })
+      loadConfetti().then((confetti) =>
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: {
+            x: x / window.innerWidth,
+            y: y / window.innerHeight,
+          },
+          colors: CONFETTI,
+          ticks: 200,
+          gravity: 1.2,
+          decay: 0.94,
+          startVelocity: 30,
+          shapes: ["circle"],
+          disableForReducedMotion: true,
+        }),
+      )
     }
   }
 
@@ -114,7 +124,13 @@ export function Pricing({
 
       <div className="flex justify-center mb-10">
         {/* a span, not the original's second <label>: a label can't hold another */}
-        <span className="relative inline-flex items-center cursor-pointer">
+        {/* reaching for the switch fetches the confetti, in case it comes before the idle moment does */}
+        <span
+          className="relative inline-flex items-center cursor-pointer"
+          onPointerEnter={() => void loadConfetti()}
+          onPointerDown={() => void loadConfetti()}
+          onFocusCapture={() => void loadConfetti()}
+        >
           <Label>
             <Switch
               ref={switchRef}
