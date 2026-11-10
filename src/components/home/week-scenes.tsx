@@ -1,28 +1,32 @@
 import type * as React from "react"
-import { Mail, MessageCircle, PhoneMissed } from "lucide-react"
+import { Check, Clock, Mail, MessageCircle, PhoneMissed } from "lucide-react"
 
-// The week cards' scenes: each problem as it looks on a real screen, glimpsed at the foot of its card. Decorative and
-// static (the card's words carry the meaning), faded in from above so they never meet the words, and bleeding off the
-// card's edges. Names, numbers and times are illustrative. Styles: the 01 section of styles/depth.css (.scene-*).
+// The week cards' scenes: each problem as it looks on a real screen, at the foot of its card. Decorative and static
+// (the card's words carry the meaning, so they're hidden from screen readers), faded in from above, and bleeding off
+// the card's edges. Brand blue for what's active, soft greys for surfaces and edges, and the danger red for what went
+// wrong. Names, numbers and times are illustrative. Styles: the 01 section of styles/depth.css (.scene-*).
 
 /** Leads: the notifications nobody got to, more of them than fit */
 function LeadsScene() {
   const rows = [
     { icon: <PhoneMissed />, alert: true, title: "Missed call", sub: "0412 ··· 318", meta: "2:14 pm" },
-    { icon: <Mail />, title: "Website enquiry", sub: "Quote for a bathroom reno?" },
-    { icon: <MessageCircle />, title: "Facebook DM", sub: "Are you free Thursday?" },
+    { icon: <Mail />, unread: true, title: "Website enquiry", sub: "Bathroom reno quote?", meta: "1:52 pm" },
+    { icon: <MessageCircle />, unread: true, title: "Facebook DM", sub: "Are you free Thursday?", meta: "1:30 pm" },
     { icon: <PhoneMissed />, alert: true, title: "Missed call", sub: "0433 ··· 902", meta: "11:52 am" },
   ]
   return (
     <div className="scene-notes">
       {rows.map((r, i) => (
-        <div key={i} className="scene-note scene-surface" data-alert={r.alert ? "" : undefined}>
+        <div key={i} className="scene-note" data-alert={r.alert ? "" : undefined} data-unread={r.unread ? "" : undefined}>
           <span className="scene-ico">{r.icon}</span>
           <span className="scene-lines">
             <b>{r.title}</b>
             <span>{r.sub}</span>
           </span>
-          {r.meta ? <span className="scene-meta">{r.meta}</span> : <span className="scene-dot" />}
+          <span className="scene-end">
+            <span className="scene-meta">{r.meta}</span>
+            {r.unread && <span className="scene-dot" />}
+          </span>
         </div>
       ))}
     </div>
@@ -33,47 +37,51 @@ function LeadsScene() {
 function CalendarsScene() {
   return (
     <div className="scene-cal">
-      {["9", "10", "11"].map((h, i) => (
+      {["9 am", "10", "11"].map((h, i) => (
         <span key={h} className="cal-hour" style={{ "--row": i } as React.CSSProperties}>
           <span>{h}</span>
         </span>
       ))}
       <span className="cal-ev cal-a">
-        Site visit
+        <b>Site visit</b>
         <small>Kim · 9:15</small>
       </span>
-      <span className="cal-ev cal-b" data-alert="">
-        Quote call
+      <span className="cal-ev cal-b">
+        <b>Quote call</b>
         <small>Raj · 9:45</small>
-        <em className="scene-chip" data-alert="">
+        <em className="scene-chip" data-solid="">
           Clash
         </em>
       </span>
       <span className="cal-ev cal-c">
-        Consult
-        <em className="scene-chip">No-show</em>
+        <b>Consult</b>
+        <em className="scene-chip" data-alert="">
+          No-show
+        </em>
       </span>
     </div>
   )
 }
 
-/** Payments and invoicing: a pile of invoices that should have been paid by now */
+/** Payments and invoicing: a pile of invoices that should have been paid by now, chased one reminder at a time */
 function PaymentsScene() {
   return (
     <div className="scene-inv">
-      <span className="inv inv-3 scene-surface" />
-      <span className="inv inv-2 scene-surface" />
-      <span className="inv inv-1 scene-surface">
+      <span className="inv inv-3" />
+      <span className="inv inv-2" />
+      <span className="inv inv-1">
         <span className="inv-top">
           <b>INV-1042</b>
-          <em className="scene-chip" data-alert="">
+          <em className="scene-chip" data-solid="">
             Overdue 14 days
           </em>
         </span>
-        <span className="inv-amt">$1,280.00</span>
-        <span className="inv-due">Due 27 Oct</span>
-        <span className="skel" style={{ width: "72%" }} />
-        <span className="skel" style={{ width: "48%" }} />
+        <span className="inv-body">
+          <span className="inv-who">Brightwater Plumbing</span>
+          <span className="inv-amt">$1,280.00</span>
+          <span className="inv-due">Due 27 Oct</span>
+          <span className="inv-btn">Send reminder</span>
+        </span>
       </span>
     </div>
   )
@@ -85,8 +93,14 @@ function NurtureScene() {
     <div className="scene-chat">
       <span className="bubble bubble-in">Could you send me a quote?</span>
       <span className="bubble bubble-out">Just following up on your quote, Sam.</span>
-      <span className="chat-meta">Delivered · 3 weeks ago</span>
-      <span className="bubble bubble-none">No reply</span>
+      <span className="chat-meta">
+        <Check aria-hidden="true" />
+        Delivered · 3 weeks ago
+      </span>
+      <span className="bubble-none">
+        <Clock aria-hidden="true" />
+        No reply
+      </span>
     </div>
   )
 }
