@@ -1,7 +1,8 @@
 // The three plans (content/pricing.ts) shaped for the pricing block (components/blocks/pricing.tsx), shared by the
 // home page and /pricing so both show the same thing: users and AI credits first, then everything the plan adds.
 // With Annual on, the big number is the year's price over twelve months, to the cent, and the line under it is the
-// year's total. Every button goes to /onboarding for now; the configurator's sale links come later.
+// year's total. Every button goes to the plans on /pricing (and from there to /contact); the configurator's sale
+// links come later.
 import type { PricingPlan } from "@/components/blocks/pricing"
 import { PLANS } from "@/content/pricing"
 import { ONBOARDING_HREF } from "@/content/site"

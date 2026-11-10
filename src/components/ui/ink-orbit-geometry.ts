@@ -1,5 +1,5 @@
-// The ink orb's geometry, apart from its rendering: the seeded ink cloud, the loose dust round it, and the B its
-// glass core is cut as. Pure data, built once per seed and cached.
+// The ink orb's geometry, apart from its rendering: the seeded ink cloud and the loose dust round it. Pure data,
+// built once per seed and cached.
 import { clamp } from "@/lib/canvas"
 
 /** a small, fast seeded random, so a seed always draws the same shape */
@@ -146,14 +146,3 @@ export function buildDust() {
   }
   return d
 }
-
-/* ------------------------------------------------------------- the glass core's B */
-
-// A heavy capital B, as an SVG path in a 108 x 140 box. The counters are cut out with the even-odd rule, so the ink
-// shows through them.
-export const B_GLYPH_W = 108
-export const B_GLYPH_H = 140
-export const B_GLYPH =
-  "M3 0H60C86 0 100 14 100 35C100 50 91 61 77 65C95 69 108 82 108 101C108 125 90 140 62 140H3Q0 140 0 137V3Q0 0 3 0Z" +
-  "M30 24H55C66 24 71 30 71 38.5C71 47 65 53 55 53H30Z" +
-  "M30 77H59C72 77 78 84 78 96C78 108 71 116 59 116H30Z"

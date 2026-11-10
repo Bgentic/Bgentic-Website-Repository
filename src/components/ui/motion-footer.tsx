@@ -6,12 +6,11 @@
 //
 // Changed from the original: Bgentic's words, links and legal line; the site's fonts (Inter, and Geist for display)
 // instead of a third face from Google Fonts; dots in the brand's light blue instead of glyphs; a pulsing dot in place
-// of the heart, and the developer's credit at the right of the bottom bar. The curtain only where the screen is tall
+// of the heart, and no credit line (only back to top at the right of the bottom bar). The curtain only where the screen is tall
 // and wide enough to hold the whole footer (elsewhere it sits in the flow); the marquee pauses under the pointer; and
 // under reduced motion nothing moves: no scrubbed reveals, no magnetic pills, no marquee, no breathing light.
 import * as React from "react"
 import { useEffect, useRef } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ArrowUp, CalendarDays, LogIn, Rocket } from "lucide-react"
@@ -263,7 +262,6 @@ const MarqueeItem = () => (
 
 const PILL = "footer-glass-pill rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground"
 
-const DEVELOPER = { name: "Christian Padilla", href: "https://christianpadilla.online" }
 
 export function CinematicFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -439,7 +437,7 @@ export function CinematicFooter() {
                   Book a discovery call
                 </MagneticButton>
                 <MagneticButton
-                  as="a"
+                  as={Link}
                   href={ONBOARDING_HREF}
                   className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group"
                 >
@@ -483,22 +481,22 @@ export function CinematicFooter() {
                   </a>
                 </li>
                 <li>
-                  <a href={LEGAL.terms} className="transition-colors hover:text-foreground">
+                  <Link href={LEGAL.terms} className="transition-colors hover:text-foreground">
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href={LEGAL.privacy} className="transition-colors hover:text-foreground">
+                  <Link href={LEGAL.privacy} className="transition-colors hover:text-foreground">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
           </div>
 
           {/* 3. Bottom Bar */}
-          {/* three columns from 768px, so the badge sits truly centred: the company on the left, the developer's
-              credit and back to top on the right */}
+          {/* three columns from 768px, so the badge sits truly centred: the company on the left, back to top on the
+              right */}
           <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col items-center gap-6 md:grid md:grid-cols-[1fr_auto_1fr]">
             <p className="order-2 md:order-1 md:justify-self-start text-muted-foreground text-[10px] md:text-xs font-semibold tracking-widest uppercase text-center md:text-left tabular-nums">
               © {LEGAL.name} · ACN {LEGAL.acn} · ABN {LEGAL.abn}
@@ -510,29 +508,7 @@ export function CinematicFooter() {
               <span className="text-foreground font-black text-xs md:text-sm tracking-normal">{LEGAL.city}</span>
             </div>
 
-            <div className="order-3 md:justify-self-end flex items-center gap-5">
-              {/* the developer's credit: his monogram and his name, to his portfolio */}
-              <a
-                href={DEVELOPER.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/credit inline-flex items-center gap-2 text-[11px] md:text-xs text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Image
-                  src="/brand/cp-logo.webp"
-                  alt=""
-                  width={114}
-                  height={96}
-                  className="h-5 w-auto opacity-80 transition-opacity group-hover/credit:opacity-100"
-                />
-                <span>
-                  Designed &amp; developed by{" "}
-                  <span className="font-semibold text-foreground underline-offset-4 group-hover/credit:underline">
-                    {DEVELOPER.name}
-                  </span>
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </span>
-              </a>
+            <div className="order-3 md:justify-self-end flex items-center">
               <MagneticButton
                 as="button"
                 type="button"

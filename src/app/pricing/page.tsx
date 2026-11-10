@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 }
 
 // /pricing: the plans open the page (navy), then what sits outside them and the questions (cream), then the close.
-// The plans are the home page's (lib/pricing-plans.ts).
+// The plans are the home page's (lib/pricing-plans.ts). Their buttons go to the plans everywhere else; here, already
+// on the plans, they go to /contact to book a call (there's no sign-up flow on this site).
 export default function PricingPage() {
   return (
     <>
@@ -22,7 +23,7 @@ export default function PricingPage() {
         <Pricing
           as="h1"
           className="py-0"
-          plans={PRICING_PLANS}
+          plans={PRICING_PLANS.map((p) => ({ ...p, href: "/contact" }))}
           title="Three plans. No lock-in."
           description={
             "Run the platform yourself, get set up properly, or have us build and run it.\nEvery plan starts with a 14-day free trial."

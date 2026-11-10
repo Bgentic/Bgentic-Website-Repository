@@ -23,52 +23,33 @@ export const desk = {
 export const leaks = {
   title: "Where the week goes",
   intro:
-    "Most businesses we meet aren't short of work. They're short of the hours that disappear between the work. Four leaks come up again and again.",
-  // Each leak's two images: the problem, a person living it (Unsplash, free under the Unsplash License, photographers
-  // credited alongside), and the fix (a Bgentic UI in /public/images/leaks, or a photograph).
+    "Most businesses we meet aren't short of work. They're short of the hours that slip away between it, and those hours go to the same four places.",
+  // The four pain points, each a light card with its name and the problem (2026-11-10, the boss's revisions: no fixes,
+  // nothing that moves). The icon is chosen by key in components/home/leaks.tsx; the consultancy card in the services
+  // bento lists the first three names.
   rows: [
     {
-      problem: "Calls ring out after five.",
-      detail: "Enquiries wait until someone is free, and by then they've called the next business on Google.",
-      fix: "Every call answered, day or night.",
-      how: "An AI receptionist replies by voice or SMS, asks the right questions and books the job into your calendar.",
-      images: {
-        problem: "https://images.unsplash.com/photo-1507099985932-87a4520ed1d5", // a man on a call, Andreas Klassen
-        solution: "/images/leaks/call-booked.png", // the AI receptionist's call, booked
-      },
+      key: "leads",
+      name: "Leads",
+      problem: "Enquiries arrive by phone, web form, email and DM, and the ones nobody answers in time call the next business.",
     },
     {
-      problem: "Orders typed in twice.",
-      detail: "The job lives in the inbox, the spreadsheet and Xero, and someone rekeys it into each one.",
-      fix: "One pipeline, synced for you.",
-      how: "Enquiries, quotes and orders sit in one CRM and flow into SAP, Xero or MYOB without anyone retyping them.",
-      images: {
-        problem: "https://images.unsplash.com/photo-1759752393975-7ca7b302fcc6", // typing into a spreadsheet, Bluestonex
-        solution: "https://images.unsplash.com/photo-1551288049-bebda4e38f71", // a dark analytics dashboard, Luke Chesser
-      },
+      key: "calendars",
+      name: "Calendars",
+      problem: "Bookings bounce back and forth by text, clash with each other, or don't show up.",
     },
     {
-      problem: "Follow-up lives in someone's head.",
-      detail: "Reminders, backorder updates and no-show calls happen when someone remembers.",
-      fix: "Follow-up that runs on time.",
-      how: "Confirmations, ETA alerts, no-show recovery and review requests go out on their own, on schedule.",
-      images: {
-        problem: "https://images.unsplash.com/photo-1758874572670-63042c5448c6", // swamped, head in hands at a laptop, Vitaly Gariev
-        solution: "/images/leaks/follow-up-autopilot.png", // follow-ups sending on their own
-      },
+      key: "payments",
+      name: "Payments and invoicing",
+      problem: "Invoices go out late, get chased by hand and get keyed into Xero twice.",
     },
     {
-      problem: "Five apps, none of them talking.",
-      detail: "Calls, emails, DMs, bookings and invoices each live somewhere different.",
-      fix: "One place for all of it.",
-      how: "A shared inbox, calendar, pipeline and payments, set up around how your team already works.",
-      images: {
-        problem: "https://images.unsplash.com/photo-1758520144705-b39e11ff32e3", // head in hands at a desk at night, Vitaly Gariev
-        solution: "/images/leaks/image_2f09a9.png", // the Bgentic CRM, every channel in one pipeline (supplied)
-      },
+      key: "nurture",
+      name: "Nurture sequences",
+      problem: "Leads who aren't ready to buy yet get one follow-up, then silence.",
     },
   ],
-}
+} as const
 
 // The engine: the transition into the services. Scattered tools drawn into one hub. The intro is the problem, then the
 // answer, which is set brighter.

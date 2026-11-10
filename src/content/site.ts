@@ -2,8 +2,9 @@
 
 export const CONTACT_EMAIL = "hello@bgentic.io"
 export const LOGIN_HREF = "https://app.bgentic.io/"
-// The sign-up and checkout flow stays on the existing site; after launch the same URL is proxied, so links don't change.
-export const ONBOARDING_HREF = "https://bgentic.io/onboarding"
+// Where "start a free trial" goes: the plans (2026-11-10). The old sign-up flow on the previous site is gone, so the
+// links that pointed there (bgentic.io/onboarding) returned a 404.
+export const ONBOARDING_HREF = "/pricing"
 export const BOOK_CALL_HREF = "/contact"
 
 export const LEGAL = {
@@ -11,8 +12,8 @@ export const LEGAL = {
   acn: "699 335 754",
   abn: "27 699 335 754",
   city: "Sydney, NSW",
-  terms: "https://bgentic.io/terms",
-  privacy: "https://bgentic.io/privacy",
+  terms: "/terms",
+  privacy: "/privacy",
 }
 
 export const NAV = [

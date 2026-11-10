@@ -52,7 +52,7 @@ const PANELS: Record<string, React.ReactNode> = {
   "ai-consultancy": (
     <Panel
       title="Where we'd start"
-      rows={leaks.rows.slice(0, 3).map((row, i) => ({ text: row.problem, tag: i === 0 ? "Fix first" : undefined }))}
+      rows={leaks.rows.slice(0, 3).map((row, i) => ({ text: row.name, tag: i === 0 ? "Fix first" : undefined }))}
     />
   ),
   "seo-marketing": (

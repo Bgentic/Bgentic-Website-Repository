@@ -3,7 +3,7 @@
 // The cloud geometry (ink-orbit-geometry.ts) is the original, so seeds draw the same shapes. Around it:
 //  - decorative: no click or keyboard handlers; the page drives it through a small message handle (onReady)
 //  - drawn on black for a `screen`-blended layer, so it glows over any dark ground
-//  - the ink, and at its heart a glass core cut as a heavy capital B that turns with the cloud
+//  - the ink, and at its heart a glowing glass ball (the original design, restored 2026-11-10 in place of a B)
 //  - two quality tiers (desktop, touch), a frame-rate cap, cached clouds and reversible morphs
 //  - a pulse (a shockwave ring and a small swell) separate from the reforge morph, so it can beat faster
 //  - loose dust that drifts on its own, rides each shockwave outward, and moves aside for a mouse
@@ -12,9 +12,6 @@ import * as React from "react"
 import { clamp, hexToRgb } from "@/lib/canvas"
 import { FINE_POINTER, REDUCED_MOTION } from "@/lib/media"
 import {
-  B_GLYPH,
-  B_GLYPH_H,
-  B_GLYPH_W,
   CORE_N,
   DUST_N,
   GRAIN_N,
@@ -55,7 +52,6 @@ const PERSPECTIVE = 3.4 // camera distance, in cloud radii
 const SPIN = 0.16 // the cloud's turn, radians per second
 const NB = 7 // depth bins: the cloud draws back to front in this many passes, the glass core between the halves
 const SPHERE_R = 0.3 // the glass core's radius, as a share of the cloud's
-const GLASS_H = 2.3 // the B's height, in glass-core radii
 
 // How the dust and grain answer each shockwave, and how the dust answers a mouse.
 const DUST_PUSH = 0.2 // how far a wave carries a mote, in cloud units
@@ -94,15 +90,9 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
     const fine = matchMedia(FINE_POINTER).matches
     const reduced = matchMedia(REDUCED_MOTION).matches
     const tier = TIERS[fine ? "desktop" : "touch"]
-    // offscreen helpers: the lens (the ink seen through the glass), and the B's halo, a heavy blur rendered once per
-    // canvas size and placed with the letter each frame
+    // offscreen helper: the lens, the ink seen through the glass
     const lens = document.createElement("canvas")
     const lctx = lens.getContext("2d")
-    const halo = document.createElement("canvas")
-    const hctx = halo.getContext("2d")
-    let haloFor = 0
-    let haloPad = 0
-    const bGlyph = new Path2D(B_GLYPH)
 
     const s = {
       yaw: 0.6,
@@ -417,59 +407,26 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       }
     }
 
-    // The glass core, cut as a heavy capital B, at the heart of the cloud. Everything a glass ball had: the black
-    // backing (clear on the screen layer), the inverted lens of the ink behind it, the rim shading and the highlight,
-    // clipped to the letter, with a thin bevel so the cut edges catch the light. Returns the letter's path.
+    // The glass core: a glowing glass ball at the heart of the cloud (the original design). A soft glow of light round
+    // it that brightens on each beat, so the ink never buries it; then, clipped to the ball, the black backing (clear on
+    // the screen layer), the inverted lens of the ink behind it, the rim shading and the highlight.
     const drawGlassCore = ({ cx, cy, scale }: View, yaw: number, lift: number) => {
       const rs = SPHERE_R * scale
-      const gh = rs * GLASS_H
-      const gk = gh / B_GLYPH_H
-      const gw = B_GLYPH_W * gk
-      const half = gh / 2
-      // It turns with the cloud: a slow swing about its upright (narrowing and shearing as if in perspective) and a
-      // slight roll, both driven by the cloud's own rotation, so the two move as one.
-      const turn = reduced ? 0 : 0.34 * Math.sin(s.yaw * 2) + s.leanYaw * 0.5
-      const roll = reduced ? 0 : 0.045 * Math.sin(s.yaw * 1.3)
-      // the letter's frame on the canvas, before its size
-      const letter = new DOMMatrix()
-        .translateSelf(cx, cy)
-        .rotateSelf((roll * 180) / Math.PI)
-        .multiplySelf(new DOMMatrix([Math.cos(turn), -0.1 * Math.sin(turn), 0, 1, 0, 0]))
-        .translateSelf(-gw / 2 - gk * 2, -gh / 2) // optical centre: the bowls carry more weight than the stem
-      const glyph = new Path2D()
-      glyph.addPath(bGlyph, DOMMatrix.fromMatrix(letter).scaleSelf(gk, gk))
-      const box = half * 1.15
-
-      // a halo of light in the letter's shape, so the ink never buries it; it brightens on each beat
-      const gh0 = SPHERE_R * Math.min(W, H) * CLOUD_SCALE * GLASS_H
-      if (hctx && haloFor !== W * 1e5 + H) {
-        haloFor = W * 1e5 + H
-        const k0 = gh0 / B_GLYPH_H
-        haloPad = Math.ceil(gh0 * 0.45)
-        halo.width = Math.ceil(B_GLYPH_W * k0) + haloPad * 2
-        halo.height = Math.ceil(gh0) + haloPad * 2
-        hctx.setTransform(k0, 0, 0, k0, haloPad, haloPad)
-        hctx.shadowColor = fade(accent, 0, 1)
-        hctx.shadowBlur = gh0 * 0.26
-        hctx.fillStyle = "#000"
-        hctx.fill(bGlyph, "evenodd")
-      }
-      if (hctx) {
-        const swellK = gh / gh0
-        ctx.save()
-        ctx.setTransform(DOMMatrix.fromMatrix(letter).scaleSelf(swellK, swellK).translateSelf(-haloPad, -haloPad))
-        ctx.globalAlpha = 0.3 + 0.25 * lift
-        ctx.drawImage(halo, 0, 0)
-        ctx.restore()
-      }
+      const glow = ctx.createRadialGradient(cx, cy, rs * 0.9, cx, cy, rs * 1.7)
+      glow.addColorStop(0, fade(accent, 0.2, 0.22 + 0.2 * lift))
+      glow.addColorStop(1, fade(accent, 1, 0))
+      ctx.fillStyle = glow
+      ctx.fillRect(cx - rs * 1.7, cy - rs * 1.7, rs * 3.4, rs * 3.4)
 
       ctx.save()
-      ctx.clip(glyph, "evenodd")
+      ctx.beginPath()
+      ctx.arc(cx, cy, rs, 0, Math.PI * 2)
+      ctx.clip()
       ctx.fillStyle = "#000"
-      ctx.fillRect(cx - box, cy - box, box * 2, box * 2)
+      ctx.fillRect(cx - rs, cy - rs, rs * 2, rs * 2)
       if (tier.lens && lctx) {
-        const span = half * 3.1
-        const ls = Math.max(1, Math.ceil(half * 2))
+        const span = rs * 3.1
+        const ls = Math.max(1, Math.ceil(rs * 2))
         if (lens.width !== ls) {
           lens.width = ls
           lens.height = ls
@@ -480,35 +437,23 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
         ctx.translate(cx, cy)
         ctx.rotate(Math.PI + yaw * 0.15)
         ctx.globalAlpha = 0.85
-        ctx.drawImage(lens, -half, -half, half * 2, half * 2)
+        ctx.drawImage(lens, -rs, -rs, rs * 2, rs * 2)
         ctx.globalAlpha = 1
         ctx.setTransform(1, 0, 0, 1, 0, 0)
       }
-      const rim = ctx.createRadialGradient(cx - half * 0.25, cy - half * 0.3, half * 0.1, cx, cy, half)
+      const rim = ctx.createRadialGradient(cx - rs * 0.25, cy - rs * 0.3, rs * 0.1, cx, cy, rs)
       rim.addColorStop(0, "rgba(255,255,255,.42)")
       rim.addColorStop(0.55, "rgba(255,255,255,.08)")
       rim.addColorStop(0.86, fade(accent, 0.75, 0.25))
       rim.addColorStop(1, fade(accent, 0.25, 0.55))
       ctx.fillStyle = rim
-      ctx.fillRect(cx - box, cy - box, box * 2, box * 2)
-      // the highlight slides across the face as the letter turns
-      const hx = cx - half * 0.38 + Math.sin(turn) * half * 0.3
-      const hy = cy - half * 0.42
-      const hl = ctx.createRadialGradient(hx, hy, 0, hx, hy, half * 0.45)
-      hl.addColorStop(0, "rgba(255,255,255,.92)")
+      ctx.fillRect(cx - rs, cy - rs, rs * 2, rs * 2)
+      const hl = ctx.createRadialGradient(cx - rs * 0.38, cy - rs * 0.42, 0, cx - rs * 0.38, cy - rs * 0.42, rs * 0.42)
+      hl.addColorStop(0, "rgba(255,255,255,.85)")
       hl.addColorStop(1, "rgba(255,255,255,0)")
       ctx.fillStyle = hl
-      ctx.fillRect(cx - box, cy - box, box * 2, box * 2)
-      // the bevel: a light line along the cut edges, inside the clip so only its inner half shows
-      const bevel = ctx.createLinearGradient(cx - gw / 2, cy - half, cx + gw / 2, cy + half)
-      bevel.addColorStop(0, "rgba(255,255,255,.7)")
-      bevel.addColorStop(0.5, fade(accent, 0.4, 0.35))
-      bevel.addColorStop(1, "rgba(255,255,255,.12)")
-      ctx.strokeStyle = bevel
-      ctx.lineWidth = Math.max(2, 2.4 * dpr)
-      ctx.stroke(glyph)
+      ctx.fillRect(cx - rs, cy - rs, rs * 2, rs * 2)
       ctx.restore()
-      return glyph
     }
 
     const draw = () => {
@@ -541,12 +486,8 @@ export function InkOrbitSculpture({ ink, accent, seed, onReady, className = "" }
       // the back half of the cloud, the glass core, then the front half over it
       for (let b = 0; b <= Math.floor(NB / 2); b++) pass(b, gs)
       const lift = s.beat > 0 ? Math.sin(Math.PI * (1 - s.beat)) : 0
-      const glyph = drawGlassCore(view, yaw, lift)
+      drawGlassCore(view, yaw, lift)
       for (let b = Math.floor(NB / 2) + 1; b < NB; b++) pass(b, gs)
-      // a faint glint of the letter's edge over the front ink: light through glass, so the B reads behind the strands
-      ctx.strokeStyle = fade(accent, 0.1, 0.26 + 0.14 * lift)
-      ctx.lineWidth = Math.max(1, 1.2 * dpr)
-      ctx.stroke(glyph)
     }
 
     /* ----------------------------------------------------------- the handle */
