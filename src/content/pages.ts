@@ -6,8 +6,14 @@ import type { ServiceSlug } from "@/content/services"
 export const servicesPage = {
   title: "Six services, one team.",
   lede: "Start with the one that hurts most. Each service is built to plug into the others, and we keep all of it running, so you're never left holding a system nobody understands.",
-  // the showreel's place at the top of the page, until the reel itself is cut
-  showreel: { label: "Showreel", note: "One minute of the systems at work. Coming soon." },
+  // the showreel at the top of the page; `description` is what screen readers hear in place of the film
+  showreel: {
+    label: "Showreel",
+    note: "One minute of the systems at work.",
+    src: "/video/BGENTIC_Video.mp4",
+    description:
+      "A one-minute film. A business's calendars, spreadsheets, inboxes and pipeline sit in separate tools, and leads slip through. Then Bgentic: the CRM pipeline, a website built fast and built to convert, an automation running step by step, and search results where buyers look. It ends with every tool pulled into one system.",
+  },
   // the connected showcase: one slide per service, each with a screen of it at work
   showcase: {
     title: "See each one at work.",
