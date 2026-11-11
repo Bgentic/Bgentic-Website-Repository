@@ -118,6 +118,9 @@ export function ReelVideo({ src, description, label, note }: Props) {
             height={1080}
             loop
             playsInline
+            // no browser buttons (picture-in-picture, cast) appear over the film on hover
+            disablePictureInPicture
+            disableRemotePlayback
             preload="metadata"
             aria-label={`${description} Press to pause or play.`}
             tabIndex={0}
