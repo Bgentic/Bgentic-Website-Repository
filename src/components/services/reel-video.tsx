@@ -13,17 +13,21 @@ type Props = { src: string; description: string; label: string; note: string }
 // when it scrolls away, looping, with no browser controls. When the browser won't start sound before the visitor has
 // touched the page, it starts the film silently and the sound comes on at their first click, tap or key press
 // anywhere. A click (or Space/Enter) on the film pauses and plays it; a paused film stays paused when it scrolls
-// back into view.
+// back into view. It also pauses when the visitor leaves: another page of the site, another browser tab or a
+// minimised window. Coming back with the film in view, it carries on where it stopped (unless they'd paused it).
 export function ReelVideo({ src, description, label, note }: Props) {
   const ref = React.useRef<HTMLVideoElement>(null)
   const reel = React.useRef<HTMLDivElement>(null)
   const held = React.useRef(false) // paused by the visitor
   const userMuted = React.useRef(false) // muted by the visitor
   const waiting = React.useRef(false) // started silently by the browser; sound comes on at the first interaction
+  const inView = React.useRef(false) // enough of the film is on screen to play
   const release = React.useRef<() => void>(() => {})
   const [sound, setSound] = React.useState(true)
 
-  React.useEffect(() => {
+  // a layout effect, so the cleanup pauses the film the moment Next hides this page on navigation (it keeps the page
+  // you leave in the document, hidden, rather than removing it, so the film would otherwise play on, sound and all)
+  React.useLayoutEffect(() => {
     const v = ref.current
     if (!v) return
     // the toggle follows the element, so it's right whichever side changed it
@@ -47,6 +51,7 @@ export function ReelVideo({ src, description, label, note }: Props) {
     }
 
     const play = () => {
+      waiting.current = false
       v.muted = userMuted.current
       v.play().catch((err: DOMException) => {
         if (err.name !== "NotAllowedError") return
@@ -60,17 +65,29 @@ export function ReelVideo({ src, description, label, note }: Props) {
 
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.intersectionRatio >= IN_VIEW) {
-          if (!held.current) play()
+        inView.current = e.intersectionRatio >= IN_VIEW
+        if (inView.current) {
+          if (!held.current && !document.hidden) play()
         } else v.pause()
       },
       { threshold: [0, IN_VIEW] },
     )
     io.observe(v)
+
+    // another browser tab or a minimised window
+    const onVisibility = () => {
+      if (document.hidden) v.pause()
+      else if (inView.current && !held.current) play()
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+
     return () => {
       io.disconnect()
       disarm()
+      document.removeEventListener("visibilitychange", onVisibility)
       v.removeEventListener("volumechange", sync)
+      inView.current = false
+      v.pause()
     }
   }, [])
 
