@@ -2964,30 +2964,34 @@
     filter: blur(40px);
     pointer-events: none;
   }
-  /* no bezel: the film runs to the frame's edge, with only a thin lit glass edge over it and a shadow under it */
+  /* the bezel around the outside of the film: dark frosted glass with grain, a 1px inner edge and a lit top */
   .reel-frame {
-    border-radius: 24px;
+    padding: 0.625rem;
+    border-radius: 30px;
+    background:
+      var(--grain),
+      linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02) 40%, rgb(255 255 255 / 0.03)),
+      rgb(12 16 28 / 0.72);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
     box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.1),
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
       0 2px 4px rgb(0 0 0 / 0.4),
       0 50px 100px -40px rgb(0 0 0 / 0.9),
       0 30px 90px -50px rgb(59 130 246 / 0.5);
   }
-  /* 16:9, the film's own shape, so it fills the frame with no bars and nothing cropped */
+  @media (min-width: 768px) {
+    .reel-frame {
+      padding: 0.875rem;
+    }
+  }
+  /* inside the bezel, the film alone: 16:9 like the film itself, so it fills the screen edge to edge, with no
+     background behind it and nothing laid over it */
   .reel-screen {
-    position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    border-radius: 24px;
-  }
-  .reel-screen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow:
-      inset 0 0 0 1px rgb(255 255 255 / 0.12),
-      inset 0 1px 0 rgb(255 255 255 / 0.2);
-    pointer-events: none;
+    border-radius: 21px;
   }
   .reel-video {
     display: block;
@@ -2996,43 +3000,19 @@
     object-fit: cover;
     cursor: pointer;
   }
-  /* shown only while someone has paused it: a glass play mark at the centre, which a click on the film clears */
-  .reel-paused {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    pointer-events: none;
+  /* under the bezel: the note on the left, the Mute/Unmute toggle on the right */
+  .reel-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.25rem;
+    padding-inline: 0.25rem;
   }
-  .reel-paused span {
-    display: grid;
-    place-items: center;
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
-    color: #fbf7f3;
-    background: var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.04)), rgb(12 16 28 / 0.5);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    box-shadow:
-      inset 0 0 0 1px rgb(255 255 255 / 0.18),
-      inset 0 1px 0 rgb(255 255 255 / 0.28),
-      0 20px 40px -12px rgb(0 0 0 / 0.6);
-  }
-  @media (min-width: 768px) {
-    .reel-paused span {
-      width: 5.5rem;
-      height: 5.5rem;
-    }
-  }
-  /* the Unmute/Mute toggle: a small pill of dark frosted glass in the screen's lower right corner, tinted enough to
-     read over the film's brightest frames. Off, its speaker is crossed out; on, the speaker and its edge light up in
-     the brand blue, with the same faint ring as the note's dot below */
+  /* the toggle: a small pill of the bezel's dark frosted glass. Off, its speaker is crossed out; on, the speaker and
+     its edge light up in the brand blue, with the same faint ring as the note's dot */
   .reel-sound {
-    position: absolute;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 0.4375rem;
@@ -3080,19 +3060,12 @@
         rgb(12 16 28 / 0.6);
     }
   }
-  @media (min-width: 768px) {
-    .reel-sound {
-      right: 1.125rem;
-      bottom: 1.125rem;
-    }
-  }
   .reel-note {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
-    margin-top: 1.25rem;
+    margin: 0;
     font-size: 0.875rem;
     color: var(--b-body);
   }
