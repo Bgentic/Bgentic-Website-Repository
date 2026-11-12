@@ -3,14 +3,16 @@
 // fainter highlight that follows the pointer. Clicking an item sends the capsule gliding to it at once, before the new
 // page has arrived (the page then lifts in: app/template.tsx), and an item gives a little under the press. Every item is
 // a plain link (Services goes straight to the one /services page, no menu); on phones the pill opens a glass sheet.
-// The page's one filled action belongs to the content, so "Book a call" here stays outlined.
+// The bar's one button is "Log in" (2026-11-12): it takes clients to their workspace (app.bgentic.io). Booking a call
+// lives in the pages, which already ask for it often. The page's one filled action belongs to the content, so the
+// button stays outlined here; in the phone sheet, where nothing else competes, it's the filled one.
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { LogIn, Menu, X } from "lucide-react"
 import { BgenticLogo } from "@/components/site/logo"
 import { buttonVariants } from "@/components/ui/button-variants"
-import { BOOK_CALL_HREF, LOGIN_HREF, NAV } from "@/content/site"
+import { LOGIN_HREF, NAV } from "@/content/site"
 import { REDUCED_MOTION } from "@/lib/media"
 import { farDown, scrollToTop } from "@/lib/scroll-to-top"
 import { cn } from "@/lib/utils"
@@ -211,16 +213,10 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1">
-          <a href={LOGIN_HREF} className="nav-item hidden md:inline-flex">
+          <a href={LOGIN_HREF} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden sm:inline-flex")}>
+            <LogIn aria-hidden="true" />
             Log in
           </a>
-          <Link
-            href={BOOK_CALL_HREF}
-            onClick={choose(BOOK_CALL_HREF)}
-            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden sm:inline-flex")}
-          >
-            Book a call
-          </Link>
           <button
             type="button"
             className={cn(buttonVariants({ variant: "quiet", size: "icon" }), "size-11 md:hidden")}
@@ -237,11 +233,11 @@ export function SiteHeader() {
         {sheet && (
           <div id={sheetId} className="nav-sheet md:hidden">
             <ul className="grid">
-              {[...NAV, { label: "Log in", href: LOGIN_HREF }].map((item) => (
+              {NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={item.href.startsWith("/") ? choose(item.href) : undefined}
+                    onClick={choose(item.href)}
                     aria-current={current(item.href)}
                     className="block rounded-xl px-4 py-3 text-[15px] font-medium text-ink hover:bg-fill aria-[current=page]:bg-fill"
                   >
@@ -250,13 +246,10 @@ export function SiteHeader() {
                 </li>
               ))}
               <li className="p-2">
-                <Link
-                  href={BOOK_CALL_HREF}
-                  onClick={choose(BOOK_CALL_HREF)}
-                  className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}
-                >
-                  Book a discovery call
-                </Link>
+                <a href={LOGIN_HREF} className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}>
+                  <LogIn aria-hidden="true" />
+                  Log in
+                </a>
               </li>
             </ul>
           </div>
