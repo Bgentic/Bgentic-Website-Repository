@@ -1,48 +1,111 @@
 "use client"
-// A short enquiry form. Until the CRM webhook is wired (Phase 3), sending opens the visitor's email app with the
-// enquiry already written, addressed to hello@bgentic.io, so it works today and nothing is lost.
+// The short enquiry form. Sending posts it to the site's own endpoint (app/api/enquiry), which passes it to the CRM;
+// once it's there the form gives way to a thank-you. If it can't be sent (offline, or the CRM doesn't answer), the
+// visitor keeps what they wrote and can send it by email instead, written out and addressed to hello@bgentic.io, so
+// an enquiry is never lost.
 import * as React from "react"
-import { Send } from "lucide-react"
+import { Check, Loader2, Send } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { CONTACT_EMAIL } from "@/content/site"
 import { SERVICES } from "@/content/services"
 import { cn } from "@/lib/utils"
 
 type Errors = Partial<Record<"name" | "email" | "message", string>>
+type Enquiry = { name: string; email: string; business: string; service: string; message: string }
+type Status = "idle" | "sending" | "sent" | "failed"
 
-export function ContactForm({ className }: { className?: string }) {
+const mailto = ({ name, email, business, service, message }: Enquiry) => {
+  const subject = `Discovery call: ${business || name}`
+  const details = [
+    `Name: ${name}`,
+    `Email: ${email}`,
+    business ? `Business: ${business}` : null,
+    service ? `Interested in: ${service}` : null,
+  ].filter((l): l is string => l !== null)
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${details.join("\n")}\n\n${message}`)}`
+}
+
+/** `submitLabel`: the button's words ("Send message" on /contact, where the form is the quick-message option) */
+export function ContactForm({ className, submitLabel = "Send enquiry" }: { className?: string; submitLabel?: string }) {
   const [errors, setErrors] = React.useState<Errors>({})
-  const [sent, setSent] = React.useState(false)
+  const [status, setStatus] = React.useState<Status>("idle")
+  const [enquiry, setEnquiry] = React.useState<Enquiry | null>(null)
+  const done = React.useRef<HTMLHeadingElement>(null)
+  const submit = React.useRef<HTMLButtonElement>(null)
   const id = React.useId()
 
-  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+  // the thank-you takes focus, so a screen reader announces it and the keyboard carries on from there; after a
+  // failed send, focus goes back to the button (it was disabled while sending, which drops focus to the page)
+  React.useEffect(() => {
+    if (status === "sent") done.current?.focus()
+    if (status === "failed") submit.current?.focus()
+  }, [status])
+
+  const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
-    const data = new FormData(ev.currentTarget)
-    const name = String(data.get("name") ?? "").trim()
-    const email = String(data.get("email") ?? "").trim()
-    const business = String(data.get("business") ?? "").trim()
-    const service = String(data.get("service") ?? "")
-    const message = String(data.get("message") ?? "").trim()
-    const next: Errors = {}
-    if (!name) next.name = "Tell us your name."
-    if (!/^\S+@\S+\.\S+$/.test(email)) next.email = "Enter an email we can reply to."
-    if (!message) next.message = "Tell us a little about what you need."
-    setErrors(next)
-    if (Object.keys(next).length) {
-      const first = Object.keys(next)[0]
-      ev.currentTarget.querySelector<HTMLElement>(`[name="${first}"]`)?.focus()
+    if (status === "sending") return
+    const form = ev.currentTarget
+    const data = new FormData(form)
+    const next: Enquiry = {
+      name: String(data.get("name") ?? "").trim(),
+      email: String(data.get("email") ?? "").trim(),
+      business: String(data.get("business") ?? "").trim(),
+      service: String(data.get("service") ?? ""),
+      message: String(data.get("message") ?? "").trim(),
+    }
+    const problems: Errors = {}
+    if (!next.name) problems.name = "Tell us your name."
+    if (!/^\S+@\S+\.\S+$/.test(next.email)) problems.email = "Enter an email we can reply to."
+    if (!next.message) problems.message = "Tell us a little about what you need."
+    setErrors(problems)
+    if (Object.keys(problems).length) {
+      form.querySelector<HTMLElement>(`[name="${Object.keys(problems)[0]}"]`)?.focus()
       return
     }
-    const subject = `Discovery call: ${business || name}`
-    const details = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      business ? `Business: ${business}` : null,
-      service ? `Interested in: ${service}` : null,
-    ].filter((l): l is string => l !== null)
-    const body = `${details.join("\n")}\n\n${message}`
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
+
+    setEnquiry(next)
+    setStatus("sending")
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ ...next, page: window.location.pathname, hp: String(data.get("bg_hp") ?? "") }),
+      })
+      setStatus(res.ok ? "sent" : "failed")
+      if (res.ok) form.reset()
+    } catch {
+      setStatus("failed")
+    }
+  }
+
+  if (status === "sent" && enquiry) {
+    const first = enquiry.name.split(/\s+/)[0]
+    return (
+      <div className={cn("form-done grid justify-items-start gap-4 py-2", className)} role="status">
+        <span className="tile size-11 rounded-[0.875rem]" aria-hidden="true">
+          <Check className="size-5" strokeWidth={2.25} />
+        </span>
+        <div>
+          <h3 ref={done} tabIndex={-1} className="text-[1.3125rem] font-semibold tracking-[-0.02em] text-ink outline-none">
+            Thanks, {first}. It&apos;s with us.
+          </h3>
+          <p className="t-body mt-2 max-w-[44ch]">
+            We&apos;ll reply to <span className="text-ink">{enquiry.email}</span> within one business day, usually
+            sooner.
+          </p>
+        </div>
+        <button
+          type="button"
+          className={buttonVariants({ variant: "glass", size: "md" })}
+          onClick={() => {
+            setStatus("idle")
+            setEnquiry(null)
+          }}
+        >
+          Send another enquiry
+        </button>
+      </div>
+    )
   }
 
   const field = (name: keyof Errors | "business", label: string, input: React.ReactNode, optional = false) => {
@@ -63,9 +126,10 @@ export function ContactForm({ className }: { className?: string }) {
     )
   }
   const describe = (name: keyof Errors) => (errors[name] ? `${id}-${name}-error` : undefined)
+  const sending = status === "sending"
 
   return (
-    <form noValidate onSubmit={onSubmit} className={cn("grid gap-5", className)}>
+    <form noValidate onSubmit={onSubmit} className={cn("relative grid gap-5", className)} aria-busy={sending}>
       <div className="grid gap-5 sm:grid-cols-2">
         {field(
           "name",
@@ -107,13 +171,32 @@ export function ContactForm({ className }: { className?: string }) {
           aria-describedby={describe("message")}
         />,
       )}
+      {/* people never see or reach this field; bots fill in every field they find, and give themselves away */}
+      <div aria-hidden="true" className="pointer-events-none absolute left-[-9999px] h-px w-px overflow-hidden">
+        <label>
+          Leave this empty
+          <input name="bg_hp" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
       <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1">
-        <button type="submit" className={buttonVariants({ variant: "primary", size: "lg" })}>
-          Send enquiry
-          <Send aria-hidden="true" />
+        <button ref={submit} type="submit" disabled={sending} className={buttonVariants({ variant: "primary", size: "lg" })}>
+          {sending ? "Sending…" : submitLabel}
+          {sending ? <Loader2 aria-hidden="true" className="motion-safe:animate-spin" /> : <Send aria-hidden="true" />}
         </button>
         <p className="field-hint text-[13px]" role="status">
-          {sent ? "Your email app should open with the enquiry written. Send it from there." : `Or email ${CONTACT_EMAIL}`}
+          {status === "failed" && enquiry ? (
+            <>
+              That didn&apos;t send. Try again, or{" "}
+              <a href={mailto(enquiry)} className="link-quiet">
+                email it to us instead
+              </a>
+              .
+            </>
+          ) : sending ? (
+            "Sending your enquiry…"
+          ) : (
+            `Or email ${CONTACT_EMAIL}`
+          )}
         </p>
       </div>
     </form>

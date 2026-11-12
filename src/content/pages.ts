@@ -119,14 +119,20 @@ export const clientsPage = {
 }
 
 export const contactPage = {
-  // the page opens on booking: the heading is the home page's close (contact.title in home.ts)
+  // the page opens on the two ways in, side by side: book a call, or send a message. The heading is the home page's
+  // close (contact.title in home.ts)
   booking: {
     intro:
-      "Pick a time for a 30-minute discovery call, then tell us a little about the business, so the call starts with answers instead of questions.",
-    steps: [
-      { title: "Book your call. ", text: "Choose a time that suits you." },
-      { title: "Tell us where the time goes. ", text: "A few lines is plenty; we'll ask the rest on the call." },
-    ],
+      "Two ways in. Book a 30-minute discovery call, or send us a quick message and we'll reply by email within one business day.",
+    call: {
+      title: "Book a discovery call",
+      text: "Thirty minutes to map where your time goes. Pick a time that suits you.",
+    },
+    message: {
+      title: "Send a quick message",
+      text: "Not ready for a call? Tell us what's going on and we'll reply by email within one business day.",
+      action: "Send message",
+    },
   },
   ways: {
     title: "Other ways to reach us.",

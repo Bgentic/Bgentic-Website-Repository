@@ -1,23 +1,39 @@
 import Script from "next/script"
-import { Mail } from "lucide-react"
+import { CalendarDays, MessageSquareText, type LucideIcon } from "lucide-react"
 import { BookingGrid } from "@/components/contact/booking-grid"
 import { ContactForm } from "@/components/site/contact-form"
 import { contact } from "@/content/home"
 import { contactPage } from "@/content/pages"
-import { CONTACT_EMAIL } from "@/content/site"
 
-// /contact opens on booking: the visitor picks a time for the discovery call on the calendar (step 1), then tells us
-// about the business on the form (step 2), so the call starts with answers. Over the hero's kinetic grid, lit from
-// behind the calendar. The calendar is Bgentic's own booking widget, embedded as given; its script sizes the iframe
-// to fit what it shows. Styles: the booking section of depth.css.
+// /contact opens on the two ways in, side by side and clearly one or the other: book a discovery call on the calendar
+// (left), or send a quick message on the form (right), with "or" standing between them. Each has its own heading: an
+// icon, a name and what to expect. Over the hero's kinetic grid, lit from behind the calendar. The calendar is
+// Bgentic's own booking widget, embedded as given; its script sizes the iframe to fit what it shows. Styles: the
+// booking section of depth.css.
 const CALENDAR = {
   src: "https://link.bgentic.io/widget/booking/YZiyZa8uDc04m87hig31",
   id: "YZiyZa8uDc04m87hig31_1793771871926",
   script: "https://link.bgentic.io/js/form_embed.js",
 }
 
+function OptionHead({ id, icon: Icon, title, text }: { id: string; icon: LucideIcon; title: string; text: string }) {
+  return (
+    <div className="booking-head">
+      <span className="tile size-11 rounded-[0.875rem]" aria-hidden="true">
+        <Icon className="size-5" />
+      </span>
+      <div className="min-w-0">
+        <h2 id={id} className="booking-title">
+          {title}
+        </h2>
+        <p className="booking-text">{text}</p>
+      </div>
+    </div>
+  )
+}
+
 export function BookingSection() {
-  const { steps } = contactPage.booking
+  const { intro, call, message } = contactPage.booking
   return (
     <section className="booking" aria-labelledby="contact-title">
       <BookingGrid />
@@ -28,22 +44,13 @@ export function BookingSection() {
             {contact.title}
           </h1>
           <div className="md:col-span-5">
-            <p className="t-lede">{contactPage.booking.intro}</p>
+            <p className="t-lede">{intro}</p>
           </div>
         </div>
 
         <div className="booking-grid mt-12">
-          <div className="booking-step" data-lamp="">
-            <p className="booking-step-head">
-              <span className="next-num" aria-hidden="true">
-                1
-              </span>
-              <span>
-                <span className="sr-only">Step 1: </span>
-                <b>{steps[0].title}</b>
-                {steps[0].text}
-              </span>
-            </p>
+          <section className="booking-option" aria-labelledby="book-call-title" data-lamp="">
+            <OptionHead id="book-call-title" icon={CalendarDays} title={call.title} text={call.text} />
             <div className="booking-frame">
               <iframe
                 src={CALENDAR.src}
@@ -54,29 +61,16 @@ export function BookingSection() {
                 className="booking-iframe"
               />
             </div>
+          </section>
+          <div className="booking-or" aria-hidden="true">
+            <span>or</span>
           </div>
-          <div className="booking-step">
-            <p className="booking-step-head">
-              <span className="next-num" aria-hidden="true">
-                2
-              </span>
-              <span>
-                <span className="sr-only">Step 2: </span>
-                <b>{steps[1].title}</b>
-                {steps[1].text}
-              </span>
-            </p>
+          <section className="booking-option" aria-labelledby="send-message-title">
+            <OptionHead id="send-message-title" icon={MessageSquareText} title={message.title} text={message.text} />
             <div className="contact-card">
-              <ContactForm />
+              <ContactForm submitLabel={message.action} />
             </div>
-            <div className="mt-6 grid gap-3">
-              <p className="contact-promise">{contact.promise}</p>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="link-quiet inline-flex items-center gap-2 text-[15px]">
-                <Mail className="size-4" aria-hidden="true" />
-                {CONTACT_EMAIL}
-              </a>
-            </div>
-          </div>
+          </section>
         </div>
       </div>
       <Script src={CALENDAR.script} strategy="afterInteractive" />

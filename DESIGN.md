@@ -319,9 +319,9 @@ The 21st.dev pricing block (`src/components/blocks/pricing.tsx`), on the shadcn 
 
 ### Booking (/contact)
 /contact opens on booking, over the hero's kinetic grid (`booking-grid.tsx`), which is lit from behind the calendar.
-- **Two numbered steps:** they sit side by side from 1024px and stack below that.
-  1. Book your call: Bgentic's own booking widget, embedded as given in a dark glass frame. Its script sizes the iframe.
-  2. Tell us where the time goes: the enquiry form in the contact card.
+- **Two ways in, one or the other (2026-11-12, replacing two numbered steps that read as a sequence):** side by side from 1024px with "or" on a small glass pill in the gutter (a hairline running down from it); stacked below that with "or" across between them. Each has its own heading: an icon tile, a 21px title and a line on what to expect. The two headings share a height (CSS subgrid), so the calendar and the form start level.
+  - **Book a discovery call** (calendar icon): Bgentic's own booking widget, embedded as given in a dark glass frame. Its script sizes the iframe.
+  - **Send a quick message** (message icon): the enquiry form in the contact card, its button "Send message". It goes to the CRM through `/api/enquiry`, with a reply by email within one business day.
 - **Below:** the other ways in and the questions, on cream.
 
 ### Footer (site-wide)
