@@ -18,7 +18,8 @@ export function Hero() {
         {hero.title[0]} <span className="t-glow block">{hero.title[1]}</span>
       </h1>
       <p className="hero-lede mt-7">{hero.lede}</p>
-      <div className="mt-10 flex flex-wrap gap-3">
+      {/* on phones the pair stacks at full width, the same size: one big target each, read as one decision */}
+      <div className="mt-10 flex flex-wrap gap-3 max-sm:flex-col max-sm:items-stretch">
         <Link href={hero.primary.href} className={buttonVariants({ variant: "primary", size: "lg" })}>
           {hero.primary.label}
           <ArrowRight aria-hidden="true" className="transition-transform duration-300 ease-(--ease-spring) group-hover/button:translate-x-0.5" />

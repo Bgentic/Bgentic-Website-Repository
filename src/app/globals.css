@@ -88,8 +88,9 @@
   --header-h: 4rem;
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
   --container: 72rem;
-  /* macro space: distinct ideas sit far apart */
-  --section-y: clamp(6rem, 12vw, 11rem);
+  /* macro space: distinct ideas sit far apart. 12vw from 800px up; below that it holds at 4.5rem, so on a phone two
+     bands meet with 144px between their content rather than 192px (more than a fifth of the screen of nothing) */
+  --section-y: clamp(4.5rem, 12vw, 11rem);
 }
 @media (min-width: 1600px) {
   :root {

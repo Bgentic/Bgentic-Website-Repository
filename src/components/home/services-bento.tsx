@@ -79,7 +79,8 @@ export function ServicesBento() {
   }
 
   return (
-    <ul className="bento" onPointerMove={onPointerMove}>
+    // `stack`: on phones the cards stack as you scroll (the phones section of depth.css)
+    <ul className="bento stack" onPointerMove={onPointerMove}>
       {SERVICES.map((s) => {
         const wide = WIDE.has(s.slug)
         return (

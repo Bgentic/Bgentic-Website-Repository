@@ -152,6 +152,25 @@
     border-radius: 20px;
     color: var(--b-ink);
   }
+  /* Centred, the pill's left edge fell on a half pixel whenever the space either side was odd (any odd-width window),
+     and the logo and labels inside it were drawn between pixels, soft. Where the browser can round in CSS, the pill
+     is placed by a left margin rounded down to a whole pixel instead, so everything in it sits on the pixel grid. */
+  @supports (width: round(down, 1.5px, 1px)) {
+    .nav-shell {
+      justify-content: flex-start;
+      padding-inline: round(var(--gutter), 1px);
+    }
+    .nav-pill {
+      margin-left: round(down, calc((100% - min(100%, 56rem)) / 2), 1px);
+    }
+  }
+  /* the wordmark, inline (components/site/logo.tsx): 26px tall, its width from its own proportions */
+  .nav-logo {
+    display: block;
+    height: 1.625rem;
+    width: auto;
+    aspect-ratio: 90.9 / 34.59;
+  }
   /* The glass sits on a pseudo-element, not the pill: an element with a backdrop-filter becomes the backdrop root
      for everything inside it, and the phone sheet would then blur only the pill, not the page. */
   .nav-pill::before {
@@ -2146,6 +2165,24 @@
     line-height: 1.55;
     color: var(--b-body);
   }
+  /* phones: the strip stacks (the tile, the words at the strip's full width, the action across its foot) instead of
+     squeezing the words into the gap between tile and button, where they fell to one word a line */
+  @media (max-width: 639px) {
+    .eng {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.375rem 1.25rem 1.25rem;
+    }
+    .eng > div {
+      flex: none;
+      width: 100%;
+    }
+    .eng > a {
+      align-self: stretch;
+      margin-top: 0.25rem;
+    }
+  }
 
   /* ------------------------------------------------------------- 05 · clients: the gallery */
   /* Four clients shown like a product shoot. Each card is dark glass holding a lit studio, and in the studio the
@@ -2986,35 +3023,697 @@
       padding: 0.875rem;
     }
   }
-  /* inside the bezel, the film alone: 16:9 like the film itself, so it fills the screen edge to edge, with no
-     background behind it and nothing laid over it */
+  /* inside the bezel, the screen: 16:9 like the film itself, so it fills the screen edge to edge */
   .reel-screen {
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: 21px;
   }
-  .reel-video {
+
+  /* The player (reel-video.tsx): the film, its poster, and either the button that opens it full screen or, full
+     screen, its controls. Its ground is the film's own (navy deepened toward black, as the film's is), so on a screen
+     that isn't 16:9 the letterboxing disappears into the picture. */
+  .rp {
+    --rp-ground: color-mix(in srgb, #060b17 70%, #000);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--rp-ground);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rp-video {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  /* the poster holds the frame until the film's first frame plays, then dissolves into it */
+  .rp-poster {
+    object-fit: cover;
+    pointer-events: none;
+    transition: opacity 700ms var(--ease-out);
+  }
+  .rp[data-started] .rp-poster {
+    opacity: 0;
+  }
+
+  /* On the page the whole film is one button. At rest nothing sits over it; under a mouse the film dims a little and
+     a glass capsule rises into its middle ("Watch full screen"). Where the browser won't autoplay at all, the capsule
+     stays over the poster as the way in ("Watch the film" and its length). */
+  .rp-open {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
     cursor: pointer;
   }
-  /* under the bezel: the note on the left, the Mute/Unmute toggle on the right */
+  .rp-open::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(closest-side, rgb(4 8 15 / 0.42), rgb(4 8 15 / 0.16));
+    opacity: 0;
+    transition: opacity 320ms var(--ease-out);
+  }
+  .rp-open:focus-visible {
+    outline-offset: -6px;
+    border-radius: 18px;
+  }
+  .rp-cue {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 3.25rem;
+    padding: 0 1.375rem 0 0.4375rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 550;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    color: #fbf7f3;
+    background:
+      var(--grain),
+      linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.04)),
+      rgb(12 16 28 / 0.5);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.14),
+      inset 0 1px 0 rgb(255 255 255 / 0.2),
+      0 2px 4px rgb(0 0 0 / 0.3),
+      0 18px 40px -16px rgb(0 0 0 / 0.7);
+    opacity: 0;
+    scale: 0.96;
+    translate: 0 0.25rem;
+    transition:
+      opacity 220ms var(--ease-out),
+      scale 320ms var(--ease-spring),
+      translate 320ms var(--ease-spring);
+  }
+  /* the disc: cream with a navy glyph (the brand's pairing), so the thing to press is unmistakable */
+  .rp-cue-disc {
+    display: grid;
+    place-items: center;
+    width: 2.375rem;
+    height: 2.375rem;
+    border-radius: 50%;
+    color: #060b17;
+    background: linear-gradient(180deg, #ffffff, #fbf7f3);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.35),
+      inset 0 -1px 0 rgb(6 11 23 / 0.08);
+  }
+  .rp-cue-disc svg {
+    width: 1.0625rem;
+    height: 1.0625rem;
+  }
+  .rp-cue-len {
+    margin-left: -0.125rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: rgb(251 247 243 / 0.7);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .rp-open:hover::before {
+      opacity: 1;
+    }
+    .rp-open:hover .rp-cue {
+      opacity: 1;
+      scale: 1;
+      translate: 0 0;
+    }
+  }
+  .rp-open:is(:focus-visible, [data-blocked])::before {
+    opacity: 1;
+  }
+  .rp-open:is(:focus-visible, [data-blocked]) .rp-cue {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+  .rp-open:active .rp-cue {
+    scale: 0.97;
+    transition-duration: 120ms;
+  }
+  /* phones: the film is small, so the capsule is too */
+  @media (max-width: 639px) {
+    .rp-cue {
+      gap: 0.5625rem;
+      height: 2.625rem;
+      padding: 0 1rem 0 0.3125rem;
+      font-size: 0.8125rem;
+    }
+    .rp-cue-disc {
+      width: 2rem;
+      height: 2rem;
+    }
+    .rp-cue-disc svg {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+  }
+
+  /* full screen: the film whole (contained, on its own ground), settling in from a touch smaller */
+  .rp:is(:fullscreen, [data-fs]) {
+    width: 100%;
+    height: 100%;
+  }
+  .rp::backdrop {
+    background: color-mix(in srgb, #060b17 70%, #000);
+  }
+  .rp:is(:fullscreen, [data-fs]) .rp-video {
+    object-fit: contain;
+  }
+  .rp:is(:fullscreen, [data-fs]) :is(.rp-open, .rp-poster) {
+    display: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .rp:fullscreen .rp-video {
+      animation: rp-arrive 640ms var(--ease-out) backwards;
+    }
+  }
+  @keyframes rp-arrive {
+    from {
+      opacity: 0.5;
+      scale: 0.95;
+    }
+  }
+
+  /* The full-screen controls: a frosted bar along the top (close, the title, volume) and a floating dock at the foot
+     (back 10 s, play/pause, forward 10 s, the times either side of the scrubber), over a faint shade top and bottom so
+     they read on any frame. All of it is the bezel's glass a step lighter, with the same grain, edge and lit top. */
+  .rp-ui {
+    --rp-blur: blur(28px) saturate(170%);
+    --rp-glass:
+      var(--grain), linear-gradient(180deg, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.035)), rgb(12 16 28 / 0.58);
+    --rp-glass-edge:
+      inset 0 0 0 1px rgb(255 255 255 / 0.11), inset 0 1px 0 rgb(255 255 255 / 0.17), 0 1px 2px rgb(0 0 0 / 0.4),
+      0 22px 48px -20px rgb(0 0 0 / 0.8);
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    color: #fbf7f3;
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .rp-glass,
+  .rp-dock {
+    background: var(--rp-glass);
+    -webkit-backdrop-filter: var(--rp-blur);
+    backdrop-filter: var(--rp-blur);
+    box-shadow: var(--rp-glass-edge);
+  }
+  .rp-stage {
+    position: absolute;
+    inset: 0;
+  }
+  .rp-shade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgb(4 8 15 / 0.6), rgb(4 8 15 / 0) 9rem),
+      linear-gradient(0deg, rgb(4 8 15 / 0.66), rgb(4 8 15 / 0) 12rem);
+  }
+  .rp-top {
+    position: absolute;
+    top: max(1.25rem, env(safe-area-inset-top));
+    left: max(1.25rem, env(safe-area-inset-left));
+    right: max(1.25rem, env(safe-area-inset-right));
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    pointer-events: none;
+  }
+  .rp-top > :not(.rp-title) {
+    pointer-events: auto;
+  }
+  .rp-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
+  }
+  .rp-title b {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .rp-title span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.875rem;
+    color: rgb(251 247 243 / 0.72);
+  }
+  .rp-vol {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    height: 2.75rem;
+    margin-left: auto;
+    padding: 0 1.125rem 0 0;
+    border-radius: 999px;
+  }
+
+  .rp-btn {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 14px;
+    color: inherit;
+    cursor: pointer;
+    transition:
+      background-color 160ms var(--ease-out),
+      scale 140ms var(--ease-out);
+  }
+  .rp-btn svg {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+  .rp-round {
+    border-radius: 50%;
+  }
+  .rp-round svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .rp-play svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .rp-skip svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .rp-btn:active {
+    scale: 0.9;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .rp-btn:hover {
+      background-color: rgb(255 255 255 / 0.1);
+    }
+  }
+
+  /* paused: one large play in the middle of the film */
+  .rp-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 5.25rem;
+    height: 5.25rem;
+    margin: -2.625rem 0 0 -2.625rem;
+    border-radius: 50%;
+    color: #fbf7f3;
+    cursor: pointer;
+    transition:
+      opacity 220ms var(--ease-out),
+      scale 300ms var(--ease-spring);
+  }
+  @starting-style {
+    .rp-center {
+      opacity: 0;
+      scale: 0.9;
+    }
+  }
+  .rp-center svg {
+    width: 2.125rem;
+    height: 2.125rem;
+  }
+  .rp-center .rp-glyph-play {
+    translate: 0.125rem 0;
+  }
+  .rp-center:active {
+    scale: 0.94;
+  }
+
+  .rp-dock {
+    position: absolute;
+    bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: min(100% - 2.5rem, 54rem);
+    padding: 0.375rem 1.125rem 0.375rem 0.375rem;
+    border-radius: 22px;
+    translate: -50% 0;
+  }
+  .rp-transport {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+  }
+  .rp-seek {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.625rem;
+    min-width: 0;
+  }
+  .rp-time {
+    flex: none;
+    min-width: 2.75rem;
+    font-size: 0.8125rem;
+    font-weight: 550;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    text-align: center;
+    color: rgb(251 247 243 / 0.82);
+  }
+
+  /* The scrubber: a hairline track that thickens under the pointer, the part already loaded a shade lighter, the
+     played part cream, a thumb that grows in, and above it the time a press would jump to. */
+  .rp-scrub {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 2.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    touch-action: none;
+  }
+  .rp-track {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 0.5rem;
+    margin-top: -0.25rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgb(251 247 243 / 0.2);
+    scale: 1 0.5;
+    transition: scale 240ms var(--ease-out);
+  }
+  .rp-buf,
+  .rp-fill {
+    position: absolute;
+    inset: 0;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+  .rp-buf {
+    background: rgb(251 247 243 / 0.2);
+  }
+  .rp-fill {
+    background: #fbf7f3;
+  }
+  .rp-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin: -0.4375rem 0 0 -0.4375rem;
+    border-radius: 50%;
+    background: #fbf7f3;
+    box-shadow:
+      0 1px 3px rgb(0 0 0 / 0.45),
+      0 0 0 0.5px rgb(0 0 0 / 0.15);
+    pointer-events: none;
+    scale: 0;
+    transition: scale 200ms var(--ease-out);
+  }
+  /* floats clear above the dock, not across its edge */
+  .rp-tip {
+    position: absolute;
+    bottom: calc(100% + 1.125rem);
+    left: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    white-space: nowrap;
+    color: #fbf7f3;
+    background: rgb(12 16 28 / 0.9);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.1),
+      0 6px 16px -6px rgb(0 0 0 / 0.7);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 140ms var(--ease-out);
+  }
+  .rp-scrub:is([data-drag], :focus-visible) .rp-track {
+    scale: 1 1;
+  }
+  .rp-scrub:is([data-drag], :focus-visible) .rp-thumb {
+    scale: 1;
+  }
+  .rp-scrub[data-drag] .rp-thumb {
+    scale: 1.2;
+  }
+  .rp-scrub[data-drag] .rp-tip {
+    opacity: 1;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .rp-scrub:hover .rp-track {
+      scale: 1 1;
+    }
+    .rp-scrub:hover .rp-thumb {
+      scale: 1;
+    }
+    .rp-scrub:hover .rp-tip {
+      opacity: 1;
+    }
+  }
+
+  /* volume: a short cream slider beside the speaker (touch screens use the device's own buttons) */
+  .rp-range {
+    width: 5.5rem;
+    height: 1.5rem;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .rp-range::-webkit-slider-runnable-track {
+    height: 0.25rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #fbf7f3 var(--level), rgb(251 247 243 / 0.22) var(--level));
+  }
+  .rp-range::-moz-range-track {
+    height: 0.25rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #fbf7f3 var(--level), rgb(251 247 243 / 0.22) var(--level));
+  }
+  .rp-range::-webkit-slider-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-top: -0.25rem;
+    border: 0;
+    border-radius: 50%;
+    background: #fbf7f3;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .rp-range::-moz-range-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: #fbf7f3;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+  }
+
+  /* Untouched while it plays, the controls and the cursor fade away, the bars easing off toward their edges; a move,
+     a tap or a key brings them back at once. Keyboard focus on a control keeps them. */
+  .rp-top,
+  .rp-dock,
+  .rp-shade,
+  .rp-transport,
+  .rp-seek {
+    transition:
+      opacity 380ms ease,
+      translate 380ms var(--ease-out);
+  }
+  .rp-ui[data-idle]:not(:has(:focus-visible)) {
+    cursor: none;
+  }
+  .rp-ui[data-idle]:not(:has(:focus-visible)) :is(.rp-top, .rp-dock, .rp-shade, .rp-transport, .rp-seek) {
+    opacity: 0;
+  }
+  .rp-ui[data-idle]:not(:has(:focus-visible)) :is(.rp-top > *, .rp-dock, .rp-transport, .rp-seek) {
+    pointer-events: none;
+  }
+  .rp-ui[data-idle]:not(:has(:focus-visible)) .rp-top {
+    translate: 0 -0.5rem;
+  }
+  .rp-ui[data-idle]:not(:has(:focus-visible)) .rp-dock {
+    translate: -50% 0.5rem;
+  }
+  /* arriving: the bars glide in from their edges just after the film settles */
+  @media (prefers-reduced-motion: no-preference) {
+    .rp-top {
+      animation: rp-drop 560ms var(--ease-out) 120ms backwards;
+    }
+    .rp-dock {
+      animation: rp-rise 600ms var(--ease-out) 180ms backwards;
+    }
+  }
+  @keyframes rp-drop {
+    from {
+      opacity: 0;
+      translate: 0 -0.75rem;
+    }
+  }
+  @keyframes rp-rise {
+    from {
+      opacity: 0;
+      translate: -50% 1rem;
+    }
+  }
+
+  /* Touch screens and narrow windows: the iOS layout. The transport sits large in the middle of the film (each
+     control its own glass disc), the scrubber runs along the foot on its own glass, and the speaker stands alone. */
+  @media (pointer: coarse), (max-width: 639px) {
+    .rp-dock {
+      display: contents;
+    }
+    .rp-transport {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      gap: clamp(1.5rem, 8vw, 3.5rem);
+      translate: -50% -50%;
+    }
+    .rp-transport .rp-btn {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background: var(--rp-glass);
+      -webkit-backdrop-filter: var(--rp-blur);
+      backdrop-filter: var(--rp-blur);
+      box-shadow: var(--rp-glass-edge);
+    }
+    .rp-transport .rp-play {
+      width: 4.75rem;
+      height: 4.75rem;
+    }
+    .rp-transport .rp-play svg {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+    .rp-transport .rp-skip svg {
+      width: 1.875rem;
+      height: 1.875rem;
+    }
+    .rp-seek {
+      position: absolute;
+      right: max(1rem, env(safe-area-inset-right));
+      bottom: max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem));
+      left: max(1rem, env(safe-area-inset-left));
+      padding: 0.25rem 0.75rem;
+      border-radius: 18px;
+      background: var(--rp-glass);
+      -webkit-backdrop-filter: var(--rp-blur);
+      backdrop-filter: var(--rp-blur);
+      box-shadow: var(--rp-glass-edge);
+    }
+    .rp-center,
+    .rp-range,
+    .rp-title span {
+      display: none;
+    }
+    .rp-vol {
+      padding: 0;
+    }
+    .rp-ui[data-idle]:not(:has(:focus-visible)) .rp-seek {
+      translate: 0 0.5rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .rp-transport {
+        animation: rp-pop 520ms var(--ease-out) 140ms backwards;
+      }
+      .rp-seek {
+        animation: rp-rise-flat 600ms var(--ease-out) 180ms backwards;
+      }
+    }
+  }
+  @keyframes rp-pop {
+    from {
+      opacity: 0;
+      scale: 0.92;
+    }
+  }
+  @keyframes rp-rise-flat {
+    from {
+      opacity: 0;
+      translate: 0 1rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rp-ui[data-idle]:not(:has(:focus-visible)) :is(.rp-top, .rp-seek) {
+      translate: none;
+    }
+    .rp-ui[data-idle]:not(:has(:focus-visible)) .rp-dock {
+      translate: -50% 0;
+    }
+    .rp-cue,
+    .rp-center {
+      translate: none;
+      scale: none;
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .rp-ui {
+      --rp-blur: none;
+      --rp-glass: rgb(17 22 33);
+    }
+    .rp-cue {
+      background: rgb(17 22 33);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .rp-btn,
+    .rp-center,
+    .rp-cue,
+    .rp-seek,
+    .rp-dock {
+      border: 1px solid ButtonText;
+    }
+    .rp-fill,
+    .rp-thumb {
+      background: Highlight;
+    }
+  }
+
+  /* under the bezel: the note on the left, the controls on the right (pause/play, sound, full screen) */
   .reel-foot {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem 1.5rem;
+    gap: 0.875rem 1.5rem;
     margin-top: 1.25rem;
     padding-inline: 0.25rem;
   }
-  /* the toggle: a small pill of the bezel's dark frosted glass. Off, its speaker is crossed out; on, the speaker and
-     its edge light up in the brand blue, with the same faint ring as the note's dot */
-  .reel-sound {
+  .reel-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  /* each control: a small pill of the bezel's dark frosted glass */
+  .reel-ctl {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4375rem;
     height: 2.5rem;
     padding-inline: 0.8125rem 0.9375rem;
@@ -3022,6 +3721,7 @@
     font-size: 0.8125rem;
     font-weight: 550;
     letter-spacing: -0.006em;
+    white-space: nowrap;
     color: var(--b-ink);
     cursor: pointer;
     background:
@@ -3036,12 +3736,23 @@
       0 1px 2px rgb(0 0 0 / 0.45),
       0 8px 20px -8px rgb(0 0 0 / 0.6);
   }
-  .reel-sound svg {
+  .reel-ctl svg {
     width: 1rem;
     height: 1rem;
     color: rgb(251 247 243 / 0.7);
     transition: color 200ms var(--ease-out);
   }
+  .reel-icon {
+    width: 2.5rem;
+    padding: 0;
+  }
+  .reel-icon svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    color: var(--b-ink);
+  }
+  /* the sound toggle: off, its speaker is crossed out; on, the speaker and its edge light up in the brand blue, with
+     the same faint ring as the note's dot */
   .reel-sound[data-sound="on"] {
     box-shadow:
       inset 0 0 0 1px rgb(59 130 246 / 0.5),
@@ -3053,11 +3764,16 @@
     color: #3b82f6;
   }
   @media (hover: hover) and (pointer: fine) {
-    .reel-sound:hover {
+    .reel-ctl:hover {
       background:
         var(--grain),
         linear-gradient(180deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04)),
         rgb(12 16 28 / 0.6);
+    }
+  }
+  @media (max-width: 639px) {
+    .reel-foot {
+      margin-top: 1rem;
     }
   }
   .reel-note {
@@ -4030,6 +4746,290 @@
   }
   .legal-see-also {
     margin-top: 1rem;
+  }
+
+  /* ------------------------------------------------------------- phones: scroll motion */
+  /* Phones only: below 640px, where these grids are a single column. Nothing in this section reaches a wider screen;
+     the one element it adds (the gallery's dots) is hidden everywhere else. */
+  .clients-dots {
+    display: none;
+  }
+  @media (max-width: 639px) {
+    /* Stacking cards: 01 Where the week goes, 02 Six services, 04 How we work, and /services How the six fit
+       together. Each card sticks under the header a step lower than the one before, so the next card slides up over
+       it and the top edge of every card beneath stays in view; scrolling back up lifts them off again in reverse.
+       It's the browser's own sticky scrolling, so the cards move with the finger, never after it. Where scroll
+       timelines run and motion is welcome, a covered card also eases back to 95% and dims a shade while the next
+       one slides over it, driven by that next card's position, so it settles the moment the next card lands. */
+    .stack {
+      --stack-top: 5.25rem; /* 12px under the floating header */
+      --stack-step: 0.875rem; /* the edge of each card left showing above the next */
+      --stack-travel: 13rem; /* how far the next card slides over this one: about a card's height */
+      --stack-shade: rgb(6 11 23 / 0.07);
+      --stack-cast: rgb(6 11 23 / 0.3);
+      --stack-r: 22px;
+      timeline-scope: --stack-2, --stack-3, --stack-4, --stack-5, --stack-6;
+    }
+    .week.stack {
+      --stack-travel: 17rem;
+    }
+    .bento.stack {
+      --stack-r: 26px;
+    }
+    .steps.stack {
+      --stack-travel: 9rem;
+    }
+    .path.stack {
+      --stack-travel: 14.5rem;
+      --stack-shade: rgb(0 0 0 / 0.32);
+      --stack-cast: rgb(0 0 0 / 0.6);
+    }
+    .stack > li {
+      position: sticky;
+      top: calc(var(--stack-top) + var(--i) * var(--stack-step));
+      border-radius: var(--stack-r);
+      transform-origin: 50% 0;
+      /* a soft shadow cast up onto the card it covers */
+      box-shadow: 0 -0.75rem 1.75rem -1.25rem var(--stack-cast);
+    }
+    .stack > li:nth-child(1) {
+      --i: 0;
+    }
+    .stack > li:nth-child(2) {
+      --i: 1;
+      view-timeline: --stack-2 block;
+    }
+    .stack > li:nth-child(3) {
+      --i: 2;
+      view-timeline: --stack-3 block;
+    }
+    .stack > li:nth-child(4) {
+      --i: 3;
+      view-timeline: --stack-4 block;
+    }
+    .stack > li:nth-child(5) {
+      --i: 4;
+      view-timeline: --stack-5 block;
+    }
+    .stack > li:nth-child(6) {
+      --i: 5;
+      view-timeline: --stack-6 block;
+    }
+    /* the shade a covered card takes on */
+    .stack > li::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      border-radius: inherit;
+      background: var(--stack-shade);
+      opacity: 0;
+      pointer-events: none;
+    }
+    /* 04: the rail gives way to the stack; each step's number sits inside its card, top right */
+    .steps.stack::before,
+    .steps.stack::after {
+      display: none;
+    }
+    .steps.stack > .step {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .steps.stack .step-node,
+    .steps.stack .step-card {
+      grid-area: 1 / 1;
+    }
+    .steps.stack .step-node {
+      z-index: 2;
+      justify-self: end;
+      margin: 1.25rem 1.25rem 0 0;
+      box-shadow:
+        inset 0 0 0 1px rgb(59 130 246 / 0.45),
+        inset 0 1px 0 rgb(255 255 255 / 0.16),
+        0 8px 18px -10px rgb(6 11 23 / 0.5);
+    }
+    .steps.stack .step-name {
+      padding-right: 3.5rem;
+    }
+    /* /services: the stops are solid when stacked, so a card never shows through the one over it */
+    .path.stack .path-stop {
+      background:
+        var(--grain),
+        radial-gradient(120% 80% at 0% 0%, rgb(17 35 68 / 0.6), transparent 62%),
+        linear-gradient(180deg, #0f141f, #0c101c);
+    }
+
+    /* Sydney businesses: a row you swipe, one card at a time. Each card is centred with the next peeking in at the
+       edge; the cards either side ease back and dim, and the dots underneath follow the row. */
+    .clients-wrap {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      timeline-scope: --client-1, --client-2, --client-3, --client-4;
+    }
+    .clients {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.5rem 9vw 1.75rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .clients::-webkit-scrollbar {
+      display: none;
+    }
+    .clients > li {
+      flex: 0 0 82vw;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+    }
+    .clients > li:nth-child(1) {
+      view-timeline: --client-1 inline;
+    }
+    .clients > li:nth-child(2) {
+      view-timeline: --client-2 inline;
+    }
+    .clients > li:nth-child(3) {
+      view-timeline: --client-3 inline;
+    }
+    .clients > li:nth-child(4) {
+      view-timeline: --client-4 inline;
+    }
+    /* above the row, at its right, so they're in view with the cards (a card is taller than the screen's room) */
+    .clients-dots {
+      order: -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding-inline: 9vw;
+    }
+    .clients-dots i {
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: 50%;
+      background: #fbf7f3;
+      opacity: 0.3;
+    }
+
+    @supports (animation-timeline: view()) {
+      .clients-dots i {
+        animation: client-dot linear both;
+      }
+      .clients-dots i:nth-child(1) {
+        animation-timeline: --client-1;
+      }
+      .clients-dots i:nth-child(2) {
+        animation-timeline: --client-2;
+      }
+      .clients-dots i:nth-child(3) {
+        animation-timeline: --client-3;
+      }
+      .clients-dots i:nth-child(4) {
+        animation-timeline: --client-4;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        /* the stack and the row are the entrance here, so the cards' own rise-in gives way to them */
+        .stack > li,
+        .clients > li {
+          animation: none;
+        }
+        .stack > li:not(:last-child) {
+          animation: stack-recede linear both;
+        }
+        .stack > li:not(:last-child)::after {
+          animation: stack-shade linear both;
+        }
+        /* from when the next card starts over this one, to the moment it lands: the next card's distance from the
+           foot of the screen, measured from where it first appears */
+        .stack > li:not(:last-child),
+        .stack > li:not(:last-child)::after {
+          --stack-at: calc(100dvh - var(--stack-top) - (var(--i) + 1) * var(--stack-step));
+          animation-range: cover calc(var(--stack-at) - var(--stack-travel)) cover var(--stack-at);
+        }
+        .stack > li:nth-child(1),
+        .stack > li:nth-child(1)::after {
+          animation-timeline: --stack-2;
+        }
+        .stack > li:nth-child(2),
+        .stack > li:nth-child(2)::after {
+          animation-timeline: --stack-3;
+        }
+        .stack > li:nth-child(3),
+        .stack > li:nth-child(3)::after {
+          animation-timeline: --stack-4;
+        }
+        .stack > li:nth-child(4),
+        .stack > li:nth-child(4)::after {
+          animation-timeline: --stack-5;
+        }
+        .stack > li:nth-child(5),
+        .stack > li:nth-child(5)::after {
+          animation-timeline: --stack-6;
+        }
+
+        .client {
+          animation: client-focus linear both;
+          animation-timeline: view(inline);
+        }
+
+        /* The lift: the pricing cards, the contact page's ways in and the pricing page's two notes each rise into
+           place as they scroll in, leaning back on their foot and coming upright (the home page's window does the
+           same, larger). It's done within the card's first 20rem of travel, so a tall card is upright and readable
+           long before its foot arrives. */
+        .lift,
+        .pricing-card,
+        .reach-grid > li {
+          transform-origin: 50% 100%;
+          animation: lift-in linear both;
+          animation-timeline: view();
+          animation-range: entry 0% entry 20rem;
+        }
+      }
+    }
+  }
+  @keyframes stack-recede {
+    to {
+      scale: 0.95;
+    }
+  }
+  @keyframes stack-shade {
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes client-focus {
+    0%,
+    100% {
+      scale: 0.92;
+      opacity: 0.55;
+    }
+    50% {
+      scale: 1;
+      opacity: 1;
+    }
+  }
+  /* one card's width of swipe runs the whole curve, so between two cards both dots are half lit: they hand over */
+  @keyframes client-dot {
+    0%,
+    100% {
+      opacity: 0.3;
+      scale: 1;
+    }
+    50% {
+      opacity: 1;
+      scale: 1.35;
+    }
+  }
+  @keyframes lift-in {
+    from {
+      opacity: 0;
+      transform: perspective(60rem) translateY(2.5rem) rotateX(14deg) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: perspective(60rem) translateY(0) rotateX(0deg) scale(1);
+    }
   }
 
   /* ------------------------------------------------------------- reduced motion and transparency */

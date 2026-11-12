@@ -5,10 +5,10 @@
 // a plain link (Services goes straight to the one /services page, no menu); on phones the pill opens a glass sheet.
 // The page's one filled action belongs to the content, so "Book a call" here stays outlined.
 import * as React from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
+import { BgenticLogo } from "@/components/site/logo"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { BOOK_CALL_HREF, LOGIN_HREF, NAV } from "@/content/site"
 import { REDUCED_MOTION } from "@/lib/media"
@@ -176,7 +176,7 @@ export function SiteHeader() {
     <div className="nav-shell">
       <header className="nav-pill" data-scrolled={scrolled || undefined}>
         <Link href="/" onClick={toHero} className="-m-1 mr-3 shrink-0 rounded-full p-1" aria-label="Bgentic home">
-          <Image src="/brand/bgentic-logo-on-dark.svg" alt="" width={68} height={26} priority unoptimized className="h-6.5 w-auto" />
+          <BgenticLogo className="nav-logo" />
         </Link>
 
         <nav aria-label="Main" className="relative hidden md:block" onPointerLeave={() => setHl((h) => ({ ...h, on: false }))}>
@@ -223,7 +223,7 @@ export function SiteHeader() {
           </Link>
           <button
             type="button"
-            className={cn(buttonVariants({ variant: "quiet", size: "icon" }), "md:hidden")}
+            className={cn(buttonVariants({ variant: "quiet", size: "icon" }), "size-11 md:hidden")}
             aria-expanded={sheet}
             aria-controls={sheetId}
             aria-label={sheet ? "Close menu" : "Open menu"}

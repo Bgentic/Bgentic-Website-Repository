@@ -37,11 +37,12 @@ export default function PricingPage() {
         <div className="container-b">
           <SectionHeader id="extras-title" title="What sits outside the plans" />
           <div className="mt-12 grid gap-4 md:grid-cols-2">
-            <div className="step-card">
+            {/* `lift`: on phones each card rises upright as it scrolls in (the phones section of depth.css) */}
+            <div className="step-card lift">
               <h3 className="text-[1.3125rem] font-semibold tracking-[-0.02em] text-ink">AI is billed on usage</h3>
               <p className="t-body mt-2">{AI_CREDITS}</p>
             </div>
-            <div className="step-card">
+            <div className="step-card lift">
               <h3 className="text-[1.3125rem] font-semibold tracking-[-0.02em] text-ink">Custom work is quoted</h3>
               <p className="t-body mt-2">
                 {CUSTOM_WORK}{" "}

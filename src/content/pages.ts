@@ -10,10 +10,14 @@ export const servicesPage = {
   showreel: {
     label: "Showreel",
     note: "One minute of the systems at work.",
-    // BGENTIC_Video.mp4 with only its colour labels fixed (primaries/transfer set to BT.709, still full range); the
-    // picture and sound are byte-identical. With the labels left "unknown", Chrome and Edge crush its navy to black.
+    // the latest cut (2026-11-12), exactly as supplied: 1920×1080, 60 fps, 60 s, H.264 + AAC, fast start. It's
+    // limited range (BT.601 matrix, primaries/transfer unlabelled), which Chrome and Edge decode correctly: checked
+    // against ffmpeg frame by frame, its navy and grid come through within a level or two. (The earlier cut was full
+    // range with the same missing labels, and they crushed its navy to black until the labels were fixed.)
     // `?v=` is the file's git hash, so browsers fetch this file fresh instead of an older cached copy
-    src: "/video/BGENTIC_Video-web.mp4?v=3d40b79",
+    src: "/video/BGENTIC%20Latest%20Video.mp4?v=9a7075a",
+    // a still of the film itself (0:46, "One system. Built to scale with you."), held until its first frame plays
+    poster: "/video/showreel-poster.jpg",
     description:
       "A one-minute film. A business's calendars, spreadsheets, inboxes and pipeline sit in separate tools, and leads slip through. Then Bgentic: the CRM pipeline, a website built fast and built to convert, an automation running step by step, and search results where buyers look. It ends with every tool pulled into one system.",
   },

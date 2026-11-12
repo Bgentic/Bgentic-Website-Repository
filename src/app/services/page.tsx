@@ -37,7 +37,8 @@ export default function ServicesPage() {
               {servicesPage.title}
             </h1>
             <p className="t-lede mx-auto mt-6 max-w-[48ch]">{servicesPage.lede}</p>
-            <div className="mt-9 flex flex-wrap justify-center gap-3">
+            {/* on phones the pair stacks at full width, the same size */}
+            <div className="mt-9 flex flex-wrap justify-center gap-3 max-sm:flex-col max-sm:items-stretch">
               <Link href="/contact" className={buttonVariants({ variant: "primary", size: "lg" })}>
                 Book a discovery call
                 <ArrowRight aria-hidden="true" />

@@ -19,7 +19,8 @@ export function ServicePath() {
     <section className="section lit-b edge" aria-labelledby="path-title">
       <div className="container-b">
         <SectionHeader id="path-title" title={title} intro={intro} />
-        <ol className="path mt-14">
+        {/* `stack`: on phones the stops stack as you scroll (the phones section of depth.css) */}
+        <ol className="path stack mt-14">
           {stops.map((stop, i) => {
             const service = serviceBySlug(stop.service)!
             const linked = IN_SHOWCASE.has(stop.service)

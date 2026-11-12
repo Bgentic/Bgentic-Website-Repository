@@ -12,7 +12,8 @@ export function HowWeWork() {
     <section className="section paper" aria-labelledby="how-title">
       <div className="container-b">
         <SectionHeader id="how-title" title={process.title} intro={process.intro} />
-        <ol className="steps mt-14">
+        {/* `stack`: on phones the steps stack as you scroll, each number inside its card (depth.css, phones) */}
+        <ol className="steps stack mt-14">
           {process.steps.map((s, i) => (
             <li key={s.name} className="step reveal">
               <span className="step-node" aria-hidden="true">

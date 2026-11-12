@@ -156,6 +156,13 @@ export function ClientsShowcase({ page = false, intro = clientsIntro.intro }: { 
             )
           })}
         </ClientsList>
+        {/* phones only: the gallery is a row you swipe, and these follow it (each dot lights while its card is
+            centred, driven by that card's scroll position; the phones section of depth.css). Hidden elsewhere. */}
+        <div className="clients-dots" aria-hidden="true">
+          {CLIENTS.map((c) => (
+            <i key={c.slug} />
+          ))}
+        </div>
       </div>
     </section>
   )

@@ -19,7 +19,8 @@ export function Leaks() {
     <section className="section paper" aria-labelledby="leaks-title">
       <div className="container-b">
         <SectionHeader id="leaks-title" title={leaks.title} intro={leaks.intro} align="center" />
-        <ul className="week mt-12">
+        {/* `stack`: on phones the cards stack as you scroll (the phones section of depth.css) */}
+        <ul className="week stack mt-12">
           {leaks.rows.map((row) => {
             const Icon = ICON[row.key]
             const Scene = WEEK_SCENES[row.key]

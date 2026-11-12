@@ -498,8 +498,11 @@ export function CinematicFooter() {
           {/* three columns from 768px, so the badge sits truly centred: the company on the left, back to top on the
               right */}
           <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col items-center gap-6 md:grid md:grid-cols-[1fr_auto_1fr]">
-            <p className="order-2 md:order-1 md:justify-self-start text-muted-foreground text-[10px] md:text-xs font-semibold tracking-widest uppercase text-center md:text-left tabular-nums">
-              © {LEGAL.name} · ACN {LEGAL.acn} · ABN {LEGAL.abn}
+            {/* each fact holds together, so a narrow screen breaks the line between them, never inside a number */}
+            <p className="order-2 md:order-1 md:justify-self-start text-muted-foreground text-[10px] md:text-xs font-semibold tracking-widest uppercase text-center md:text-left tabular-nums text-balance">
+              <span className="whitespace-nowrap">© {LEGAL.name} ·</span>{" "}
+              <span className="whitespace-nowrap">ACN {LEGAL.acn} ·</span>{" "}
+              <span className="whitespace-nowrap">ABN {LEGAL.abn}</span>
             </p>
 
             <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2.5 order-1 md:order-2 cursor-default border-border/50">
