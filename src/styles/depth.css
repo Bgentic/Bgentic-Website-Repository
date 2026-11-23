@@ -101,6 +101,9 @@
   .showcase-screen,
   .path-stop,
   .reach,
+  .plan,
+  .plan::before,
+  .plan-index,
   .clients-hint {
     corner-shape: squircle;
   }
@@ -561,8 +564,8 @@
      deepened with navy (6.0:1; plain slate on sand is 4.4:1). Cards are cream paper lit from above: a fine edge, a
      white top and a soft navy shadow. Light blue stays an accent on the bands: graphic marks, the rail, the focus ring
      and the one filled action, never text (it's 3.5:1 on cream). A few things inside a light band stay navy, the
-     product showing through: the photographs, the example panels on the service cards, the step numbers, the
-     engineering strip and the popular plan. */
+     product showing through: the photographs, the example panels on the service cards, the step numbers and the
+     engineering strip. */
   .paper {
     --b-ink: #060b17;
     --b-body: #5d5a63;
@@ -2788,28 +2791,6 @@
     }
   }
 
-  /* ------------------------------------------------------------- the pricing block on paper */
-  /* The pricing block (components/blocks/pricing.tsx) reads shadcn's tokens. On the home page's cream band they're
-     re-pointed to paper: navy type, slate notes, navy hairlines, and light blue kept for the popular border, the
-     badge, the switch and the checks (graphics, never text: "Save 9%" turns navy). Each card becomes a paper sheet
-     lit from above, and the blue buttons drop the paper glass's white wash so they stay light blue. */
-  .pricing-paper {
-    --background: #fbf7f3;
-    --foreground: #060b17;
-    --muted-foreground: #5d5a63;
-    --border: rgb(6 11 23 / 0.12);
-    --input: rgb(6 11 23 / 0.22);
-    --pricing-accent-text: #060b17;
-  }
-  .pricing-paper .pricing-card {
-    background: var(--grain), var(--paper);
-    box-shadow: var(--paper-edge), var(--paper-shadow);
-  }
-  .pricing-paper .pricing-card .btn-glass.bg-primary,
-  .pricing-paper .pricing-card .btn-glass:hover {
-    background-image: none;
-  }
-
   /* ------------------------------------------------------------- 07 · contact: the close */
   /* The strongest light on the page, still faint: brand navy behind the form and a low horizon under it. */
   .contact-x {
@@ -4342,6 +4323,388 @@
     }
   }
 
+  /* ------------------------------------------------------------- /pricing · the plan */
+  /* One plan, quoted (2026-11-23, replacing the three priced cards, archived in src/archive/pricing). The page opens
+     on one wide frosted-glass card on navy (components/pricing/plan-card.tsx):
+     - the offer, left: the free trial as a badge on the card's top edge, a two-tone h1, the quote line, the one
+       filled action and the reply promise, how quoting works in three numbered steps, then two facts at its foot
+     - everything in the plan, right: six groups in two columns, read in rows, a hairline over each group
+     - a strip across the foot: custom work, and on phones the action again
+     One light, faint and from above the offer, falling off into navy; the card's edge is lit where that light lands.
+     Nothing moves: the card is the page's opening, and the buttons answer the press. */
+  .plan-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    padding-block: calc(var(--header-h) + clamp(2.75rem, 5vw, 4rem)) clamp(4rem, 8vw, 7rem);
+    background:
+      radial-gradient(54rem 34rem at 24% 6%, rgb(59 130 246 / 0.08), transparent 70%),
+      radial-gradient(64rem 40rem at 78% 100%, rgb(21 44 85 / 0.2), transparent 70%),
+      radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(0 0 0 / 0.42) 100%),
+      var(--b-ground);
+  }
+  .plan {
+    position: relative;
+    display: grid;
+    border-radius: 32px;
+    background:
+      var(--grain),
+      radial-gradient(60% 50% at 0% 0%, rgb(59 130 246 / 0.11), transparent 72%),
+      linear-gradient(180deg, rgb(17 22 33 / 0.84), rgb(9 13 24 / 0.9));
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.1),
+      0 2px 4px rgb(0 0 0 / 0.4),
+      0 50px 100px -40px rgb(0 0 0 / 0.9),
+      0 40px 110px -60px rgb(59 130 246 / 0.38);
+  }
+  /* the edge: 1px, lit light blue where the light lands (top left), a faint white round the rest */
+  .plan::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      155deg,
+      rgb(86 146 246 / 0.55),
+      rgb(255 255 255 / 0.09) 30%,
+      rgb(255 255 255 / 0.06) 72%,
+      rgb(59 130 246 / 0.2)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+  .plan > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* the trial: a badge on the card's top edge, over the offer */
+  .plan-trial {
+    position: absolute;
+    top: 0;
+    left: clamp(1.5rem, 4vw, 3rem);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.125rem;
+    padding-inline: 0.75rem 0.9375rem;
+    border-radius: 999px;
+    translate: 0 -50%;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+    color: var(--b-ink);
+    background:
+      var(--grain),
+      linear-gradient(180deg, rgb(59 130 246 / 0.24), rgb(59 130 246 / 0.1)),
+      #0c101c;
+    box-shadow:
+      inset 0 0 0 1px rgb(59 130 246 / 0.42),
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      0 8px 20px -8px rgb(0 0 0 / 0.7);
+  }
+  .plan-trial svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    color: #5692f6;
+  }
+
+  .plan-offer {
+    display: flex;
+    flex-direction: column;
+    padding: 3.25rem clamp(1.5rem, 4vw, 3rem) 2.25rem;
+    container-type: inline-size;
+  }
+  /* two lines that never wrap: the size follows the column, so "Everything in it." always fits on its line */
+  .plan-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 10.6cqi, 3.5rem);
+    font-weight: 560;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    color: var(--b-ink);
+  }
+  .plan-title span {
+    display: block;
+    white-space: nowrap;
+  }
+  .plan-title span + span {
+    color: var(--b-body);
+  }
+  .plan-lede {
+    max-width: 42ch;
+    margin-top: 1.375rem;
+    font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    line-height: 1.55;
+    color: var(--b-body);
+    text-wrap: pretty;
+  }
+  .plan-actions {
+    display: grid;
+    justify-items: start;
+    gap: 0.875rem;
+    margin-top: 2.25rem;
+  }
+  .plan-promise {
+    font-size: 0.875rem;
+    color: var(--b-slate);
+  }
+  .plan-subtitle {
+    font-family: var(--font-heading);
+    font-size: 1.1875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.016em;
+    color: var(--b-ink);
+  }
+  .plan-steps {
+    margin-top: 2.75rem;
+  }
+  .plan-steps-list {
+    display: grid;
+    gap: 1.125rem;
+    margin-top: 1.25rem;
+  }
+  .plan-steps-list li {
+    display: flex;
+    gap: 0.875rem;
+  }
+  .plan-step-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: -0.006em;
+    color: var(--b-ink);
+  }
+  .plan-step-text {
+    margin-top: 0.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--b-body);
+    text-wrap: pretty;
+  }
+  .plan-facts {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.07);
+  }
+  .plan-facts li {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.9375rem;
+    color: var(--b-body);
+  }
+  .plan-facts svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: #3b82f6;
+  }
+
+  .plan-included {
+    padding: 2.25rem clamp(1.5rem, 4vw, 3rem) 1.25rem;
+    border-top: 1px solid rgb(255 255 255 / 0.07);
+  }
+  .plan-groups {
+    display: grid;
+    column-gap: 2.5rem;
+    margin-top: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .plan-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .plan-group {
+    padding-block: 1.5rem 1.75rem;
+    border-top: 1px solid rgb(255 255 255 / 0.07);
+  }
+  .plan-group-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .plan-group-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 10px;
+  }
+  .plan-group-icon svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  .plan-group-name {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--b-ink);
+  }
+  .plan-list {
+    display: grid;
+    gap: 0.6875rem;
+    margin-top: 1.125rem;
+  }
+  /* sand on navy, a step under the cream of the group names: every line readable at a glance (11.6:1) */
+  .plan-list li {
+    display: flex;
+    gap: 0.625rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: #d7cfc5;
+    text-wrap: pretty;
+  }
+  .plan-list svg {
+    flex: none;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    margin-top: 0.2em;
+    color: #3b82f6;
+  }
+  .plan-group-note {
+    margin-top: 1rem;
+    padding-left: 1.5625rem;
+    font-size: 0.8125rem;
+    color: var(--b-slate);
+  }
+
+  .plan-foot {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+    padding: 1.5rem clamp(1.5rem, 4vw, 3rem) 1.75rem;
+    border-top: 1px solid rgb(255 255 255 / 0.07);
+  }
+  .plan-custom {
+    max-width: 68ch;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--b-body);
+    text-wrap: pretty;
+  }
+  @media (max-width: 639.98px) {
+    .plan-actions,
+    .plan-foot {
+      justify-items: stretch;
+    }
+  }
+  @media (min-width: 1024px) {
+    .plan {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    }
+    .plan-trial {
+      left: 3rem;
+    }
+    .plan-offer {
+      padding: 3.75rem 3rem 2.75rem;
+    }
+    /* the steps start where the list's second row does; the facts sit at the offer's foot, level with the end of
+       the list beside it */
+    .plan-steps {
+      margin-top: 3.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .plan-facts {
+      margin-top: auto;
+    }
+    .plan-included {
+      padding: 3.25rem 3rem 1rem;
+      border-top: 0;
+    }
+    /* the column rule: a hairline that fades out at both ends */
+    .plan-included::before {
+      content: "";
+      position: absolute;
+      inset-block: 2.5rem 1rem;
+      left: 0;
+      width: 1px;
+      background: linear-gradient(
+        180deg,
+        transparent,
+        rgb(255 255 255 / 0.09) 18%,
+        rgb(255 255 255 / 0.09) 82%,
+        transparent
+      );
+    }
+    .plan-foot {
+      grid-column: 1 / -1;
+      padding-block: 1.375rem 1.5rem;
+    }
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .plan {
+      background: var(--grain), #0f141f;
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .plan {
+      background: #0f141f;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .plan-trial {
+      background: #102141;
+    }
+  }
+  @media (forced-colors: active) {
+    .plan {
+      border: 1px solid CanvasText;
+    }
+    .plan::before,
+    .plan-included::before {
+      display: none;
+    }
+    .plan-trial {
+      border: 1px solid CanvasText;
+      background: Canvas;
+    }
+  }
+
+  /* home 06 · the plan, summed up: a paper sheet on the cream band, a row for each group of /pricing's card */
+  .plan-index {
+    padding: 0.5rem clamp(1.25rem, 3vw, 2rem);
+    border-radius: 24px;
+    background: var(--grain), var(--paper);
+    box-shadow: var(--paper-edge), var(--paper-shadow);
+  }
+  .plan-index li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-block: 1.125rem;
+  }
+  .plan-index li + li {
+    border-top: 1px solid rgb(6 11 23 / 0.08);
+  }
+  .plan-index-name {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--b-ink);
+  }
+  .plan-index-text {
+    margin-top: 0.1875rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--b-body);
+    text-wrap: pretty;
+  }
+
   /* ------------------------------------------------------------- one system: the tools and the app */
   .system {
     position: relative;
@@ -5061,12 +5424,11 @@
           animation-timeline: view(inline);
         }
 
-        /* The lift: the pricing cards, the contact page's ways in and the pricing page's two notes each rise into
-           place as they scroll in, leaning back on their foot and coming upright (the home page's window does the
-           same, larger). It's done within the card's first 20rem of travel, so a tall card is upright and readable
-           long before its foot arrives. */
+        /* The lift: the home page's plan sheet and the contact page's ways in each rise into place as they scroll
+           in, leaning back on their foot and coming upright (the home page's window does the same, larger). It's
+           done within the card's first 20rem of travel, so a tall card is upright and readable long before its
+           foot arrives. (The three priced plan cards had it too; they're archived in src/archive/pricing.) */
         .lift,
-        .pricing-card,
         .reach-grid > li {
           transform-origin: 50% 100%;
           animation: lift-in linear both;

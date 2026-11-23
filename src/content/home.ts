@@ -11,7 +11,8 @@ export const hero = {
   lede: "Calendars, calls and messages, your CRM, website, ads, trade portals, and AI chat. Bgentic brings every part of your business together so you can run it all from one connected app.",
   primary: { label: "Book a discovery call", href: "/contact" },
   secondary: { label: "Explore capabilities", href: "/services" },
-  aside: { text: "Rather set it up yourself? Plans start at $199 a month.", link: { label: "See pricing", href: "/pricing" } },
+  // no prices (2026-11-23): one plan, quoted to each business
+  aside: { text: "One plan with every tool in it, and a 14-day free trial.", link: { label: "See what's included", href: "/pricing" } },
 }
 
 // The hero panel's demonstration. A fictional plumbing business; every card is labelled as an example.
@@ -153,12 +154,6 @@ export const process = {
 export const clientsIntro = {
   title: "Sydney businesses we run systems for.",
   intro: "Four different trades, one thing in common: the admin runs itself now.",
-}
-
-export const pricingIntro = {
-  title: "Serious systems. Predictable pricing.",
-  intro:
-    "Three plans in Australian dollars, GST included.\nPay monthly with no lock-in, or annually and save. Every plan starts with a 14-day free trial.",
 }
 
 export const contact = {

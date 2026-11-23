@@ -177,8 +177,8 @@ export const SERVICES: Service[] = [
     clients: ["npp-traffic-solutions", "sydney-pink-slips", "we-are-art", "sventy8-events"],
     faqs: [
       {
-        q: "Is a website included in the monthly plans?",
-        a: "Every plan includes a website builder. A custom website designed and built by us is quoted separately.",
+        q: "Is a website included in the plan?",
+        a: "The plan includes a website builder. A custom website designed and built by us is quoted separately.",
       },
     ],
   },

@@ -1,0 +1,596 @@
+/* ==========================================================================
+   BGENTIC · GoHighLevel form theme
+   --------------------------------------------------------------------------
+   Where it goes:  Sites → Forms → Builder → open the form → Styles (right
+                   panel) → Custom CSS → paste ALL of this → Save.
+   What it does:   Re-skins the GHL form to match bgentic.io's contact card:
+                   navy glass card, cream labels, recessed dark fields with a
+                   light-blue focus ring, Inter type, and the light-blue
+                   "Send" button with a navy label. Adds the Bgentic logo at
+                   the top of the form.
+   Theme switch:   NAVY is on by default (matches the website). For a cream
+                   card, un-comment the CREAM block in section 1b.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap");
+
+
+/* ==========================================================================
+   1a. TOKENS · NAVY THEME (default, matches the /contact page)
+   ========================================================================== */
+:root {
+  /* Brand palette, as the website uses it (navy deepened from #0F172A) */
+  --bf-navy: #060b17;
+  --bf-blue: #3b82f6;
+  --bf-cream: #fbf7f3;
+  --bf-slate: #5d5a63;
+  --bf-sand: #d7cfc5;
+
+  /* Page behind the card. Transparent so an embedded form sits on your site's
+     own background; set to var(--bf-navy) if you share the form's own link. */
+  --bf-page: transparent;
+  /* Must match the page the form is embedded on (bgentic.io is dark). If they
+     differ, browsers paint a solid box behind an embedded form. */
+  --bf-scheme: dark;
+
+  /* Card */
+  --bf-card:
+    radial-gradient(90% 60% at 50% 0%, rgb(59 130 246 / 0.12), transparent 70%),
+    linear-gradient(180deg, #111621, #060b17);
+  --bf-card-shadow:
+    inset 0 0 0 1px rgb(59 130 246 / 0.2),
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 2px 4px rgb(0 0 0 / 0.4);
+  --bf-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.11'/%3E%3C/svg%3E");
+
+  /* Type */
+  --bf-heading: #fbf7f3;        /* cream on navy, 18.5:1 */
+  --bf-label: #fbf7f3;
+  --bf-text: #938f8c;           /* text-on-navy, 6.1:1  */
+  --bf-note: #82807f;           /* quiet-on-navy, 5.0:1 */
+  --bf-link: #3b82f6;           /* light blue on navy, 5.35:1 */
+
+  /* Fields: recessed dark glass */
+  --bf-field-bg: rgb(0 0 0 / 0.22);
+  --bf-field-solid: #0a0e18;    /* same colour, opaque (autofill + menus) */
+  --bf-field-text: #fbf7f3;
+  --bf-field-line: rgb(255 255 255 / 0.09);
+  --bf-field-line-hover: rgb(255 255 255 / 0.16);
+  --bf-field-inset: inset 0 1px 2px rgb(0 0 0 / 0.35);
+  --bf-placeholder: #82807f;
+  --bf-focus-line: rgb(59 130 246 / 0.7);
+  --bf-focus-ring: 0 0 0 3px rgb(59 130 246 / 0.22);
+  --bf-menu-bg: #0f141f;
+  --bf-menu-line: rgb(255 255 255 / 0.1);
+  --bf-menu-hover: rgb(59 130 246 / 0.16);
+  --bf-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23938f8c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Status (signal colours, only ever a status) */
+  --bf-danger: #f0787c;
+  --bf-danger-text: #f5a9ac;
+  --bf-divider: rgb(255 255 255 / 0.08);
+
+  /* Logo */
+  --bf-logo-on-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='9.17 9.17 90.9 34.59'%3E%3Cg%3E%3Cpath fill='%23fff' d='M24.45,19.99c.75-1.07,1.2-2.36,1.2-3.77,0-3.6-2.9-6.51-6.49-6.55h0s-7.45,0-7.45,0c-1.13,0-2.04.91-2.04,2.04v16.19l8.99,9.05h.5s.51,0,.51,0c4.87,0,9.06-3.72,9.33-8.58.2-3.58-1.69-6.74-4.55-8.39Z'/%3E%3Cpath fill='%233b82f6' d='M16.74,27.9h-7.07s8.99,9.05,8.99,9.05v-7.14c0-1.06-.86-1.92-1.92-1.92Z'/%3E%3C/g%3E%3Cpath fill='%233b82f6' d='M30.14,43.25c-1.3,0-2.42-.17-3.35-.51-.93-.34-1.7-.79-2.29-1.35-.59-.56-1.03-1.18-1.32-1.84l2.74-1.13c.19.31.45.64.77,1s.76.65,1.32.9c.56.25,1.28.37,2.16.37,1.21,0,2.21-.29,2.99-.88.79-.59,1.18-1.52,1.18-2.8v-3.22h-.2c-.19.35-.47.74-.83,1.16-.36.43-.85.79-1.48,1.11s-1.44.47-2.44.47c-1.29,0-2.46-.3-3.49-.91-1.03-.61-1.85-1.5-2.45-2.7-.6-1.19-.9-2.65-.9-4.39s.3-3.23.89-4.47c.59-1.24,1.41-2.2,2.45-2.86,1.04-.66,2.21-1,3.53-1,1.01,0,1.83.17,2.46.51.62.34,1.11.73,1.46,1.18s.62.84.81,1.18h.23v-1.12c0-.84.68-1.53,1.53-1.53h.06c.84,0,1.53.68,1.53,1.53v15.2c0,1.41-.33,2.56-.98,3.46-.65.9-1.54,1.57-2.65,2-1.11.43-2.36.65-3.76.65ZM30.1,33.89c.92,0,1.69-.21,2.33-.64s1.12-1.05,1.45-1.85c.33-.81.5-1.77.5-2.9s-.16-2.07-.49-2.91c-.33-.84-.81-1.49-1.44-1.97-.63-.47-1.41-.71-2.34-.71s-1.76.25-2.4.74c-.64.49-1.12,1.16-1.44,2.01s-.48,1.79-.48,2.83.16,2.01.49,2.82c.33.81.81,1.44,1.46,1.9.64.46,1.44.68,2.38.68Z'/%3E%3Cpath fill='%23fff' d='M46.84,37.1c-1.61,0-3-.35-4.16-1.04-1.16-.69-2.06-1.67-2.68-2.93-.63-1.26-.94-2.74-.94-4.44s.31-3.15.94-4.43c.63-1.28,1.51-2.28,2.64-2.99,1.13-.72,2.46-1.08,3.98-1.08.92,0,1.82.15,2.68.46.87.3,1.64.78,2.33,1.44.69.65,1.23,1.5,1.63,2.54.4,1.04.6,2.3.6,3.79v1.13h-13.01v-2.39h9.89c0-.84-.17-1.58-.51-2.23-.34-.65-.82-1.16-1.43-1.54-.62-.38-1.33-.56-2.16-.56-.9,0-1.67.22-2.34.66s-1.18,1-1.53,1.7c-.36.7-.54,1.46-.54,2.27v1.87c0,1.09.19,2.02.58,2.79.39.77.93,1.35,1.62,1.75s1.51.6,2.44.6c.6,0,1.15-.09,1.65-.26.5-.17.93-.43,1.29-.78.36-.35.64-.78.83-1.29l3.02.54c-.24.89-.67,1.66-1.29,2.33s-1.4,1.18-2.33,1.54c-.93.37-2,.55-3.19.55Z'/%3E%3Cpath fill='%23fff' d='M58.6,27.06v9.72h-3.19v-14.83c0-.84.68-1.53,1.53-1.53h0c.84,0,1.53.68,1.53,1.53v1.13h.2c.38-.87.97-1.56,1.77-2.09s1.82-.79,3.05-.79c1.12,0,2.09.23,2.93.7.84.46,1.49,1.16,1.95,2.07s.69,2.05.69,3.4v10.41h-3.19v-10.02c0-1.19-.31-2.12-.93-2.79s-1.47-1.01-2.55-1.01c-.74,0-1.39.16-1.97.48s-1.02.79-1.35,1.4c-.33.62-.5,1.36-.5,2.22Z'/%3E%3Cpath fill='%23fff' d='M78.97,20.41v2.56h-8.94v-2.56h8.94ZM73.96,16.49h.13c.84,0,1.53.68,1.53,1.53v13.95c0,.62.09,1.08.28,1.39.18.31.42.52.72.63.29.11.62.17.96.17.26,0,.48-.02.67-.05.19-.04.34-.06.45-.08l.58,2.63c-.18.07-.45.14-.79.22-.34.07-.77.12-1.28.12-.84.01-1.62-.13-2.34-.45-.72-.31-1.31-.79-1.76-1.45-.45-.65-.67-1.47-.67-2.46v-14.61c0-.84.68-1.53,1.53-1.53Z'/%3E%3Cpath fill='%23fff' d='M82.09,17.88c-.55,0-1.03-.19-1.42-.56-.39-.37-.59-.82-.59-1.34s.2-.97.59-1.35c.39-.37.87-.56,1.42-.56s1.03.19,1.42.56c.39.37.59.82.59,1.34s-.2.98-.59,1.35c-.39.37-.87.56-1.42.56ZM80.48,36.77v-16.36h3.19v16.36h-3.19Z'/%3E%3Cpath fill='%23fff' d='M92.84,37.1c-1.58,0-2.95-.36-4.08-1.08-1.14-.72-2.02-1.72-2.63-2.99-.61-1.27-.92-2.73-.92-4.37s.31-3.13.94-4.41c.62-1.27,1.51-2.27,2.64-2.99,1.14-.72,2.47-1.08,4.02-1.08,1.24,0,2.35.23,3.32.69s1.76,1.1,2.36,1.92c.6.82.96,1.79,1.07,2.89h-3.1c-.17-.77-.56-1.43-1.17-1.98-.61-.55-1.42-.83-2.43-.83-.89,0-1.66.23-2.33.7-.66.47-1.18,1.13-1.55,1.98-.37.86-.55,1.87-.55,3.03s.18,2.22.54,3.09c.36.87.88,1.54,1.54,2.01.66.48,1.45.71,2.35.71.6,0,1.15-.11,1.65-.33.49-.22.91-.55,1.25-.96.34-.42.57-.92.71-1.51h3.1c-.11,1.06-.46,2-1.03,2.83s-1.34,1.48-2.31,1.96c-.96.48-2.09.71-3.38.71Z'/%3E%3C/svg%3E");
+  --bf-logo-on-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='9.17 9.17 90.9 34.59'%3E%3Cg%3E%3Cpath fill='%230f172a' d='M24.45,19.99c.75-1.07,1.2-2.36,1.2-3.77,0-3.6-2.9-6.51-6.49-6.55h0s-7.45,0-7.45,0c-1.13,0-2.04.91-2.04,2.04v16.19l8.99,9.05h.5s.51,0,.51,0c4.87,0,9.06-3.72,9.33-8.58.2-3.58-1.69-6.74-4.55-8.39Z'/%3E%3Cpath fill='%233b82f6' d='M16.74,27.9h-7.07s8.99,9.05,8.99,9.05v-7.14c0-1.06-.86-1.92-1.92-1.92Z'/%3E%3C/g%3E%3Cg%3E%3Cpath fill='%233b82f6' d='M30.14,43.25c-1.3,0-2.42-.17-3.35-.51-.93-.34-1.7-.79-2.29-1.35-.59-.56-1.03-1.18-1.32-1.84l2.74-1.13c.19.31.45.64.77,1s.76.65,1.32.9c.56.25,1.28.37,2.16.37,1.21,0,2.21-.29,2.99-.88.79-.59,1.18-1.52,1.18-2.8v-3.22h-.2c-.19.35-.47.74-.83,1.16-.36.43-.85.79-1.48,1.11s-1.44.47-2.44.47c-1.29,0-2.46-.3-3.49-.91-1.03-.61-1.85-1.5-2.45-2.7-.6-1.19-.9-2.65-.9-4.39s.3-3.23.89-4.47c.59-1.24,1.41-2.2,2.45-2.86,1.04-.66,2.21-1,3.53-1,1.01,0,1.83.17,2.46.51.62.34,1.11.73,1.46,1.18s.62.84.81,1.18h.23v-1.12c0-.84.68-1.53,1.53-1.53h.06c.84,0,1.53.68,1.53,1.53v15.2c0,1.41-.33,2.56-.98,3.46-.65.9-1.54,1.57-2.65,2-1.11.43-2.36.65-3.76.65ZM30.1,33.89c.92,0,1.69-.21,2.33-.64s1.12-1.05,1.45-1.85c.33-.81.5-1.77.5-2.9s-.16-2.07-.49-2.91c-.33-.84-.81-1.49-1.44-1.97-.63-.47-1.41-.71-2.34-.71s-1.76.25-2.4.74c-.64.49-1.12,1.16-1.44,2.01s-.48,1.79-.48,2.83.16,2.01.49,2.82c.33.81.81,1.44,1.46,1.9.64.46,1.44.68,2.38.68Z'/%3E%3Cpath fill='%230f172a' d='M46.84,37.1c-1.61,0-3-.35-4.16-1.04-1.16-.69-2.06-1.67-2.68-2.93-.63-1.26-.94-2.74-.94-4.44s.31-3.15.94-4.43c.63-1.28,1.51-2.28,2.64-2.99,1.13-.72,2.46-1.08,3.98-1.08.92,0,1.82.15,2.68.46.87.3,1.64.78,2.33,1.44.69.65,1.23,1.5,1.63,2.54.4,1.04.6,2.3.6,3.79v1.13h-13.01v-2.39h9.89c0-.84-.17-1.58-.51-2.23-.34-.65-.82-1.16-1.43-1.54-.62-.38-1.33-.56-2.16-.56-.9,0-1.67.22-2.34.66s-1.18,1-1.53,1.7c-.36.7-.54,1.46-.54,2.27v1.87c0,1.09.19,2.02.58,2.79.39.77.93,1.35,1.62,1.75s1.51.6,2.44.6c.6,0,1.15-.09,1.65-.26.5-.17.93-.43,1.29-.78.36-.35.64-.78.83-1.29l3.02.54c-.24.89-.67,1.66-1.29,2.33s-1.4,1.18-2.33,1.54c-.93.37-2,.55-3.19.55Z'/%3E%3Cpath fill='%230f172a' d='M58.6,27.06v9.72h-3.19v-14.83c0-.84.68-1.53,1.53-1.53h0c.84,0,1.53.68,1.53,1.53v1.13h.2c.38-.87.97-1.56,1.77-2.09s1.82-.79,3.05-.79c1.12,0,2.09.23,2.93.7.84.46,1.49,1.16,1.95,2.07s.69,2.05.69,3.4v10.41h-3.19v-10.02c0-1.19-.31-2.12-.93-2.79s-1.47-1.01-2.55-1.01c-.74,0-1.39.16-1.97.48s-1.02.79-1.35,1.4c-.33.62-.5,1.36-.5,2.22Z'/%3E%3Cpath fill='%230f172a' d='M78.97,20.41v2.56h-8.94v-2.56h8.94ZM73.96,16.49h.13c.84,0,1.53.68,1.53,1.53v13.95c0,.62.09,1.08.28,1.39.18.31.42.52.72.63.29.11.62.17.96.17.26,0,.48-.02.67-.05.19-.04.34-.06.45-.08l.58,2.63c-.18.07-.45.14-.79.22-.34.07-.77.12-1.28.12-.84.01-1.62-.13-2.34-.45-.72-.31-1.31-.79-1.76-1.45-.45-.65-.67-1.47-.67-2.46v-14.61c0-.84.68-1.53,1.53-1.53Z'/%3E%3Cpath fill='%230f172a' d='M82.09,17.88c-.55,0-1.03-.19-1.42-.56-.39-.37-.59-.82-.59-1.34s.2-.97.59-1.35c.39-.37.87-.56,1.42-.56s1.03.19,1.42.56c.39.37.59.82.59,1.34s-.2.98-.59,1.35c-.39.37-.87.56-1.42.56ZM80.48,36.77v-16.36h3.19v16.36h-3.19Z'/%3E%3Cpath fill='%230f172a' d='M92.84,37.1c-1.58,0-2.95-.36-4.08-1.08-1.14-.72-2.02-1.72-2.63-2.99-.61-1.27-.92-2.73-.92-4.37s.31-3.13.94-4.41c.62-1.27,1.51-2.27,2.64-2.99,1.14-.72,2.47-1.08,4.02-1.08,1.24,0,2.35.23,3.32.69s1.76,1.1,2.36,1.92c.6.82.96,1.79,1.07,2.89h-3.1c-.17-.77-.56-1.43-1.17-1.98-.61-.55-1.42-.83-2.43-.83-.89,0-1.66.23-2.33.7-.66.47-1.18,1.13-1.55,1.98-.37.86-.55,1.87-.55,3.03s.18,2.22.54,3.09c.36.87.88,1.54,1.54,2.01.66.48,1.45.71,2.35.71.6,0,1.15-.11,1.65-.33.49-.22.91-.55,1.25-.96.34-.42.57-.92.71-1.51h3.1c-.11,1.06-.46,2-1.03,2.83s-1.34,1.48-2.31,1.96c-.96.48-2.09.71-3.38.71Z'/%3E%3C/g%3E%3C/svg%3E");
+  --bf-logo: var(--bf-logo-on-dark);
+  --bf-logo-height: 34px;
+  --bf-logo-align: center;      /* center | left */
+
+  /* Layout */
+  --bf-radius-card: 28px;
+  --bf-radius-field: 12px;
+  --bf-radius-button: 16px;
+  --bf-button-width: 100%;      /* 100% = full width · auto = fits the label */
+  --bf-font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+
+/* ==========================================================================
+   1b. TOKENS · CREAM THEME (optional)
+   Remove the opening slash-star and closing star-slash around this block to
+   switch the card to cream paper with navy type and the on-light logo.
+   ========================================================================== */
+/*
+:root {
+  --bf-page: transparent;
+  --bf-scheme: light;
+  --bf-card: linear-gradient(180deg, #fffdfb, #fbf7f3);
+  --bf-card-shadow:
+    inset 0 0 0 1px rgb(6 11 23 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 1px 2px rgb(6 11 23 / 0.06);
+  --bf-grain: none;
+  --bf-heading: #060b17;
+  --bf-label: #060b17;
+  --bf-text: #5d5a63;
+  --bf-note: #5d5a63;
+  --bf-link: #060b17;
+  --bf-field-bg: #ffffff;
+  --bf-field-solid: #ffffff;
+  --bf-field-text: #060b17;
+  --bf-field-line: rgb(6 11 23 / 0.14);
+  --bf-field-line-hover: rgb(6 11 23 / 0.26);
+  --bf-field-inset: inset 0 1px 1px rgb(6 11 23 / 0.04);
+  --bf-placeholder: rgb(93 90 99 / 0.85);
+  --bf-focus-line: #3b82f6;
+  --bf-focus-ring: 0 0 0 3px rgb(59 130 246 / 0.24);
+  --bf-menu-bg: #ffffff;
+  --bf-menu-line: rgb(6 11 23 / 0.1);
+  --bf-menu-hover: rgb(59 130 246 / 0.1);
+  --bf-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235d5a63' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --bf-danger: #d93a40;
+  --bf-danger-text: #9b3236;
+  --bf-divider: rgb(6 11 23 / 0.1);
+  --bf-logo: var(--bf-logo-on-light);
+}
+*/
+
+
+/* ==========================================================================
+   2. PAGE + CARD
+   ========================================================================== */
+html,
+body {
+  background: var(--bf-page) !important;
+  color-scheme: var(--bf-scheme);
+}
+
+/* GHL's outer wrappers stay clear so only one card shows */
+:where(.form-builder--wrap, .ghl-form-wrap, .form-builder):not(#_builder-form) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+#_builder-form {
+  position: relative !important;
+  padding: 24px !important;
+  border: 0 !important;
+  border-radius: var(--bf-radius-card) !important;
+  corner-shape: squircle;
+  background: var(--bf-grain), var(--bf-card) !important;
+  box-shadow: var(--bf-card-shadow) !important;
+  color: var(--bf-text) !important;
+  font-family: var(--bf-font) !important;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.006em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  caret-color: var(--bf-blue);
+  accent-color: var(--bf-blue);
+}
+@media (min-width: 768px) {
+  #_builder-form {
+    padding: 36px !important;
+  }
+}
+
+/* Every text element takes Inter (form controls don't inherit fonts) */
+#_builder-form :where(div, p, span, label, a, li, small, strong, b, h1, h2, h3, h4, h5, h6, input, select, textarea, button) {
+  font-family: var(--bf-font) !important;
+}
+
+
+/* ==========================================================================
+   3. LOGO (top of the form)
+   ========================================================================== */
+#_builder-form::before {
+  content: "" !important;
+  display: block !important;
+  box-sizing: content-box !important;
+  flex: 0 0 100%;
+  grid-column: 1 / -1;
+  order: -1;
+  width: 100%;
+  height: var(--bf-logo-height);
+  margin: 0 0 28px;
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--bf-divider);
+  background-image: var(--bf-logo);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: var(--bf-logo-align) center;
+  background-origin: content-box;
+  background-clip: content-box;
+}
+
+
+/* ==========================================================================
+   4. TEXT: headings, labels, body copy, links
+   ========================================================================== */
+#_builder-form :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--bf-heading) !important;
+  font-weight: 640 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
+  text-wrap: balance;
+}
+
+#_builder-form :is(p, li, small) {
+  color: var(--bf-text) !important;
+}
+
+#_builder-form :is(label, .label-alignment, .field-label, .form-label) {
+  margin-bottom: 8px !important;
+  color: var(--bf-label) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.006em !important;
+}
+
+/* Option labels (checkboxes, radios, consent) read as body copy, not as field labels.
+   The :has() line is kept on its own so older browsers skip only that line. */
+#_builder-form :is(input[type="checkbox"], input[type="radio"]) + label,
+#_builder-form :is(.option, .option-checkbox, .option-radio, .terms-and-condition) label {
+  margin-bottom: 0 !important;
+  color: var(--bf-text) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  cursor: pointer;
+}
+#_builder-form label:has(> input[type="checkbox"], > input[type="radio"]) {
+  margin-bottom: 0 !important;
+  color: var(--bf-text) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  cursor: pointer;
+}
+
+#_builder-form :is(.short-label, .help-text, .hint, .field-hint, .description) {
+  color: var(--bf-note) !important;
+  font-size: 13px !important;
+}
+
+#_builder-form a {
+  color: var(--bf-link) !important;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 0.2em;
+}
+#_builder-form a:hover {
+  text-decoration-color: currentColor;
+}
+
+
+/* ==========================================================================
+   5. FIELDS: text, email, phone, number, date, select, textarea
+   ========================================================================== */
+#_builder-form :where(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="hidden"]):not([type="file"]):not([type="range"]):not([type="color"]),
+  select,
+  textarea,
+  .form-control:not([type="checkbox"]):not([type="radio"]),
+  .multiselect__tags,
+  .vue-tel-input,
+  .mx-input
+) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 46px !important;
+  margin: 0;
+  padding: 11px 14px !important;
+  border: 1px solid var(--bf-field-line) !important;
+  border-radius: var(--bf-radius-field) !important;
+  background-color: var(--bf-field-bg) !important;
+  background-image: none !important;
+  box-shadow: var(--bf-field-inset) !important;
+  color: var(--bf-field-text) !important;
+  font-size: 16px !important;          /* 16px stops iOS zooming on focus */
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  outline: none !important;
+  transition: border-color 160ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#_builder-form textarea {
+  min-height: 128px !important;
+  resize: vertical;
+}
+
+/* Hover */
+#_builder-form :where(input, select, textarea, .form-control, .multiselect__tags, .vue-tel-input, .mx-input):hover {
+  border-color: var(--bf-field-line-hover) !important;
+}
+
+/* Focus: light-blue edge + soft ring */
+#_builder-form :where(input, select, textarea, .form-control, .mx-input):focus,
+#_builder-form .multiselect--active .multiselect__tags,
+#_builder-form .vue-tel-input:focus-within {
+  border-color: var(--bf-focus-line) !important;
+  box-shadow: var(--bf-field-inset), var(--bf-focus-ring) !important;
+  outline: none !important;
+}
+
+/* Placeholder */
+#_builder-form ::placeholder,
+#_builder-form .multiselect__placeholder {
+  color: var(--bf-placeholder) !important;
+  opacity: 1 !important;
+}
+
+/* Native select: custom chevron */
+#_builder-form select {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  padding-right: 40px !important;
+  background-image: var(--bf-chevron) !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 12px 8px !important;
+  cursor: pointer;
+}
+#_builder-form select option {
+  background: var(--bf-menu-bg);
+  color: var(--bf-field-text);
+}
+
+/* Browser autofill keeps the dark field instead of turning yellow/blue */
+#_builder-form input:-webkit-autofill,
+#_builder-form input:-webkit-autofill:hover,
+#_builder-form textarea:-webkit-autofill,
+#_builder-form select:-webkit-autofill {
+  -webkit-text-fill-color: var(--bf-field-text) !important;
+  caret-color: var(--bf-field-text);
+  box-shadow: inset 0 0 0 1000px var(--bf-field-solid) !important;
+  transition: background-color 9999s ease-out 0s;
+}
+#_builder-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--bf-field-text) !important;
+  box-shadow: inset 0 0 0 1000px var(--bf-field-solid), var(--bf-focus-ring) !important;
+}
+
+
+/* ==========================================================================
+   6. DROPDOWNS (GHL's searchable single/multi select)
+   ========================================================================== */
+#_builder-form .multiselect {
+  min-height: 46px !important;
+  color: var(--bf-field-text) !important;
+  background: transparent !important;
+}
+#_builder-form .multiselect__tags {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-right: 44px !important;
+}
+#_builder-form :is(.multiselect__single, .multiselect__input, .multiselect__placeholder) {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--bf-field-text) !important;
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+}
+#_builder-form .multiselect__placeholder {
+  color: var(--bf-placeholder) !important;
+}
+/* swap the library's grey triangle for the same chevron the native select uses;
+   GHL rotates this box when the menu opens, so the chevron flips */
+#_builder-form .multiselect__select {
+  top: 1px !important;
+  right: 4px !important;
+  width: 40px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  background: var(--bf-chevron) center / 12px 8px no-repeat !important;
+}
+#_builder-form .multiselect__select::before {
+  display: none !important;
+}
+#_builder-form .multiselect__content-wrapper {
+  margin-top: 6px !important;
+  border: 1px solid var(--bf-menu-line) !important;
+  border-radius: var(--bf-radius-field) !important;
+  background: var(--bf-menu-bg) !important;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.38), 0 16px 40px -8px rgb(0 0 0 / 0.6) !important;
+  overflow: auto;
+}
+#_builder-form .multiselect__option {
+  min-height: 0 !important;
+  padding: 10px 14px !important;
+  background: transparent !important;
+  color: var(--bf-field-text) !important;
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+}
+#_builder-form .multiselect__option--highlight {
+  background: var(--bf-menu-hover) !important;
+}
+#_builder-form .multiselect__option--selected {
+  background: rgb(59 130 246 / 0.1) !important;
+  font-weight: 550 !important;
+}
+#_builder-form .multiselect__option::after {
+  display: none !important;          /* hides "Press enter to select" */
+}
+#_builder-form .multiselect__tag {
+  margin: 0 !important;
+  border-radius: 8px !important;
+  background: rgb(59 130 246 / 0.18) !important;
+  color: var(--bf-field-text) !important;
+}
+#_builder-form .multiselect__tag-icon::after {
+  color: var(--bf-field-text) !important;
+}
+#_builder-form .multiselect__tag-icon:hover {
+  background: rgb(59 130 246 / 0.3) !important;
+}
+
+
+/* ==========================================================================
+   7. PHONE + DATE PICKER
+   ========================================================================== */
+/* Phone with country code (two GHL versions) */
+#_builder-form .vue-tel-input {
+  display: flex !important;
+  align-items: center;
+  padding: 0 !important;
+}
+#_builder-form .vue-tel-input input,
+#_builder-form .vti__input {
+  min-height: 44px !important;
+  padding: 0 14px 0 6px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#_builder-form :is(.vti__dropdown, .iti__selected-flag) {
+  background: transparent !important;
+  border-radius: var(--bf-radius-field) 0 0 var(--bf-radius-field);
+}
+#_builder-form :is(.vti__dropdown-list, .iti__country-list) {
+  border: 1px solid var(--bf-menu-line) !important;
+  border-radius: var(--bf-radius-field) !important;
+  background: var(--bf-menu-bg) !important;
+  color: var(--bf-field-text) !important;
+  box-shadow: 0 16px 40px -8px rgb(0 0 0 / 0.6) !important;
+}
+#_builder-form :is(.vti__dropdown-item.highlighted, .iti__country.iti__highlight) {
+  background: var(--bf-menu-hover) !important;
+}
+#_builder-form .iti__dial-code {
+  color: var(--bf-note) !important;
+}
+
+/* Date picker */
+#_builder-form :is(.mx-icon-calendar, .mx-icon-clear) {
+  color: var(--bf-text) !important;
+}
+.mx-datepicker-main {
+  border: 1px solid var(--bf-menu-line) !important;
+  border-radius: var(--bf-radius-field) !important;
+  background: var(--bf-menu-bg) !important;
+  color: var(--bf-field-text) !important;
+  font-family: var(--bf-font) !important;
+}
+.mx-datepicker-main .cell:hover {
+  background: var(--bf-menu-hover) !important;
+  color: var(--bf-field-text) !important;
+}
+.mx-datepicker-main .cell.active {
+  background: var(--bf-blue) !important;
+  color: var(--bf-navy) !important;
+}
+.mx-datepicker-main :is(.mx-btn, .mx-table th) {
+  color: var(--bf-text) !important;
+}
+
+
+/* ==========================================================================
+   8. CHECKBOXES + RADIOS
+   ========================================================================== */
+#_builder-form :is(input[type="checkbox"], input[type="radio"]) {
+  accent-color: var(--bf-blue) !important;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: -3px;
+  cursor: pointer;
+}
+#_builder-form :is(input[type="checkbox"], input[type="radio"]):focus-visible {
+  outline: 2px solid var(--bf-blue) !important;
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   9. ERRORS
+   ========================================================================== */
+#_builder-form :where(input, select, textarea, .form-control, .multiselect__tags):is(.is-invalid, .error, [aria-invalid="true"]) {
+  border-color: var(--bf-danger) !important;
+}
+#_builder-form :is(.error, .text-danger, .invalid-feedback, .error-message, .help-block.error):not(input):not(select):not(textarea) {
+  margin-top: 6px;
+  color: var(--bf-danger-text) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
+
+
+/* ==========================================================================
+   10. SUBMIT BUTTON (light blue fill, navy label: the brand pairing, 5.35:1)
+   ========================================================================== */
+#_builder-form :is(button[type="submit"], .btn, .button-element, .ghl-btn, .form-builder--btn-submit button) {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px;
+  box-sizing: border-box !important;
+  width: var(--bf-button-width) !important;
+  min-height: 48px !important;
+  margin-top: 8px;
+  padding: 0 24px !important;
+  border: 0 !important;
+  border-radius: var(--bf-radius-button) !important;
+  corner-shape: squircle;
+  background: var(--bf-grain), linear-gradient(180deg, #5c97f8, #3b82f6 60%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(6 11 23 / 0.12),
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -1px 0 rgb(6 11 23 / 0.18),
+    0 1px 2px rgb(6 11 23 / 0.35),
+    0 8px 22px -8px rgb(59 130 246 / 0.45) !important;
+  color: var(--bf-navy) !important;
+  font-size: 16px !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.006em !important;
+  line-height: 1 !important;
+  text-shadow: none !important;
+  text-transform: none !important;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 120ms cubic-bezier(0.23, 1, 0.32, 1),
+    background 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+#_builder-form :is(button[type="submit"], .btn, .button-element, .ghl-btn, .form-builder--btn-submit button) * {
+  color: inherit !important;
+  font: inherit !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  #_builder-form :is(button[type="submit"], .btn, .button-element, .ghl-btn, .form-builder--btn-submit button):hover {
+    background: var(--bf-grain), linear-gradient(180deg, #6fa3f8, #4c8cf7 60%) !important;
+  }
+}
+#_builder-form :is(button[type="submit"], .btn, .button-element, .ghl-btn, .form-builder--btn-submit button):active {
+  transform: scale(0.97);
+}
+#_builder-form :is(button[type="submit"], .btn, .button-element, .ghl-btn, .form-builder--btn-submit button):focus-visible {
+  outline: 2px solid #7fb0f7 !important;
+  outline-offset: 3px !important;
+}
+#_builder-form :is(button[type="submit"], .btn, .button-element, .ghl-btn, .form-builder--btn-submit button):disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed;
+}
+
+
+/* ==========================================================================
+   11. ACCESSIBILITY
+   ========================================================================== */
+#_builder-form ::selection {
+  background: rgb(59 130 246 / 0.28);
+}
+@media (prefers-reduced-motion: reduce) {
+  #_builder-form *,
+  #_builder-form *::before {
+    transition: none !important;
+  }
+  #_builder-form :is(button, .btn):active {
+    transform: none !important;
+  }
+}

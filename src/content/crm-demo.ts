@@ -1,5 +1,6 @@
 // The example workspace in "Every tool you juggle" (components/crm): Bgentic's own CRM, every tab clickable, with
-// made-up leads and clients. The window's bar labels it Example. Plan prices on invoices are the real ones; phone
+// made-up leads and clients. The window's bar labels it Example. Every amount is made up: no invoice shows a plan or
+// its price, since Bgentic quotes each business (2026-11-23; the old tier prices were taken out of it). Phone
 // numbers are from the range ACMA sets aside for fiction (0491 570 xxx). No ratings or review text: the site shows
 // none.
 
@@ -131,17 +132,17 @@ export const crmDemo = {
 
   payments: {
     stats: [
-      { label: "Collected in October", value: "AU$4,348.00" },
+      { label: "Collected in October", value: "AU$7,350.00" },
       { label: "Outstanding", value: "AU$3,000.00" },
-      { label: "Overdue", value: "AU$199.00" },
+      { label: "Overdue", value: "AU$880.00" },
       { label: "Drafts", value: "AU$8,400.00" },
     ],
     invoices: [
       { no: "INV-1043", who: "Summit Fitouts", what: "Monthly retainer", amount: "AU$3,500.00", status: "Paid", when: "12 Oct" },
-      { no: "INV-1042", who: "Brightwater Plumbing", what: "Standard plan", amount: "AU$349.00", status: "Paid", when: "10 Oct" },
-      { no: "INV-1041", who: "Northgate Legal", what: "Premium plan", amount: "AU$499.00", status: "Paid", when: "9 Oct" },
+      { no: "INV-1042", who: "Brightwater Plumbing", what: "CRM setup", amount: "AU$1,650.00", status: "Paid", when: "10 Oct" },
+      { no: "INV-1041", who: "Northgate Legal", what: "Workflow build", amount: "AU$2,200.00", status: "Paid", when: "9 Oct" },
       { no: "INV-1040", who: "Harbour Dental Group", what: "Monthly retainer", amount: "AU$3,000.00", status: "Sent", when: "Due 20 Oct" },
-      { no: "INV-1039", who: "Ryde Electrical", what: "Basic plan", amount: "AU$199.00", status: "Overdue", when: "Due 6 Oct" },
+      { no: "INV-1039", who: "Ryde Electrical", what: "Website update", amount: "AU$880.00", status: "Overdue", when: "Due 6 Oct" },
       { no: "INV-1038", who: "Evergreen Landscapes", what: "Monthly retainer", amount: "AU$8,400.00", status: "Draft", when: "Not sent" },
     ],
   },

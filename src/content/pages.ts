@@ -138,10 +138,11 @@ export const contactPage = {
     title: "Other ways to reach us.",
     email: { title: "Email us", text: "Write to us any time. We reply within one business day." },
     login: { title: "Already a client?", text: "Log in to your Bgentic workspace: your inbox, pipeline and reports.", action: "Log in" },
+    // no prices (2026-11-23): one plan, quoted to each business
     plans: {
-      title: "Rather start on your own?",
-      text: "Every plan has a 14-day free trial, card required. Pay monthly with no lock-in, or annually and save about 9%.",
-      action: "See the plans",
+      title: "See what's in the plan",
+      text: "Every tool your business runs on, in one plan, quoted to fit. It starts with a 14-day free trial.",
+      action: "See the plan",
     },
   },
   faq: {
@@ -158,8 +159,8 @@ export const contactPage = {
         a: "No. You get the map and the plan either way. Build it with us, build it yourself, or put it in a drawer.",
       },
       {
-        q: "Can I start without a call?",
-        a: "Yes. Every plan starts with a 14-day free trial, card required. Pay monthly with no lock-in, or annually and save about 9%.",
+        q: "Can I get a quote without a call?",
+        a: "Yes. Send us a quick message about your business and we'll reply by email within one business day. Your plan starts with a 14-day free trial.",
       },
     ],
   },

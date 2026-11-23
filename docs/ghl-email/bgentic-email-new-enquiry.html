@@ -1,0 +1,75 @@
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f0ebe5" style="width:100%;background-color:#f0ebe5;">
+<tr>
+<td align="center" style="padding:32px 12px;">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">
+
+<tr>
+<td bgcolor="#060b17" style="background-color:#060b17;border-radius:20px 20px 0 0;padding:28px 28px 8px 28px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td align="left" valign="middle"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;"><tr><td valign="bottom" style="padding:0 0 5px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;"><tr><td colspan="2" width="20" height="13" bgcolor="#ffffff" style="padding:0;font-size:0;line-height:0;width:20px;height:13px;background-color:#ffffff;border-radius:3px 8px 4px 0;"><p style="margin:0;font-size:1px;line-height:1px;">&nbsp;</p></td><td width="4" height="13" style="padding:0;font-size:0;line-height:0;width:4px;height:13px;"><p style="margin:0;font-size:1px;line-height:1px;">&nbsp;</p></td></tr><tr><td width="11" height="10" bgcolor="#ffffff" style="padding:0;font-size:0;line-height:0;width:11px;height:10px;background-color:#ffffff;"><p style="margin:0;font-size:1px;line-height:1px;">&nbsp;</p></td><td colspan="2" rowspan="2" width="13" height="21" bgcolor="#ffffff" style="padding:0;font-size:0;line-height:0;width:13px;height:21px;background-color:#ffffff;border-radius:0 7px 11px 0;"><p style="margin:0;font-size:1px;line-height:1px;">&nbsp;</p></td></tr><tr><td style="padding:0;font-size:0;line-height:0;border-top:10px solid #3b82f6;border-left:10px solid #060b17;"><p style="margin:0;font-size:1px;line-height:1px;">&nbsp;</p></td></tr></table></td><td valign="bottom" style="padding:0 0 0 1px;"><p style="margin:0;font-family:Inter,'Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;font-size:40px;line-height:40px;font-weight:400;letter-spacing:-1.5px;-webkit-text-stroke-width:0.6px;color:#ffffff;white-space:nowrap;"><span style="color:#3b82f6;">g</span>entic</p></td></tr></table></td>
+<td align="right" valign="middle">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="right">
+<tr>
+<td bgcolor="#1a1e29" style="background-color:#1a1e29;border:1px solid #2d313a;border-radius:999px;padding:7px 14px 7px 12px;white-space:nowrap;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:16px;color:#fbf7f3;font-weight:700;"><span style="color:#3b82f6;">&#9679;</span>&nbsp;&nbsp;New enquiry</p></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="#060b17" style="background-color:#060b17;padding:20px 28px 0 28px;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:28px;line-height:34px;color:#fbf7f3;font-weight:700;">{{inboundWebhookRequest.full_name}}</p></td>
+</tr>
+<tr>
+<td bgcolor="#060b17" style="background-color:#060b17;padding:8px 28px 30px 28px;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:22px;color:#938f8c;">New contact, added to your pipeline.</p></td>
+</tr>
+
+<tr>
+<td bgcolor="#fbf7f3" style="background-color:#fbf7f3;padding:20px 28px 32px 28px;">
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td width="110" valign="top" style="width:110px;padding:12px 0;border-bottom:1px solid #e3dfdd;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5d5a63;">Email</p></td>
+<td valign="top" style="padding:12px 0;border-bottom:1px solid #e3dfdd;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:22px;color:#060b17;">{{inboundWebhookRequest.email}}</p></td>
+</tr>
+<tr>
+<td width="110" valign="top" style="width:110px;padding:12px 0;border-bottom:1px solid #e3dfdd;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5d5a63;">Business</p></td>
+<td valign="top" style="padding:12px 0;border-bottom:1px solid #e3dfdd;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:22px;color:#060b17;">{{inboundWebhookRequest.company_name}}</p></td>
+</tr>
+<tr>
+<td width="110" valign="top" style="width:110px;padding:12px 0;border-bottom:1px solid #e3dfdd;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5d5a63;">Services</p></td>
+<td valign="top" style="padding:12px 0;border-bottom:1px solid #e3dfdd;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:22px;color:#060b17;">{{inboundWebhookRequest.interested_in}}</p></td>
+</tr>
+</table>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="padding:28px 0 10px 0;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:20px;color:#060b17;font-weight:700;">Where does the time go?</p></td>
+</tr>
+<tr>
+<td bgcolor="#f6f1ec" style="background-color:#f6f1ec;border-left:3px solid #3b82f6;border-radius:0 12px 12px 0;padding:16px 20px;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#060b17;white-space:pre-wrap;">{{inboundWebhookRequest.message}}</p></td>
+</tr>
+</table>
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+<tr>
+<td bgcolor="#3b82f6" style="background-color:#3b82f6;border-radius:12px;padding:14px 22px;white-space:nowrap;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:18px;color:#060b17;font-weight:700;"><a href="https://app.bgentic.io/v2/location/{{location.id}}/contacts/detail/{{contact.id}}" style="color:#060b17;text-decoration:none;"><span style="color:#060b17;">Open in CRM &rarr;</span></a></p></td>
+<td width="10" style="width:10px;font-size:0;line-height:0;">&nbsp;</td>
+<td bgcolor="#fbf7f3" style="background-color:#fbf7f3;border:1px solid #d7cfc5;border-radius:12px;padding:13px 21px;white-space:nowrap;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:18px;color:#060b17;font-weight:700;"><a href="mailto:{{inboundWebhookRequest.email}}?subject=Re%3A%20your%20enquiry%20to%20Bgentic" style="color:#060b17;text-decoration:none;"><span style="color:#060b17;">Reply</span></a></p></td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<tr>
+<td bgcolor="#060b17" style="background-color:#060b17;border-radius:0 0 20px 20px;padding:16px 28px;"><p style="margin:0;font-family:Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#82807f;">Sent automatically from the contact form on bgentic.io</p></td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>

@@ -155,7 +155,7 @@ The Bgentic brand palette, exactly as the brand guidelines give it (2026-11). Na
 - **Success, warning, danger** (signal-success, signal-warn, signal-danger): the only colours outside the palette, and only ever a status, such as Paid, Overdue or Live, as a small mark or pill beside its words. Never decoration.
 
 ### Named Rules
-**The Band Rule.** A band is one material. Navy carries the product (hero, the app, the film, clients, the close); paper carries the story (the leaks, how we work and pricing on cream, the services on sand). Bands alternate, so two navy bands never touch. Inside a paper band a few things stay navy, the product showing through: photographs, the example panels on the service cards, the step numbers, the engineering strip and the popular plan. They re-point their own tokens back to navy (`.paper :is(...)`).
+**The Band Rule.** A band is one material. Navy carries the product (hero, the app, the film, clients, the close); paper carries the story (the leaks, how we work and pricing on cream, the services on sand). Bands alternate, so two navy bands never touch. Inside a paper band a few things stay navy, the product showing through: photographs, the example panels on the service cards, the step numbers and the engineering strip. They re-point their own tokens back to navy (`.paper :is(...)`).
 
 **The Pairing Rule.** Only the brand's approved pairings carry text: cream or sand on navy, navy or slate on cream, navy or deep slate on sand, navy on light blue. White on light blue is 3.7:1 and is not used; the filled action's label is navy.
 
@@ -302,20 +302,20 @@ Every service lives on this one page; the per-service pages were folded into it 
 ### Contact (/contact)
 - **Bands:**
   1. **Navy:** the booking section.
-  2. **Cream:** three "other ways in" paper sheets (email, log in, the plans), then common questions.
+  2. **Cream:** three "other ways in" paper sheets (email, log in, the plan), then common questions.
 - **Reach sheet:** a cream paper card: a tile, a 21px title, a body line and an action naming its target. It lifts 3px on hover.
 
-### Pricing block (home 06 and /pricing)
-The 21st.dev pricing block (`src/components/blocks/pricing.tsx`), on the shadcn tokens, with one set of plans for both pages (`src/lib/pricing-plans.ts`).
-- **On /pricing:** it opens the page on navy, with light blue as primary; `--primary-foreground` is navy, the brand pairing.
-- **On the home page:** it holds the cream band between the clients and the close, under "Serious systems. Predictable pricing." There, `.pricing-paper` re-points its tokens to paper:
-  - **Type:** navy text, slate notes and navy hairlines.
-  - **Light blue:** only on the popular border, the badge, the switch, the checks and the popular button. The "Save 9%" text turns navy.
-  - **Cards:** cream paper sheets lit from above.
-- **Kept as designed:** the monthly/annual switch, which fires confetti in light blue, blue-hover, cream and sand. NumberFlow rolls the AUD prices. On entry the three cards spring into a 3D fan: the outer two lean back and in at 94%, and the popular one rises 20px with a light-blue 2px border and badge.
-- **Prices and features:** the real plans from `content/pricing.ts`. Each card shows its users and AI credits, then its features in full. The terms sit under the switch.
-- **Annual on:** the big number is the year's price over twelve months, to the cent, with "Billed annually at $X" (the year's total) under it. The switch's saving is computed from the totals ("Save 9%").
-- **Bands:** the plans in navy; then, on cream, what sits outside the plans and the questions; then the close.
+### The plan (/pricing and home 06)
+One plan, quoted to each business (2026-11-23). It replaces the three priced tiers and the 21st.dev pricing block (the switch, NumberFlow prices, the 3D fan), which are archived byte for byte in `src/archive/pricing/` with a README on restoring them. Copy lives in `content/pricing.ts`.
+- **Rules:** no prices, monthly rates, tiers or billing periods anywhere on the site. Never mention user limits, seats or AI credits. Every capability the three tiers listed stays listed, plus the 14-day free trial. The way in is a quote, through /contact.
+- **/pricing, navy:** one wide frosted-glass card (`components/pricing/plan-card.tsx`) opens the page.
+  - **Material:** grain, a faint light-blue light from the top left, a 1px edge lit light blue where that light lands and faint white round the rest, a deep shadow with a faint blue under-glow. Solid fills under reduced transparency; a plain border in forced colours.
+  - **The offer, left (0.92fr):** the trial as a pill badge straddling the card's top edge; a two-tone h1, "One plan." in cream and "Everything in it." in text-on-navy, each line on its own and sized to the column (container units) so it never wraps; the quote line; the one filled action, "Contact us for a quote"; the reply promise; "How quoting works" in three numbered steps (the close's `.next-num`); two facts at the foot (Sydney, AUD with GST), level with the end of the list.
+  - **Everything in the plan, right (1.08fr):** six groups in two columns, read in rows (sales and customers, conversations, automation, marketing, websites and funnels, setup and support), each with a hairline over it, its drawn icon in a 32px tile, a cream name and the items in sand with light-blue checks. Setup and support carries "Scoped in your quote." A hairline that fades at both ends divides the two columns.
+  - **The foot:** a strip across the card for custom work (ERP connectors, trade portals, AI assistants) with a link to /services. Below 1024px the card stacks, the offer first, and the foot repeats the action, since the list above it runs several screens.
+  - **Motion:** none. The card is the page's opening; only the buttons answer the press.
+- **/pricing bands:** the plan on navy; the questions on cream; the close.
+- **Home 06, cream:** "One plan. Priced to your business." with the filled action and a glass "See what's included" on the left; on the right a paper sheet (`.plan-index`) sums up the six groups, a line each. It keeps the cream band between the clients and the close, so the bands still alternate. On phones the sheet lifts in.
 
 ### Booking (/contact)
 /contact opens on booking, over the hero's kinetic grid (`booking-grid.tsx`), which is lit from behind the calendar.
@@ -357,7 +357,7 @@ The InkOrbit sculpture: a fixed-size point cloud (2,800 core points and 16,000 g
 - **Phones (below 640px only, 2026-11-12, at the user's request; nothing reaches a wider screen):** the "phones: scroll motion" section of depth.css.
   - **Stacking cards** (`.stack`): Where the week goes, Six services, How we work and /services' path. Each card is sticky under the header (84px), 14px lower than the one before, so the next slides up over it and every edge beneath stays in view; it unravels in reverse going back up. A covered card eases to 95% and takes a faint shade while the next one slides over it, driven by the next card's view timeline and finishing as it lands. How we work's numbers move inside their cards (top right) and the rail hides; the path's glass stops go solid.
   - **Sydney businesses:** a swipe row, one card at a time (82vw, centred, the next peeking), the cards either side easing to 92% and dimming, and four dots above the row's right edge that follow it.
-  - **The lift** (`.lift`, the pricing cards, the contact page's ways in): each card rises 2.5rem and comes upright from 14° as it scrolls in, done within its first 20rem.
+  - **The lift** (`.lift`: the home page's plan sheet, the contact page's ways in): each card rises 2.5rem and comes upright from 14° as it scrolls in, done within its first 20rem.
   - All of it is CSS: native sticky and scroll-snap, with scroll timelines where supported. Under reduced motion the stacks still stack and the row still swipes; nothing recedes, scales or lifts.
 - **Reduced motion:** no orb fade-in, no travel or pin, no scroll reveals, and no transitions on the header, rail or skip link. Everything is shown in its final state. Print shows every reveal finished and hides the orb, rail and header.
 

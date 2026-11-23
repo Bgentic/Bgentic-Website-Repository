@@ -1,0 +1,38 @@
+/* ARCHIVED 2026-11-23, with the three priced plans. Not imported anywhere. To restore, paste the rules below back into
+   src/styles/depth.css inside `@layer components` (they sat just before "07 · contact: the close"), and add
+   `.pricing-card,` back to the phones' lift selector (the "phones: scroll motion" section of depth.css, beside `.lift`
+   and `.reach-grid > li`). See ../README.md. */
+
+/* ------------------------------------------------------------- the pricing block on paper */
+/* The pricing block (components/blocks/pricing.tsx) reads shadcn's tokens. On the home page's cream band they're
+   re-pointed to paper: navy type, slate notes, navy hairlines, and light blue kept for the popular border, the
+   badge, the switch and the checks (graphics, never text: "Save 9%" turns navy). Each card becomes a paper sheet
+   lit from above, and the blue buttons drop the paper glass's white wash so they stay light blue. */
+.pricing-paper {
+  --background: #fbf7f3;
+  --foreground: #060b17;
+  --muted-foreground: #5d5a63;
+  --border: rgb(6 11 23 / 0.12);
+  --input: rgb(6 11 23 / 0.22);
+  --pricing-accent-text: #060b17;
+}
+.pricing-paper .pricing-card {
+  background: var(--grain), var(--paper);
+  box-shadow: var(--paper-edge), var(--paper-shadow);
+}
+.pricing-paper .pricing-card .btn-glass.bg-primary,
+.pricing-paper .pricing-card .btn-glass:hover {
+  background-image: none;
+}
+
+/* The phones' lift selector, as it was:
+
+        .lift,
+        .pricing-card,
+        .reach-grid > li {
+          transform-origin: 50% 100%;
+          animation: lift-in linear both;
+          animation-timeline: view();
+          animation-range: entry 0% entry 20rem;
+        }
+*/

@@ -21,7 +21,7 @@ Both lose time to missed calls, follow-ups left to memory, rekeying between syst
 
 ## Product Purpose
 
-bgentic.io presents Bgentic Pty Ltd, an AI consultancy in Sydney. It explains what Bgentic builds and runs, shows each service working, and turns a qualified visitor into a discovery call. Success is a booked discovery call. Starting a plan through the existing `/onboarding` flow is the secondary path.
+bgentic.io presents Bgentic Pty Ltd, an AI consultancy in Sydney. It explains what Bgentic builds and runs, shows each service working, and turns a qualified visitor into a discovery call. Success is a booked discovery call. A quote request through /contact (a call or a quick message) is the same path in.
 
 ## Positioning
 
@@ -36,16 +36,17 @@ Bgentic is an AI consultancy, not a SaaS. The CRM software it works with is a to
 
 - **Six services,** each shown with an interactive demo built into the page: AI consultancy, automations, CRM, websites, ecommerce and SEO marketing.
 - **How Bgentic works:** five steps, Map, Design, Build, Launch, Support.
-- **Monthly plans** are bought through the existing `/onboarding` flow, which stays on the legacy site and is proxied. The app login is `app.bgentic.io`.
+- **One plan, quoted (2026-11-23):** the public tiers are gone. Every business gets the same plan, with every tool in it, priced in a quote after a discovery call or a message. The app login is `app.bgentic.io`.
 - **SEO agent:** a Claude-based agent will edit site content daily in a later phase. Copy therefore lives in content files, separate from components.
 
 ## Capabilities and Constraints
 
-- **Pricing must match `/onboarding` exactly:**
-  - Basic $199, Standard $349, Premium $499 a month, AUD, including GST.
-  - 14-day free trial, card required. Month to month, no lock-in.
-  - Included AI credits of $10, $15 and $20 a month; AI features are billed on usage.
-  - Never change, round or reword these.
+- **Pricing is quote-based (user, 2026-11-23):**
+  - No prices, monthly rates, tiers or billing periods anywhere on the site.
+  - Never mention user limits, seats or AI credits.
+  - /pricing lists every capability in the plan, plus the 14-day free trial (card required), and asks for a quote through /contact. Quotes are in AUD, including GST.
+  - The old tiers (Basic $199, Standard $349, Premium $499, with AI credits) are archived in `src/archive/pricing/`, not deleted. Don't restore them without the user's sign-off.
+  - The Terms (`content/legal.ts`, locked) still describe the old tiers' included credits; changing them needs sign-off.
 - **Routes that must keep working:** `/onboarding`, `/terms`, `/privacy` and `app.bgentic.io`.
 - **Quality bar:**
   - WCAG 2.2 AA.
@@ -88,7 +89,7 @@ Bgentic is an AI consultancy, not a SaaS. The CRM software it works with is a to
 
 1. **Prove by demonstration, never by claim.** Show the system working; don't assert results.
 2. **Consultancy first.** The people and the method are the offer; the software is a tool.
-3. **Specific beats general.** Real times, real steps, real prices.
+3. **Specific beats general.** Real times, real steps, real capabilities. Prices come in a quote, never on the page.
 4. **Restraint is the luxury.** One idea per viewport.
 5. **Nothing invented.** Every fact on the page is true today.
 

@@ -2,8 +2,9 @@
 
 export const CONTACT_EMAIL = "hello@bgentic.io"
 export const LOGIN_HREF = "https://app.bgentic.io/"
-// Where "start a free trial" goes: the plans (2026-11-10). The old sign-up flow on the previous site is gone, so the
-// links that pointed there (bgentic.io/onboarding) returned a 404.
+// Where "start a free trial" goes: the plan on /pricing (2026-11-10), which explains the trial and asks for a quote
+// (2026-11-23). The old sign-up flow on the previous site is gone, so the links that pointed there
+// (bgentic.io/onboarding) returned a 404.
 export const ONBOARDING_HREF = "/pricing"
 export const BOOK_CALL_HREF = "/contact"
 
