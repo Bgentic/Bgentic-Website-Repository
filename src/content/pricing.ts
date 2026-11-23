@@ -109,8 +109,9 @@ export const plan = {
     },
   ] satisfies PlanGroup[],
   custom: {
-    text: "Need something the plan doesn't cover? We also scope and quote custom ERP connectors, trade portals and AI assistants.",
-    link: { label: "See our services", href: "/services" },
+    title: "Need something the plan doesn't cover?",
+    text: "We also scope and quote custom ERP connectors, trade portals and AI assistants.",
+    action: { label: "See our services", href: "/services" },
   },
 }
 
@@ -140,7 +141,9 @@ export const PRICING_FAQ = [
 
 // Home 06: the plan, summed up on the cream band between the clients and the close
 export const planIntro = {
-  title: "One plan. Priced to your business.",
+  // two lines, set like /pricing's: the first in ink, the second a step quieter
+  title: ["One plan.", "Quoted to fit."],
+  sheetTitle: "Everything in the plan",
   intro:
     "Every tool your business runs on, set up and supported by our team. We quote it around what you need, and it starts with a 14-day free trial.",
   primary: { label: "Contact us for a quote", href: QUOTE_HREF },
