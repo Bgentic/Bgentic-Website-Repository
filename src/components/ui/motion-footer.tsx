@@ -442,7 +442,7 @@ export function CinematicFooter() {
                   className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group"
                 >
                   <Rocket className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
-                  Start a free trial
+                  See the plan
                 </MagneticButton>
               </div>
 

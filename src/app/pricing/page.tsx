@@ -7,7 +7,7 @@ import { PRICING_FAQ } from "@/content/pricing"
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "One plan with every tool your business runs on, set up and supported by our team in Sydney. It starts with a 14-day free trial. Contact us for a quote.",
+    "One plan with every tool your business runs on, set up and supported by our team in Sydney. Contact us for a quote.",
 }
 
 // /pricing (2026-11-23): one plan, quoted. The plan opens the page on navy, then the questions on cream, then the
@@ -28,7 +28,7 @@ export default function PricingPage() {
             <h2 id="faq-title" className="t-h2">
               Questions
             </h2>
-            <p className="t-lede mt-6 max-w-[34ch]">How quoting works, and how the free trial starts.</p>
+            <p className="t-lede mt-6 max-w-[34ch]">How quoting works, and what a quote covers.</p>
           </div>
           <div className="lg:col-span-7 lg:col-start-6">
             <Faq items={PRICING_FAQ} />

@@ -44,9 +44,10 @@ Bgentic is an AI consultancy, not a SaaS. The CRM software it works with is a to
 - **Pricing is quote-based (user, 2026-11-23):**
   - No prices, monthly rates, tiers or billing periods anywhere on the site.
   - Never mention user limits, seats or AI credits.
-  - /pricing lists every capability in the plan, plus the 14-day free trial (card required), and asks for a quote through /contact. Quotes are in AUD, including GST.
+  - /pricing lists every capability in the plan and asks for a quote through /contact. Quotes are in AUD, including GST.
+  - **No free trial (user, 2026-11-25).** The 14-day trial is no longer offered; don't mention a trial anywhere on the site.
   - The old tiers (Basic $199, Standard $349, Premium $499, with AI credits) are archived in `src/archive/pricing/`, not deleted. Don't restore them without the user's sign-off.
-  - The Terms (`content/legal.ts`, locked) still describe the old tiers' included credits; changing them needs sign-off.
+  - The Terms (`content/legal.ts`, locked) still describe the old tiers' included credits and the free trial (clause 05); changing them needs sign-off.
 - **Routes that must keep working:** `/onboarding`, `/terms`, `/privacy` and `app.bgentic.io`.
 - **Quality bar:**
   - WCAG 2.2 AA.

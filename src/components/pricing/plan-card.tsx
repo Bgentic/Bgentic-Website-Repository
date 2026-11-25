@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, Blocks, CalendarCheck, Check, MapPin, Receipt } from "lucide-react"
+import { ArrowRight, Blocks, Check, MapPin, Receipt } from "lucide-react"
 import { PLAN_ICONS } from "@/components/pricing/plan-icons"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { plan } from "@/content/pricing"
@@ -9,8 +9,7 @@ const FACT_ICONS = [MapPin, Receipt]
 
 // /pricing · the plan (2026-11-23, replacing the three priced cards, archived in src/archive/pricing). One wide slab
 // of navy glass opens the page:
-// - the offer, left: the free trial as a badge on the slab's top edge (it catches the light once as the page lands),
-//   the page's h1, the quote line, the one filled action and the reply promise, how quoting works in three steps on
+// - the offer, left: the page's h1, the quote line, the one filled action and the reply promise, how quoting works in three steps on
 //   a fine rail, and two facts. On a desk-sized screen the offer stays in view beside the list as it scrolls.
 // - everything in the plan, right: six groups in two columns, read in rows, each under a hairline with a lit icon
 // - a strip across the foot for custom work, with its own glass action; on phones it repeats the quote action first,
@@ -21,11 +20,6 @@ export function PlanCard() {
   const quote = buttonVariants({ variant: "primary", size: "lg" })
   return (
     <div className="plan plan-glass">
-      <p className="plan-trial">
-        <CalendarCheck aria-hidden="true" strokeWidth={2} />
-        {plan.trial}
-      </p>
-
       <div className="plan-offer">
         <div className="plan-offer-inner">
           <h1 id="plan-title" className="plan-title">

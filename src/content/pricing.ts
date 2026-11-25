@@ -5,11 +5,11 @@
 // Rules for this copy, from the user:
 // - no prices, monthly rates, tiers or billing periods, anywhere on the site
 // - never mention user limits, seats or AI credits
-// - every other capability the three plans listed stays listed (merged where two tiers said the same thing twice),
-//   plus the free trial
+// - every other capability the three plans listed stays listed (merged where two tiers said the same thing twice)
+// - no free trial (removed 2026-11-25: the trial is no longer offered)
 // - the way in is a quote, through /contact
-// The facts it does state are on file: the 14-day free trial with a card, AUD with GST (the Terms, clause 06), the
-// 30-minute discovery call, the reply within one business day, the team in Sydney.
+// The facts it does state are on file: AUD with GST (the Terms, clause 06), the 30-minute discovery call, the reply
+// within one business day, the team in Sydney, and the onboarding and training listed under "Setup and support".
 
 export type PlanGroupIcon = "sales" | "conversations" | "automation" | "marketing" | "websites" | "support"
 
@@ -27,7 +27,6 @@ export type PlanGroup = {
 const QUOTE_HREF = "/contact"
 
 export const plan = {
-  trial: "14-day free trial",
   title: ["One plan.", "Everything in it."],
   lede: "Every tool your business runs on, set up and supported by our team in Sydney. We quote it around what you need us to build, connect and run.",
   cta: { label: "Contact us for a quote", href: QUOTE_HREF },
@@ -38,7 +37,7 @@ export const plan = {
     items: [
       { title: "Tell us about your business", text: "On a 30-minute discovery call, or in a quick message." },
       { title: "Get your quote", text: "Priced to what we build, connect and run for you." },
-      { title: "Start with 14 days free", text: "Your plan starts with a free trial. A card is required to start it." },
+      { title: "We set it up with you", text: "Our team loads your plan for your industry and trains your people." },
     ],
   },
   facts:["Set up and supported from Sydney", "Quotes in Australian dollars, GST included"],
@@ -126,10 +125,6 @@ export const PRICING_FAQ = [
     a: "Book a 30-minute discovery call, or send us a quick message about your business. We reply within one business day.",
   },
   {
-    q: "How does the free trial work?",
-    a: "Your plan starts with a 14-day free trial. A card is required to start it.",
-  },
-  {
     q: "Do quotes include GST?",
     a: "Yes. Quotes are in Australian dollars and include GST.",
   },
@@ -145,7 +140,7 @@ export const planIntro = {
   title: ["One plan.", "Quoted to fit."],
   sheetTitle: "Everything in the plan",
   intro:
-    "Every tool your business runs on, set up and supported by our team. We quote it around what you need, and it starts with a 14-day free trial.",
+    "Every tool your business runs on, set up and supported by our team. We quote it around what you need.",
   primary: { label: "Contact us for a quote", href: QUOTE_HREF },
   secondary: { label: "See what's included", href: "/pricing" },
 }

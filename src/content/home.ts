@@ -12,7 +12,7 @@ export const hero = {
   primary: { label: "Book a discovery call", href: "/contact" },
   secondary: { label: "Explore capabilities", href: "/services" },
   // no prices (2026-11-23): one plan, quoted to each business
-  aside: { text: "One plan with every tool in it, and a 14-day free trial.", link: { label: "See what's included", href: "/pricing" } },
+  aside: { text: "One plan with every tool in it, quoted to fit.", link: { label: "See what's included", href: "/pricing" } },
 }
 
 // The hero panel's demonstration. A fictional plumbing business; every card is labelled as an example.

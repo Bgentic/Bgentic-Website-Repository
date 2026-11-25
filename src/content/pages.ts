@@ -141,7 +141,7 @@ export const contactPage = {
     // no prices (2026-11-23): one plan, quoted to each business
     plans: {
       title: "See what's in the plan",
-      text: "Every tool your business runs on, in one plan, quoted to fit. It starts with a 14-day free trial.",
+      text: "Every tool your business runs on, in one plan, quoted to fit.",
       action: "See the plan",
     },
   },
@@ -160,7 +160,7 @@ export const contactPage = {
       },
       {
         q: "Can I get a quote without a call?",
-        a: "Yes. Send us a quick message about your business and we'll reply by email within one business day. Your plan starts with a 14-day free trial.",
+        a: "Yes. Send us a quick message about your business and we'll reply by email within one business day.",
       },
     ],
   },

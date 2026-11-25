@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, CalendarCheck } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { PLAN_ICONS } from "@/components/pricing/plan-icons"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { plan, planIntro } from "@/content/pricing"
@@ -7,8 +7,8 @@ import { plan, planIntro } from "@/content/pricing"
 // 06 · The plan (2026-11-23, in place of the three priced plans, archived in src/archive/pricing): one plan, quoted,
 // on the cream band between the clients and the close, so the bands still alternate. The pitch and the way in on the
 // left, in /pricing's two-tone lockup; on the right the plan itself shows through the paper: a small slab of the same
-// navy glass as /pricing's card (a navy island, as the popular plan was), its trial badge on the top edge and the six
-// groups a line each. No prices, user limits or AI credits. Styles: the "/pricing · the plan" section of depth.css.
+// navy glass as /pricing's card (a navy island, as the popular plan was), with the six groups a line each. No prices,
+// user limits or AI credits. Styles: the "/pricing · the plan" section of depth.css.
 export function PlanSection() {
   return (
     <section className="section paper" aria-labelledby="plan-band-title">
@@ -37,10 +37,6 @@ export function PlanSection() {
 
         {/* `lift`: on phones the slab rises upright as it scrolls in (the phones section of depth.css) */}
         <div className="plan-glass plan-island lift lg:col-span-7 lg:col-start-6">
-          <p className="plan-trial">
-            <CalendarCheck aria-hidden="true" strokeWidth={2} />
-            {plan.trial}
-          </p>
           <p className="plan-subtitle">{planIntro.sheetTitle}</p>
           <ul className="plan-index">
             {plan.groups.map((group) => {

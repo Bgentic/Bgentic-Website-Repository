@@ -4327,15 +4327,14 @@
   /* ------------------------------------------------------------- /pricing · the plan */
   /* One plan, quoted (2026-11-23, replacing the three priced cards, archived in src/archive/pricing). The page opens
      on one wide slab of navy glass (components/pricing/plan-card.tsx):
-     - the offer, left: the free trial as a badge on the slab's top edge, a two-tone h1, the quote line, the one
-       filled action and the reply promise, how quoting works in three numbered steps on a fine rail, then two
+     - the offer, left: a two-tone h1, the quote line, the one filled action and the reply promise, how quoting works in three numbered steps on a fine rail, then two
        facts. On a desk-sized screen tall enough to hold it, the offer stays in view beside the list as it scrolls.
      - everything in the plan, right: six groups in two columns, read in rows, a hairline over each group and a lit
        icon tile at its head
      - a strip across the foot: custom work with its own glass action, and on phones the quote action again
      The home page's island (components/home/plan-section.tsx) is a small slab of the same glass.
-     One light, faint and from the top left, falling off into navy; the edge is lit where it lands. The one moment
-     of motion: as the page lands the trial badge catches the light once. */
+     One light, faint and from the top left, falling off into navy; the edge is lit where it lands. Nothing moves
+     but the buttons (the trial badge and its one sheen went with the trial, 2026-11-25). */
   .plan-hero {
     position: relative;
     isolation: isolate;
@@ -4393,55 +4392,6 @@
   .plan-glass > * {
     position: relative;
     z-index: 1;
-  }
-
-  /* the trial: a badge on the slab's top edge. On /pricing it catches the light once as the page lands: a soft sheen
-     crosses it in 1.5s, after the page's own arrival, and never again. */
-  .plan-trial {
-    position: absolute;
-    top: 0;
-    left: clamp(1.5rem, 4vw, 3rem);
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    height: 2.125rem;
-    padding-inline: 0.75rem 0.9375rem;
-    border-radius: 999px;
-    overflow: hidden;
-    translate: 0 -50%;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    color: #fbf7f3;
-    background:
-      var(--grain),
-      linear-gradient(180deg, rgb(59 130 246 / 0.26), rgb(59 130 246 / 0.1)),
-      #0c101c;
-    box-shadow:
-      inset 0 0 0 1px rgb(59 130 246 / 0.45),
-      inset 0 1px 0 rgb(255 255 255 / 0.16),
-      0 1px 1px rgb(0 0 0 / 0.4),
-      0 8px 20px -8px rgb(0 0 0 / 0.7);
-  }
-  .plan-trial svg {
-    width: 0.9375rem;
-    height: 0.9375rem;
-    color: #5692f6;
-  }
-  .plan-trial::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.3) 50%, transparent 70%);
-    translate: -110% 0;
-    pointer-events: none;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .plan > .plan-trial::after {
-      animation: plan-sheen 1500ms var(--ease-in-out) 900ms both;
-    }
   }
 
   /* the offer */
@@ -4716,11 +4666,8 @@
     .plan {
       grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     }
-    .plan > .plan-trial {
-      left: 3rem;
-    }
     .plan-offer {
-      padding: 3.75rem 3rem 3rem;
+      padding: 3.25rem 3rem 3rem;
     }
     .plan-steps {
       margin-top: 3.25rem;
@@ -4759,9 +4706,9 @@
   }
 
   /* home 06 · the island: a small slab of the same glass on the cream band, solid (glass over paper would turn
-     grey), with a navy-tinted shadow, the trial badge on its top edge and a line for each group */
+     grey), with a navy-tinted shadow and a line for each group */
   .plan-island {
-    padding: 2.5rem clamp(1.25rem, 3vw, 2.25rem) 0.875rem;
+    padding: 2rem clamp(1.25rem, 3vw, 2.25rem) 0.875rem;
     border-radius: 28px;
     background:
       var(--grain),
@@ -4775,9 +4722,6 @@
       0 1px 2px rgb(6 11 23 / 0.3),
       0 14px 28px -14px rgb(6 11 23 / 0.4),
       0 56px 100px -44px rgb(6 11 23 / 0.62);
-  }
-  .plan-island > .plan-trial {
-    left: clamp(1.25rem, 3vw, 2.25rem);
   }
   .plan-index {
     margin-top: 0.875rem;
@@ -4817,25 +4761,15 @@
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
-    .plan-trial {
-      background: #102141;
-    }
   }
   @media (forced-colors: active) {
-    .plan-glass,
-    .plan-trial {
+    .plan-glass {
       border: 1px solid CanvasText;
     }
     .plan-glass::before,
-    .plan-trial::after,
     .plan-included::before,
     .plan-steps-list li::after {
       display: none;
-    }
-  }
-  @keyframes plan-sheen {
-    to {
-      translate: 110% 0;
     }
   }
 
